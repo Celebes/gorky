@@ -1,5 +1,7 @@
 package pl.edu.wat.tim.gorky;
 
+import pl.edu.wat.tim.gorky.main.GorkyGame;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 

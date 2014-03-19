@@ -1,5 +1,6 @@
 package pl.edu.wat.tim.gorky;
 
+import pl.edu.wat.tim.gorky.main.GorkyGame;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;

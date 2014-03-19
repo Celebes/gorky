@@ -1,4 +1,4 @@
-package pl.edu.wat.tim.gorky;
+package pl.edu.wat.tim.gorky.main;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
