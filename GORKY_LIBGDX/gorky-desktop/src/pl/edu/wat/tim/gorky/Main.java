@@ -12,7 +12,7 @@ public class Main {
 		cfg.useGL20 = false;
 		cfg.width = 480;
 		cfg.height = 320;
-		
+		//test
 		new LwjglApplication(new GorkyGame(), cfg);
 	}
 }
