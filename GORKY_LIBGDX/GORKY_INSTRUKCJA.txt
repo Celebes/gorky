@@ -1,0 +1,26 @@
+>>>IMPORT PROJEKTU LIBGDX DO ECLIPSE ADT:
+1) File -> new -> java project
+2) Odznaczamy "use default location"
+3) Zaznaczamy lokalizacje projektu "gorky" z gita - w ten sposob zostanie utworzony projekt z istniejacych kodow, klikamy Finish
+4) Projekt "gorky" zostanie dodany do "Package Explorer" po lewej w Eclipse
+5) Kroki 1-5 powtarzamy rowniez dla "gorky-desktop", "gorky-html" mozna olac
+6) Dla "gorky-android" proces wyglada troche inaczej, trzeba wejsc w File -> Import.. -> Existing Android Code Into Workspace i zaznaczyc folder z "gorky-android"
+
+>>>KONFIGURACJA BUILD PATH PROJEKTU "GORKY":
+1) Klikamy prawym na "gorky" -> properties -> Java Build Path -> Libraries -> Add Library.. -> JUnit -> JUnit 4 -> Finish
+2) Nadal w Java Build Path -> Order and Export -> zaznaczamy "gdx.jar"
+
+>>>KONFIGURACJA BUILD PATH PROJEKTU "GORKY-ANDROID":
+1) Musimy poprzez "Android SDK Manager" zainstalowac Android API 15, a takze najnowsza wersje Android SDK, instrukcja tutaj: http://stackoverflow.com/questions/22524789/error-this-android-sdk-requires-android-developer-toolkit-version-22-6-1-or-abo
+2) Klikamy prawym na "gorky-android" -> properties -> Java Build Path -> Projects -> Add.. -> zaznaczamy "gorky"
+3) W zakladce "libraries" -> Add JARs.. -> gorky -> libds -> gdx.jar -> OK
+4) W zakladce "Order and Export" -> zaznaczamy wszystko oprocz "Android 4.0.3"
+
+>>>KONFIGURACJA BUILD PATH PROJEKTU "GORKY-DESKTOP"
+1) Build Path -> Projects -> Add.. -> gorky
+2) Source -> Link Source..
+    * Linked Folder Location:../gorky-android/assets
+	* Folder name: assets
+
+>>>WERYFIKACJA:
+Klikamy prawym na Main.java w projekcie gorky-desktop -> Run as.. -> Java Application

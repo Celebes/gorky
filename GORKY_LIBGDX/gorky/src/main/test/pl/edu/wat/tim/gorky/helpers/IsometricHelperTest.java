@@ -1,7 +1,5 @@
 package pl.edu.wat.tim.gorky.helpers;
 
-import static org.junit.Assert.fail;
-
 import java.awt.Point;
 
 import org.junit.Test;
