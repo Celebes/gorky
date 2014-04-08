@@ -1,25 +1,25 @@
 package pl.edu.wat.tim.gorky.helpers;
 
-import java.awt.Point;
-
 import org.junit.Test;
+
+import com.badlogic.gdx.math.Vector2;
 
 public class IsometricHelperTest {
 
 	@Test
 	public void testIsometricToCartesian() {
-		Point isometricPoint = new Point(100, 100);
-		Point cartesianPoint = IsometricHelper.isometricToCartesian(isometricPoint);
+		Vector2 isometricVector2 = new Vector2(100, 100);
+		Vector2 cartesianVector2 = IsometricHelper.isometricToCartesian(isometricVector2);
 		
-		assert cartesianPoint.equals(new Point(0, 100));
+		assert cartesianVector2.equals(new Vector2(0, 100));
 	}
 
 	@Test
 	public void testCartesianToIsometric() {
-		Point cartesianPoint = new Point(0, 100);
-		Point isometricPoint = IsometricHelper.CartesianToIsometric(cartesianPoint);
+		Vector2 cartesianVector2 = new Vector2(0, 100);
+		Vector2 isometricVector2 = IsometricHelper.cartesianToIsometric(cartesianVector2);
 		
-		assert isometricPoint.equals(new Point(100, 100));
+		assert isometricVector2.equals(new Vector2(100, 100));
 	}
 
 }

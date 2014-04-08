@@ -27,3 +27,8 @@ proguard/
 *.ipr
 *.iws
 .idea/
+/GORKY_LIBGDX/gorky-html/gwt-unitCache/*
+/GORKY_LIBGDX/gorky-html/war/WEB-INF/deploy/pl.edu.wat.tim.gorky.GwtDefinition/symbolMaps/*.symbolMap
+.gwt
+.settings
+war
