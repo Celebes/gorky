@@ -1,0 +1,13 @@
+Instrukcja gorky-game:
+1. Instalujemy plugin do Gradle dla Eclipse (https://github.com/spring-projects/eclipse-integration-gradle/)
+	* W Eclipse klikamy help -> instal new software
+	* Podajemy link: http://dist.springsource.com/release/TOOLS/gradle
+	* Zaznaczamy okienko "Extensions / Gradle Integration" i instalujemy
+2. Teraz mamy dostepna opcje File -> Import -> Gradle project, wybieramy ja
+3. Znajdujemy folder "gorky-game", klikamy open
+4. W okienku gdzie wybieralismy folder klikamy na "Build Model"
+5. Po jakims czasie jak sie wszystko posciaga bedziemy mieli do wyboru projekty do zaimportowania
+6. Wybieramy wszystkie i klikamy Finish. Gradle cos jeszcze posciaga i doda projekty do eclipse.
+
+Opis jak uruchamiac poszczegolne rodzaje projektow:
+https://github.com/libgdx/libgdx/wiki/Gradle-and-Eclipse

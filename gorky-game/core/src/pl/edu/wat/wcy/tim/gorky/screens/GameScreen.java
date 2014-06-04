@@ -1,0 +1,71 @@
+package pl.edu.wat.wcy.tim.gorky.screens;
+
+import pl.edu.wat.wcy.tim.gorky.game.WorldController;
+import pl.edu.wat.wcy.tim.gorky.game.WorldRenderer;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
+
+public class GameScreen extends AbstractGameScreen {
+	private static final String TAG = GameScreen.class.getName();
+	
+	private WorldController worldController;
+	private WorldRenderer worldRenderer;
+	
+	private boolean paused;
+
+	public GameScreen(Game game) {
+		super(game);
+	}
+	
+	@Override
+	public void render(float deltaTime) {
+		
+		if(!paused) {
+			worldController.update(deltaTime);
+		}
+		
+		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		worldRenderer.render();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		worldRenderer.resize(width, height);
+	}
+
+	@Override
+	public void show() {
+		worldController = new WorldController(game);
+		worldRenderer = new WorldRenderer(worldController);
+		Gdx.input.setCatchBackKey(true);
+	}
+
+	@Override
+	public void hide() {
+		worldRenderer.dispose();
+		Gdx.input.setCatchBackKey(false);
+	}
+
+	@Override
+	public void pause() {
+		paused = true;
+	}
+	
+	@Override
+	public void resume() {
+		super.resume();
+		// Only called on Android!
+		paused = false;
+	}
+	
+	@Override
+	public InputProcessor getInputProcessor() {
+		return worldController;
+	}
+
+}
