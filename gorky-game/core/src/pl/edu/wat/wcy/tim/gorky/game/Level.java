@@ -17,7 +17,7 @@ public class Level {
 	public static final String TAG = Level.class.getName();
 	
 	public enum BLOCK_TYPE {
-		GRASS(255, 255, 255),					// bialy
+		EMPTY(255, 255, 255),					// bialy
 		PLAYER_SPAWNPOINT(255, 0, 0),			// czerwony
 		WALL(0, 0, 0);							// czarny
 		
@@ -58,7 +58,6 @@ public class Level {
 		for (int pixelY = 0; pixelY < pixmap.getHeight(); pixelY++) {
 			for (int pixelX = 0; pixelX < pixmap.getWidth(); pixelX++) {
 				AbstractGameObject obj = null;
-				float offsetHeight = 0;
 				
 				// wysokosc rosnie z dolu do gory
 				float baseHeight = pixmap.getHeight() - pixelY;
@@ -68,29 +67,27 @@ public class Level {
 				
 				// sprawdz kolor i utworz odpowiedni obiekt
 				
-				// trawa
-				if(BLOCK_TYPE.GRASS.sameColor(currentPixel)) {
-					obj = new Grass();
-					//offsetHeight = -3.0f;
-					//obj.position = IsometricHelper.cartesianToIsometric(new Vector2(pixelX, pixelY * obj.dimension.y + offsetHeight));
-					//obj.position.set(pixelX, pixelY * obj.dimension.y + offsetHeight);
-					obj.position.set(pixelX, baseHeight * obj.dimension.y);
-					grassTiles.add((Grass)obj);
+				// dodaj trawe wszedzie
+				obj = new Grass();
+				obj.position.set(pixelX, baseHeight * obj.dimension.y);
+				grassTiles.add((Grass)obj);
+				
+				// puste pole
+				if(BLOCK_TYPE.EMPTY.sameColor(currentPixel)) {
+					// nic nie rob
 				}
 				
 				// gracz
 				else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 					obj = new Player();
-					//offsetHeight = -3.0f;
-					obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+					obj.position.set(pixelX,baseHeight * obj.dimension.y);
 					player = (Player)obj;
 				}
 				
 				// murek
 				else if(BLOCK_TYPE.WALL.sameColor(currentPixel)) {
 					obj = new Wall();
-					//offsetHeight = -3.0f;
-					obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+					obj.position.set(pixelX,baseHeight * obj.dimension.y);
 					wallTiles.add((Wall)obj);
 				}
 

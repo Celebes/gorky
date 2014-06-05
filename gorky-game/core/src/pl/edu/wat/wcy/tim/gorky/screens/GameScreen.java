@@ -27,7 +27,8 @@ public class GameScreen extends AbstractGameScreen {
 			worldController.update(deltaTime);
 		}
 		
-		Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		// kolor jasnozielony
+		Gdx.gl.glClearColor(57.0f / 255.0f, 181.0f / 225.0f, 115.0f / 255.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		worldRenderer.render();
