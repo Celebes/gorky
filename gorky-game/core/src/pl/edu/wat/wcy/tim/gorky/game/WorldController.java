@@ -1,5 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
+import pl.edu.wat.wcy.tim.gorky.objects.Player;
+import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
 import pl.edu.wat.wcy.tim.gorky.util.CameraHelper;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
@@ -9,7 +11,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -18,10 +20,12 @@ public class WorldController extends InputAdapter {
 	private static final String TAG = WorldController.class.getName();
 	private WorldRenderer worldRenderer;
 	public Game game;
-	public Sprite[] testSprites;
-	public int selectedSprite;
 	public CameraHelper cameraHelper;
 	public Level level;
+	
+	// Detekcja kolizji
+	private Rectangle r1 = new Rectangle();
+	private Rectangle r2 = new Rectangle();
 	
 	public WorldController(Game game) {
 		this.game = game;
@@ -49,7 +53,37 @@ public class WorldController extends InputAdapter {
 
 	private void testCollisions() {
 		// TODO Auto-generated method stub
+		r1.set(level.player.position.x, level.player.position.y, level.player.bounds.width, level.player.bounds.height);
 		
+		// sprawdz kolizje z WALL
+		for(Wall w : level.wallTiles) {
+			r2.set(w.position.x, w.position.y, w.bounds.width, w.bounds.height);
+			
+			if (!r1.overlaps(r2)) {
+				continue;
+			}
+			
+			onCollisionPlayerWithWall(w);
+		}
+	}
+
+	private void onCollisionPlayerWithWall(Wall w) {
+		Player p = level.player;
+		
+		float upperValue = Math.abs(p.position.y -(w.position.y - w.bounds.height / 4.0f));
+		float bottomValue = Math.abs(p.position.y - (w.position.y + p.bounds.height / 4.0f));
+		float rightValue = Math.abs(p.position.x - (w.position.x - p.bounds.width / 4.0f));
+		float leftValue = Math.abs(p.position.x - (w.position.x + w.bounds.width / 4.0f));
+		
+		if(upperValue > bottomValue && upperValue > rightValue && upperValue > leftValue) {
+			p.position.y = w.position.y + p.bounds.height;
+		} else if(bottomValue > upperValue && bottomValue > rightValue && bottomValue > leftValue) {
+			p.position.y = w.position.y - p.bounds.height;
+		} else if(rightValue > upperValue && rightValue > bottomValue && rightValue > leftValue) {
+			p.position.x = w.position.x + w.bounds.width;
+		} else if(leftValue > upperValue && leftValue > bottomValue && leftValue > rightValue) {
+			p.position.x = w.position.x - p.bounds.width;
+		}
 	}
 
 	private void handleDebugInput(float deltaTime) {
