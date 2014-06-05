@@ -18,8 +18,8 @@ public class Player extends AbstractGameObject {
 	private Vector2 start;
 	private Vector2 stop;
 	private Vector2 direction;
-	boolean moving;
-	float distance;
+	private volatile boolean followingTouch;
+	private float distance;
 	
 	public Player() {
 		init();
@@ -61,13 +61,12 @@ public class Player extends AbstractGameObject {
 			viewDirection = velocity.y > 0 ? VIEW_DIRECTION.UP : VIEW_DIRECTION.DOWN;
 		}
 		
-		if(moving == true) {
+		if(followingTouch == true) {
 			velocity.add(direction);
 			direction = stop.cpy().sub(position.cpy()).nor();
 			if(position.dst(start) >= distance) {
 				velocity = new Vector2();
-				//position = stop;
-				moving = false;
+				followingTouch = false;
 			}
 		}
 	}
@@ -77,7 +76,15 @@ public class Player extends AbstractGameObject {
 		stop = moveToVector;
 		distance = start.dst(stop);
 		direction = stop.cpy().sub(start.cpy()).nor();
-		moving = true;
+		followingTouch = true;
+	}
+
+	public boolean isFollowingTouch() {
+		return followingTouch;
+	}
+
+	public void setFollowingTouch(boolean moving) {
+		this.followingTouch = moving;
 	}
 
 }

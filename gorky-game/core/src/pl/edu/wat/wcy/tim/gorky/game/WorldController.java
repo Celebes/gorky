@@ -148,14 +148,18 @@ public class WorldController extends InputAdapter {
 			
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 				level.player.velocity.x = -level.player.terminalVelocity.x;
+				level.player.setFollowingTouch(false);
 			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 				level.player.velocity.x = level.player.terminalVelocity.x;
+				level.player.setFollowingTouch(false);
 			} 
 
 			if (Gdx.input.isKeyPressed(Keys.UP)) {
 				level.player.velocity.y = level.player.terminalVelocity.y;
+				level.player.setFollowingTouch(false);
 			} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 				level.player.velocity.y = -level.player.terminalVelocity.y;
+				level.player.setFollowingTouch(false);
 			}
 		}
 		

@@ -3,15 +3,14 @@ package pl.edu.wat.wcy.tim.gorky.util;
 import pl.edu.wat.wcy.tim.gorky.objects.AbstractGameObject;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class CameraHelper {
 	private static final String TAG = CameraHelper.class.getName();
 	
-	private final float MAX_ZOOM_IN = 1f;
-	private final float MAX_ZOOM_OUT = 50.0f;
+	private final float MAX_ZOOM_IN = 0.25f;
+	private final float MAX_ZOOM_OUT = 10.0f;
 	
 	private Vector2 position;
 	private float zoom;
@@ -29,6 +28,23 @@ public class CameraHelper {
 		
 		position.x = target.position.x + target.origin.x;
 		position.y = target.position.y + target.origin.y;
+		
+		// ogranicz ruch kamery do granic wygenerowanego poziomu
+		if(position.x < Constants.VIEWPORT_WIDTH / 2.0f) {
+			position.x = Math.max(position.x, Constants.VIEWPORT_WIDTH / 2.0f);
+		}
+		
+		if(position.y < (Constants.VIEWPORT_HEIGHT / 2.0f) + 1.0f) {
+			position.y = Math.max(position.y, (Constants.VIEWPORT_HEIGHT / 2.0f) + 1.0f);
+		}
+		
+		if(position.x > Constants.CURRENT_MAP_WIDTH - (Constants.VIEWPORT_WIDTH / 2.0f)) {
+			position.x = Math.min(position.x, Constants.CURRENT_MAP_WIDTH - (Constants.VIEWPORT_WIDTH / 2.0f));
+		}
+		
+		if(position.y > Constants.CURRENT_MAP_HEIGHT - (Constants.VIEWPORT_HEIGHT / 2.0f) + 1.0f) {
+			position.y = Math.min(position.y, Constants.CURRENT_MAP_HEIGHT - (Constants.VIEWPORT_HEIGHT / 2.0f) + 1.0f);
+		}
 	}
 	
 	public void applyTo(OrthographicCamera camera) {

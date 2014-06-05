@@ -5,6 +5,7 @@ import pl.edu.wat.wcy.tim.gorky.objects.AbstractGameObject;
 import pl.edu.wat.wcy.tim.gorky.objects.Grass;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
+import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -52,7 +53,10 @@ public class Level {
 		
 		// wczytaj obrazek z opisem poziomu
 		Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
-
+		
+		// ustaw wymiary w Constans
+		Constants.CURRENT_MAP_WIDTH = pixmap.getWidth();
+		Constants.CURRENT_MAP_HEIGHT = pixmap.getHeight();
 
 		// skanuj pixele od gornego-lewego rogu do dolnego-prawego		
 		for (int pixelY = 0; pixelY < pixmap.getHeight(); pixelY++) {
