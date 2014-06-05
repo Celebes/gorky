@@ -11,6 +11,7 @@ public class Player extends AbstractGameObject {
 	public enum VIEW_DIRECTION { UP, RIGHT, DOWN, LEFT }
 	
 	private TextureRegion regPlayer;
+	private TextureRegion regPlayerRight;
 	public VIEW_DIRECTION viewDirection;
 	
 	// przemieszczanie za kliknieciem
@@ -29,6 +30,7 @@ public class Player extends AbstractGameObject {
 		dimension.set(1.0f, 1.0f);
 		origin.set(dimension.x / 2, dimension.y / 2);
 		regPlayer = Assets.instance.player.player;
+		regPlayerRight = Assets.instance.player.player_right;
 		
 		viewDirection = VIEW_DIRECTION.DOWN;
 		
@@ -42,10 +44,27 @@ public class Player extends AbstractGameObject {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		batch.draw(regPlayer.getTexture(), position.x, position.y, origin.x,
+		TextureRegion reg = null;
+		
+		boolean flipY = false;
+		boolean flipX = false;
+		
+		if(viewDirection == VIEW_DIRECTION.DOWN) {
+			reg = regPlayer;
+		} else if(viewDirection == VIEW_DIRECTION.UP) {
+			reg = regPlayer;
+			flipY = true;			
+		} else if(viewDirection == VIEW_DIRECTION.RIGHT) {
+			reg = regPlayerRight;
+		} else if(viewDirection == VIEW_DIRECTION.LEFT) {
+			reg = regPlayerRight;
+			flipX = true;
+		}
+		
+		batch.draw(reg.getTexture(), position.x, position.y, origin.x,
 				origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
-				regPlayer.getRegionX(), regPlayer.getRegionY(), regPlayer.getRegionWidth(),
-				regPlayer.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT, viewDirection == VIEW_DIRECTION.UP);
+				reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),
+				reg.getRegionHeight(), flipX, flipY);
 		
 	}
 	
@@ -53,13 +72,22 @@ public class Player extends AbstractGameObject {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		if (velocity.x != 0) {
+		/*if (velocity.x != 0) {
 			viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT : VIEW_DIRECTION.RIGHT;
 		}
 		
 		if (velocity.y != 0) {
 			viewDirection = velocity.y > 0 ? VIEW_DIRECTION.UP : VIEW_DIRECTION.DOWN;
+		}*/
+		
+		if(velocity.x != 0 || velocity.y != 0) {
+			if(Math.abs(velocity.x) > Math.abs(velocity.y)) {
+				viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT : VIEW_DIRECTION.RIGHT;
+			} else {
+				viewDirection = velocity.y > 0 ? VIEW_DIRECTION.UP : VIEW_DIRECTION.DOWN;
+			}
 		}
+		
 		
 		if(followingTouch == true) {
 			velocity.add(direction);

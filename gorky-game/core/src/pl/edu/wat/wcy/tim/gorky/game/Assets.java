@@ -84,9 +84,11 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	public class AssetPlayer {
 		public final AtlasRegion player;
+		public final AtlasRegion player_right;
 		
 		public AssetPlayer(TextureAtlas atlas) {
 			player = atlas.findRegion("player");
+			player_right = atlas.findRegion("player_right");
 		}
 	}
 	
