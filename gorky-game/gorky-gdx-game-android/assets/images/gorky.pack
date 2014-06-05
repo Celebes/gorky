@@ -1,0 +1,19 @@
+
+gorky.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+basic_green_tile
+  rotate: false
+  xy: 1, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_wall
+  rotate: false
+  xy: 53, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1

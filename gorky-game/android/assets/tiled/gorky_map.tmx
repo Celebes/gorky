@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tileset-3" tilewidth="32" tileheight="32">
+  <image source="hyptosis_tile-art-batch-3.png" width="960" height="960"/>
+ </tileset>
+ <layer name="ziemia" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztV0FuwzAMc/OR+GF9yU57+naoAI0gRTu1WwzogQgSW7JIS5Zza63dPvjgH+F44IrtSXBLz1dy6A/McMkxs7F37EX1PhP/Dg6zeXIaW5cvjt8swpeKpcrnU9grDmizEooHrhV14eJBDjtjn+WROaiYA53YvwKZh9KOccBcwXnv4lFp7Dj0wk/GkZ4ZK7k4sPn31r6/fp8Md7CN3AzeGSu44DpKS8VJ1U7W3529yn6WRxVLtR+VX9Sf9ZtVHFCrKpdc/KyfVDWzkgPz776rftiFnau11RipdaYvu28pTvhtJS+nE47he29/z1PHYWTsaj6pHsh0Y9+Ci7ujKX0Up5HzmN0llOZVDqh5WPNqbMRuZk9H8mvEVtUU3oer9Q5ic1VnZd8LLrivrhYUn/DjeDxzBqocGfE1O3/l3WtEc9ZPGHKPd/N3xI/5wf79qvxh+mLt9GJ8956gpi4P8N7o6qYbf88C+02sGZqyHp/PCHxnObWbR/hn8ea1M9fgmPsmxnjC9901gmviWX/AeG+cy+g6P2fsMfs=
+  </data>
+ </layer>
+ <layer name="obiekty" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztz7sJAkEYReF/txV3A7sw0irUQtRCfNbhK7AKQesQNPQsmBgsjtGwcD44DMwkdyIkSb9saZd7RKJ9ETEuIyY0Lb/fTnTOsup/V/4xY/+cFrTmbvN5u9Gd+kW+fakebFyyf9X8gQ7cHWnI/ZPzRaMO/KNRR1yqlngb5N6XqkdVS3XGXZIkSZKk7nsDSi0YbQ==
+  </data>
+ </layer>
+ <objectgroup name="spawn" width="50" height="30">
+  <object name="SpawnPoint" x="908" y="339" width="38" height="33"/>
+ </objectgroup>
+</map>

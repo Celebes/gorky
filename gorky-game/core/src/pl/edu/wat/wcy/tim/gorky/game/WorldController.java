@@ -2,26 +2,26 @@ package pl.edu.wat.wcy.tim.gorky.game;
 
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
 import pl.edu.wat.wcy.tim.gorky.util.CameraHelper;
+import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class WorldController extends InputAdapter {
 	
 	private static final String TAG = WorldController.class.getName();
+	private WorldRenderer worldRenderer;
 	public Game game;
 	public Sprite[] testSprites;
 	public int selectedSprite;
 	public CameraHelper cameraHelper;
+	public Level level;
 	
 	public WorldController(Game game) {
 		this.game = game;
@@ -31,66 +31,25 @@ public class WorldController extends InputAdapter {
 	private void init() {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		initTestObjects();
+		initLevel();
 	}
 	
-	private void initTestObjects() {
-		testSprites = new Sprite[5];
-		
-		int width = 32;
-		int height = 32;
-		
-		Pixmap pixmap = createProceduralBitmap(width, height);
-		
-		// utworz nowa texture z pixmapy
-		Texture texture = new Texture(pixmap);
-		
-		// utworz nowe Sprite'y na podstawie textury
-		for(int i=0; i<testSprites.length; i++) {
-			Sprite spr = new Sprite(texture);
-			
-			// rozmiar kazdego sprite'a to 1x1 [m] w swiecie gry (cala gra ma 5x5 [m])
-			spr.setSize(1, 1);
-			
-			// przestaw poczatek sprite'a z dolnego lewego rogu na srodek
-			spr.setOrigin(spr.getWidth() / 2.0f, spr.getHeight() / 2.0f);
-			
-			// wybierz losowa pozycje na ekranie
-			float randomX = MathUtils.random(-2.0f, 2.0f);
-			float randomY = MathUtils.random(-2.0f, 2.0f);
-			spr.setPosition(randomX, randomY);
-			
-			// dodaj do tablicy
-			testSprites[i] = spr;
-		}
-		
-		// ustaw pierwszego sprite'a jako wybranego
-		selectedSprite = 0;
-	}
-
-	private Pixmap createProceduralBitmap(int width, int height) {
-		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
-		
-		// czerwony kwadrat z 50% opacity
-		pixmap.setColor(1, 0, 0, 0.5f);
-		pixmap.fill();
-		
-		// zolty X na kwadracie
-		pixmap.setColor(1, 1, 0, 1);
-		pixmap.drawLine(0, 0, width, height);
-		pixmap.drawLine(width, 0, 0, height);
-		
-		// turkusowa ramka
-		pixmap.setColor(0, 1, 1, 1);
-		pixmap.drawRectangle(0, 0, width, height);
-		
-		return pixmap;
+	private void initLevel() {
+		level = new Level(Constants.LEVEL_02);
+		cameraHelper.setTarget(level.player);
 	}
 
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
-		updateTestObjects(deltaTime);
+		handleInputGame(deltaTime);
+		level.update(deltaTime);
+		testCollisions();
 		cameraHelper.update(deltaTime);
+	}
+
+	private void testCollisions() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void handleDebugInput(float deltaTime) {
@@ -98,51 +57,34 @@ public class WorldController extends InputAdapter {
 			return;
 		}
 		
-		// kontrolowanie zaznaczonego sprite'a, 5 metrow na sekunde
-		float sprMoveSpeed = 5 * deltaTime;
-		
-		if(Gdx.input.isKeyPressed(Keys.A)) {
-			moveSelectedSprite(-sprMoveSpeed, 0f);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.D)) {
-			moveSelectedSprite(sprMoveSpeed, 0f);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.W)) {
-			moveSelectedSprite(0f, sprMoveSpeed);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.S)) {
-			moveSelectedSprite(0f, -sprMoveSpeed);
-		}
-		
-		// sterowanie kamera
-		float camMoveSpeed = 5 * deltaTime;
-		float camMoveSpeedAccelerationFactor = 5;
-		
-		if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-			camMoveSpeed *= camMoveSpeedAccelerationFactor;
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			moveCamera(-camMoveSpeed, 0);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			moveCamera(camMoveSpeed, 0);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.UP)) {
-			moveCamera(0, camMoveSpeed);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-			moveCamera(0, -camMoveSpeed);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)) {
-			cameraHelper.setPosition(0, 0);
+		if(!cameraHelper.hasTarget(level.player)) {
+			// sterowanie kamera
+			float camMoveSpeed = 5 * deltaTime;
+			float camMoveSpeedAccelerationFactor = 5;
+			
+			if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
+				camMoveSpeed *= camMoveSpeedAccelerationFactor;
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.A)) {
+				moveCamera(-camMoveSpeed, 0);
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.D)) {
+				moveCamera(camMoveSpeed, 0);
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.W)) {
+				moveCamera(0, camMoveSpeed);
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.S)) {
+				moveCamera(0, -camMoveSpeed);
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.BACKSPACE)) {
+				cameraHelper.setPosition(0, 0);
+			}
 		}
 		
 		// przyblizanie kamery
@@ -165,29 +107,39 @@ public class WorldController extends InputAdapter {
 			cameraHelper.setZoom(1);
 		}
 	}
+	
+	private void handleInputGame (float deltaTime) {
+		if(cameraHelper.hasTarget(level.player)) {
+			// ruch postaci
+			
+			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+				level.player.velocity.x = -level.player.terminalVelocity.x;
+			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				level.player.velocity.x = level.player.terminalVelocity.x;
+			} 
+
+			if (Gdx.input.isKeyPressed(Keys.UP)) {
+				level.player.velocity.y = level.player.terminalVelocity.y;
+			} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+				level.player.velocity.y = -level.player.terminalVelocity.y;
+			}
+		}
+		
+		if(Gdx.input.isTouched()) {			
+			Vector3 touchScreen = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+			Vector3 touchGame3 = worldRenderer.getCamera().unproject(touchScreen);
+			
+			Vector2 touchInGame = new Vector2(touchGame3.x, touchGame3.y);
+			
+			level.player.setMoveToVector(touchInGame);
+		}
+		
+	}
 
 	private void moveCamera(float x, float y) {
 		x += cameraHelper.getPosition().x;
 		y += cameraHelper.getPosition().y;
 		cameraHelper.setPosition(x, y);
-	}
-
-	private void moveSelectedSprite(float x, float y) {
-		testSprites[selectedSprite].translate(x, y);
-	}
-
-	private void updateTestObjects(float deltaTime) {
-		// pobierz aktualna rotacje wybranego sprite'a
-		float rotation = testSprites[selectedSprite].getRotation();
-		
-		// obroc go o 90 stopni na sekunde
-		rotation += (90 * deltaTime);
-		
-		// pilnuj zeby nie przekroczyc 360 stopni
-		rotation %= 360;
-		
-		// zastosuj nowy obrot
-		testSprites[selectedSprite].setRotation(rotation);
 	}
 
 	@Override
@@ -198,21 +150,9 @@ public class WorldController extends InputAdapter {
 			Gdx.app.debug(TAG, "Game world resetted!");
 		}
 		
-		// wybierz nastepnego sprite'a
-		else if(keycode == Keys.SPACE) {
-			selectedSprite = (selectedSprite + 1) % testSprites.length;
-			
-			// zaktualizuj kamere by sledzila nowy obiekt
-			if(cameraHelper.hasTarget()) {
-				cameraHelper.setTarget(testSprites[selectedSprite]);
-			}
-			
-			Gdx.app.debug(TAG, "Sprite #" + selectedSprite + " selected");
-		}
-		
-		// wlacz sledzenie kamery
+		// wlacz sledzenie postaci
 		else if(keycode == Keys.ENTER) {
-			cameraHelper.setTarget(cameraHelper.hasTarget() ? null : testSprites[selectedSprite]);
+			cameraHelper.setTarget(cameraHelper.hasTarget() ? null : level.player);
 			Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
 		}
 		
@@ -227,4 +167,13 @@ public class WorldController extends InputAdapter {
 	private void backToMenu() {
 		game.setScreen(new MenuScreen(game));
 	}
+	
+	public WorldRenderer getWorldRenderer() {
+		return worldRenderer;
+	}
+
+	public void setWorldRenderer(WorldRenderer worldRenderer) {
+		this.worldRenderer = worldRenderer;
+	}
+
 }

@@ -1,5 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.util;
 
+import pl.edu.wat.wcy.tim.gorky.objects.AbstractGameObject;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -8,12 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 public class CameraHelper {
 	private static final String TAG = CameraHelper.class.getName();
 	
-	private final float MAX_ZOOM_IN = 0.25f;
-	private final float MAX_ZOOM_OUT = 10.0f;
+	private final float MAX_ZOOM_IN = 1f;
+	private final float MAX_ZOOM_OUT = 50.0f;
 	
 	private Vector2 position;
 	private float zoom;
-	private Sprite target;
+	private AbstractGameObject target;
 	
 	public CameraHelper() {
 		position = new Vector2();
@@ -25,8 +27,8 @@ public class CameraHelper {
 			return;
 		}
 		
-		position.x = target.getX() + target.getOriginX();
-		position.y = target.getY() + target.getOriginY();
+		position.x = target.position.x + target.origin.x;
+		position.y = target.position.y + target.origin.y;
 	}
 	
 	public void applyTo(OrthographicCamera camera) {
@@ -40,15 +42,15 @@ public class CameraHelper {
 		return (target != null);
 	}
 	
-	public boolean hasTarget(Sprite target) {
+	public boolean hasTarget(AbstractGameObject target) {
 		return (hasTarget() && this.target.equals(target));
 	}
 	
-	public void setTarget(Sprite target) {
+	public void setTarget(AbstractGameObject target) {
 		this.target = target;
 	}
 	
-	public Sprite getTarget() {
+	public AbstractGameObject getTarget() {
 		return target;
 	}
 	
