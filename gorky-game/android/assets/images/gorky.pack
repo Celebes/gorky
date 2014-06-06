@@ -3,38 +3,59 @@ gorky.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-enemy
+enemy_ogre
   rotate: false
   xy: 1, 1
+  size: 56, 80
+  orig: 56, 80
+  offset: 0, 0
+  index: 1
+player_knight_down
+  rotate: false
+  xy: 59, 17
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-player
+player_knight_right
   rotate: false
-  xy: 67, 1
+  xy: 125, 17
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-player_right
+player_knight_up
   rotate: false
-  xy: 133, 1
+  xy: 191, 17
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tile_grass
   rotate: false
-  xy: 199, 1
+  xy: 257, 17
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tile_wall
   rotate: false
-  xy: 265, 1
+  xy: 323, 17
   size: 64, 64
   orig: 64, 64
+  offset: 0, 0
+  index: -1
+player_knight
+  rotate: false
+  xy: 389, 16
+  size: 38, 65
+  orig: 38, 65
+  offset: 0, 0
+  index: 1
+enemy
+  rotate: false
+  xy: 429, 29
+  size: 44, 52
+  orig: 44, 52
   offset: 0, 0
   index: -1

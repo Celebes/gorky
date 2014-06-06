@@ -13,8 +13,10 @@ public class Player extends AbstractGameObject {
 	
 	public enum VIEW_DIRECTION { UP, RIGHT, DOWN, LEFT }
 	
-	private TextureRegion regPlayer;
+	private TextureRegion regPlayerUp;
 	private TextureRegion regPlayerRight;
+	private TextureRegion regPlayerDown;
+	
 	public VIEW_DIRECTION viewDirection;
 	
 	// przemieszczanie za kliknieciem
@@ -60,8 +62,10 @@ public class Player extends AbstractGameObject {
 	private void init() {
 		dimension.set(1.0f, 1.0f);
 		origin.set(dimension.x / 2, dimension.y / 2);
-		regPlayer = Assets.instance.player.player;
+		
+		regPlayerUp = Assets.instance.player.player_up;
 		regPlayerRight = Assets.instance.player.player_right;
+		regPlayerDown = Assets.instance.player.player_down;
 		
 		viewDirection = VIEW_DIRECTION.DOWN;
 		
@@ -77,14 +81,12 @@ public class Player extends AbstractGameObject {
 	public void render(SpriteBatch batch) {
 		TextureRegion reg = null;
 		
-		boolean flipY = false;
 		boolean flipX = false;
 		
 		if(viewDirection == VIEW_DIRECTION.DOWN) {
-			reg = regPlayer;
+			reg = regPlayerDown;
 		} else if(viewDirection == VIEW_DIRECTION.UP) {
-			reg = regPlayer;
-			flipY = true;			
+			reg = regPlayerUp;		
 		} else if(viewDirection == VIEW_DIRECTION.RIGHT) {
 			reg = regPlayerRight;
 		} else if(viewDirection == VIEW_DIRECTION.LEFT) {
@@ -95,7 +97,7 @@ public class Player extends AbstractGameObject {
 		batch.draw(reg.getTexture(), position.x, position.y, origin.x,
 				origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
 				reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),
-				reg.getRegionHeight(), flipX, flipY);
+				reg.getRegionHeight(), flipX, false);
 		
 	}
 	

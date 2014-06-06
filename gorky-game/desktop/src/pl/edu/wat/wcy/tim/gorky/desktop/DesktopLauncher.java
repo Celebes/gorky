@@ -24,9 +24,9 @@ public class DesktopLauncher {
 		}
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "CanyonBunny";
+		cfg.title = "GORKY";
 		cfg.width = 800;
-		cfg.height = 480;		
+		cfg.height = 480;
 		
 		new LwjglApplication(new GorkyGame(), cfg);
 	}

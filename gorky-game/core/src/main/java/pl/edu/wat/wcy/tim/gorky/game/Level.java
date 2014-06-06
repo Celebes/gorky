@@ -1,7 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
-import pl.edu.wat.wcy.tim.gorky.helpers.IsometricHelper;
 import pl.edu.wat.wcy.tim.gorky.objects.AbstractGameObject;
+import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Grass;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
@@ -10,7 +10,6 @@ import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -20,6 +19,7 @@ public class Level {
 	public enum BLOCK_TYPE {
 		EMPTY(255, 255, 255),					// bialy
 		PLAYER_SPAWNPOINT(255, 0, 0),			// czerwony
+		ENEMY_SPAWNPOINT(0, 255, 0),			// zielony
 		WALL(0, 0, 0);							// czarny
 		
 		private int color;
@@ -39,6 +39,7 @@ public class Level {
 	
 	public Array<Wall> wallTiles;
 	public Array<Grass> grassTiles;
+	public Array<Enemy> enemies;
 	public Player player;
 	
 	public Level (String filename) {
@@ -50,6 +51,7 @@ public class Level {
 		
 		wallTiles = new Array<>();
 		grassTiles = new Array<>();
+		enemies = new Array<>();
 		
 		// wczytaj obrazek z opisem poziomu
 		Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -88,6 +90,13 @@ public class Level {
 					player = (Player)obj;
 				}
 				
+				// potworek
+				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
+					obj = new Enemy();
+					obj.position.set(pixelX,baseHeight * obj.dimension.y);
+					enemies.add((Enemy)obj);
+				}
+				
 				// murek
 				else if(BLOCK_TYPE.WALL.sameColor(currentPixel)) {
 					obj = new Wall();
@@ -120,6 +129,10 @@ public class Level {
 		
 		for(Wall w : wallTiles) {
 			w.render(batch);
+		}
+		
+		for(Enemy e : enemies) {
+			e.render(batch);
 		}
 		
 		player.render(batch);

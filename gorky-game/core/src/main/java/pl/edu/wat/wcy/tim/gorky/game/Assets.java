@@ -21,6 +21,11 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetGrass grass;
 	public AssetWall wall;
 	public AssetPlayer player;
+	public AssetEnemy enemy;
+	
+	// obrazki
+	public Texture menuTexture;
+	public Texture battleTexture;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -34,6 +39,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		// wczytaj atlas textur
 		assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
 		
+		// wczytaj tekstury
+		assetManager.load("images/LOGO_TIM.png", Texture.class);
+		assetManager.load("images/BATTLE_UNDER_CONSTRUCTION.gif", Texture.class);
+		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
 		
@@ -45,6 +54,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
 		
+		// zapisz tekstury do zmiennych
+		menuTexture = assetManager.get("images/LOGO_TIM.png", Texture.class);
+		battleTexture = assetManager.get("images/BATTLE_UNDER_CONSTRUCTION.gif", Texture.class);
+		
 		// wlacz filtrowanie pixeli zeby byly bardziej gladkie
 		for(Texture t : atlas.getTextures()) {
 			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -54,6 +67,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		grass = new AssetGrass(atlas);
 		wall = new AssetWall(atlas);
 		player = new AssetPlayer(atlas);
+		enemy = new AssetEnemy(atlas);
 	}
 	
 	@Override
@@ -83,12 +97,14 @@ public class Assets implements Disposable, AssetErrorListener {
 	}
 	
 	public class AssetPlayer {
-		public final AtlasRegion player;
+		public final AtlasRegion player_down;
 		public final AtlasRegion player_right;
+		public final AtlasRegion player_up;
 		
 		public AssetPlayer(TextureAtlas atlas) {
-			player = atlas.findRegion("player");
-			player_right = atlas.findRegion("player_right");
+			player_down = atlas.findRegion("player_knight_down");
+			player_right = atlas.findRegion("player_knight_right");
+			player_up = atlas.findRegion("player_knight_up");
 		}
 	}
 	

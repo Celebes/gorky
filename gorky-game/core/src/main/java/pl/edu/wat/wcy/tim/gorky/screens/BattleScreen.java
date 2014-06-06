@@ -9,17 +9,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class MenuScreen extends AbstractGameScreen {
+public class BattleScreen extends AbstractGameScreen {
 	
-	private static final String TAG = MenuScreen.class.getName();
+	private static final String TAG = BattleScreen.class.getName();
 	
 	private SpriteBatch batch;
 	private Texture img;
-	
-	public MenuScreen(Game game) {
+
+	public BattleScreen(Game game) {
 		super(game);
 	}
-	
+
 	@Override
 	public void render(float deltaTime) {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -45,7 +45,7 @@ public class MenuScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		img = Assets.instance.menuTexture;
+		img = Assets.instance.battleTexture;
 	}
 
 	@Override
@@ -56,5 +56,5 @@ public class MenuScreen extends AbstractGameScreen {
 
 	@Override
 	public void pause() {}
-	
+
 }

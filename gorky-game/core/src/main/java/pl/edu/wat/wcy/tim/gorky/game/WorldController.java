@@ -1,7 +1,9 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
+import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
+import pl.edu.wat.wcy.tim.gorky.screens.BattleScreen;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
 import pl.edu.wat.wcy.tim.gorky.util.CameraHelper;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
@@ -65,6 +67,23 @@ public class WorldController extends InputAdapter {
 			
 			onCollisionPlayerWithWall(w);
 		}
+		
+		// sprawdz kolizje z ENEMY
+		for(Enemy e : level.enemies) {
+			r2.set(e.position.x, e.position.y, e.bounds.width, e.bounds.height);
+			
+			if(!r1.overlaps(r2)) {
+				continue;
+			}
+			
+			onCollisionPlayerWithEnemy(e);
+			
+			//level.enemies.removeValue(e, false);
+		}
+	}
+
+	private void onCollisionPlayerWithEnemy(Enemy e) {
+		game.setScreen(new BattleScreen(game));
 	}
 
 	private void onCollisionPlayerWithWall(Wall w) {
