@@ -1,5 +1,8 @@
 package pl.edu.wat.wcy.tim.gorky.objects;
 
+import pl.edu.wat.wcy.tim.gorky.equipment.Equipable;
+import pl.edu.wat.wcy.tim.gorky.equipment.Equipment;
+import pl.edu.wat.wcy.tim.gorky.equipment.Sword;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,10 +25,37 @@ public class Player extends AbstractGameObject {
 	private volatile boolean followingTouch;
 	private float distance;
 	
+	// statystyki
+	CharacterAttributes playerAttributes;
+	
+	// ekwipunek
+	Equipment ekwipunek;
+	
 	public Player() {
 		init();
+		initCharacterAttributes();
+		initEquipment();
 	}
 	
+	private void initEquipment() {
+		// podstawowy ekwipunek
+		Equipable startingSword = new Sword("Drewniany miecz wstydu", 3);
+	}
+
+	private void initCharacterAttributes() {
+		playerAttributes = new CharacterAttributes();
+		
+		// podstawowe statystyki
+		playerAttributes.setAtk(5);
+		playerAttributes.setDef(5);
+		playerAttributes.setMagAtk(15);
+		playerAttributes.setMagDef(5);
+		playerAttributes.setMaxHP(100);
+		playerAttributes.setMaxMP(100);
+		playerAttributes.setHP(playerAttributes.getMaxHP());
+		playerAttributes.setHP(playerAttributes.getMaxMP());
+	}
+
 	private void init() {
 		dimension.set(1.0f, 1.0f);
 		origin.set(dimension.x / 2, dimension.y / 2);
