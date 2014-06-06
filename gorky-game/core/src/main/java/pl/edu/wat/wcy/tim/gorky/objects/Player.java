@@ -26,7 +26,7 @@ public class Player extends AbstractGameObject {
 	private float distance;
 	
 	// statystyki
-	CharacterAttributes playerAttributes;
+	CharacterAttributes characterAttributes;
 	
 	// ekwipunek
 	Equipment ekwipunek;
@@ -40,20 +40,21 @@ public class Player extends AbstractGameObject {
 	private void initEquipment() {
 		// podstawowy ekwipunek
 		Equipable startingSword = new Sword("Drewniany miecz wstydu", 3);
+		//ekwipunek.
 	}
 
 	private void initCharacterAttributes() {
-		playerAttributes = new CharacterAttributes();
+		characterAttributes = new CharacterAttributes();
 		
 		// podstawowe statystyki
-		playerAttributes.setAtk(5);
-		playerAttributes.setDef(5);
-		playerAttributes.setMagAtk(15);
-		playerAttributes.setMagDef(5);
-		playerAttributes.setMaxHP(100);
-		playerAttributes.setMaxMP(100);
-		playerAttributes.setHP(playerAttributes.getMaxHP());
-		playerAttributes.setHP(playerAttributes.getMaxMP());
+		characterAttributes.setAtk(5);
+		characterAttributes.setDef(5);
+		characterAttributes.setMagAtk(15);
+		characterAttributes.setMagDef(5);
+		characterAttributes.setMaxHP(100);
+		characterAttributes.setMaxMP(100);
+		characterAttributes.setHP(characterAttributes.getMaxHP());
+		characterAttributes.setHP(characterAttributes.getMaxMP());
 	}
 
 	private void init() {
@@ -143,6 +144,22 @@ public class Player extends AbstractGameObject {
 
 	public void setFollowingTouch(boolean moving) {
 		this.followingTouch = moving;
+	}
+
+	public Equipment getEkwipunek() {
+		return ekwipunek;
+	}
+
+	public void setEkwipunek(Equipment ekwipunek) {
+		this.ekwipunek = ekwipunek;
+	}
+
+	public CharacterAttributes getCharacterAttributes() {
+		return characterAttributes;
+	}
+
+	public void setCharacterAttributes(CharacterAttributes characterAttributes) {
+		this.characterAttributes = characterAttributes;
 	}
 
 }
