@@ -1,9 +1,9 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
+import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,8 +17,9 @@ public class MenuScreen extends AbstractGameScreen {
 	private SpriteBatch batch;
 	private Texture img;
 	
-	public MenuScreen(Game game) {
+	public MenuScreen(GorkyGame game) {
 		super(game);
+		Gdx.app.log(TAG, "KONSTRUKTOR() | img: " + img + " | batch: " + batch);
 		img = Assets.loadTexture(Constants.MENU_SPLASH_SCREEN);
 	}
 	
@@ -28,11 +29,15 @@ public class MenuScreen extends AbstractGameScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
+		if(img == null) {
+			Gdx.app.log(TAG, "RENDER() | img: " + img + " | batch: " + batch);
+		}
 		batch.draw(img, 0, 0);
 		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-			game.setScreen(new GameScreen(game));
+			Gdx.app.log(TAG, "RENDER() | img: " + img + " | batch: " + batch);
+			game.setScreen(game.gameScreen);
 		}
 	}
 
@@ -46,13 +51,13 @@ public class MenuScreen extends AbstractGameScreen {
 
 	@Override
 	public void show() {
+		Gdx.app.log(TAG, "SHOW() | img: " + img + " | batch: " + batch);
 		batch = new SpriteBatch();
 	}
 
 	@Override
 	public void hide() {
-		batch.dispose();
-		//img.dispose();
+		//batch.dispose();
 	}
 
 	@Override

@@ -4,8 +4,8 @@ public class CharacterAttributes {
 	
 	private int atk;			// sila ataku
 	private int def;			// obrona przeciwko atakom fizycznym
-	private int magAtk;		// sila ataku magicznego
-	private int magDef;		// obrona przeciwko atakom magicznym
+	private int magAtk;			// sila ataku magicznego
+	private int magDef;			// obrona przeciwko atakom magicznym
 	private int HP;				// aktualne punkty zycia
 	private int maxHP;			// max punkty zycia
 	private int MP;				// aktualne punkty many

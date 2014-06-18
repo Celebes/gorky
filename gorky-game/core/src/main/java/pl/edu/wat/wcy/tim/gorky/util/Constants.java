@@ -20,4 +20,5 @@ public class Constants {
 	public static float CURRENT_MAP_WIDTH = 0.0f;
 	public static float CURRENT_MAP_HEIGHT = 0.0f;
 	
+	public static final String PREFERENCES = "gorky.prefs";
 }

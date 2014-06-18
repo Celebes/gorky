@@ -1,9 +1,9 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
+import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,7 +17,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private SpriteBatch batch;
 	private Texture img;
 
-	public BattleScreen(Game game) {
+	public BattleScreen(GorkyGame game) {
 		super(game);
 		img = Assets.loadTexture(Constants.BATTLE_SPLASH_SCREEN);
 	}
@@ -27,12 +27,14 @@ public class BattleScreen extends AbstractGameScreen {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		if(img != null) {
+			batch.begin();
+			batch.draw(img, 0, 0);
+			batch.end();
+		}
 		
 		if(Gdx.input.isTouched()) {
-			game.setScreen(new GameScreen(game));
+			game.setScreen(game.menuScreen);
 		}
 	}
 
@@ -51,8 +53,8 @@ public class BattleScreen extends AbstractGameScreen {
 
 	@Override
 	public void hide() {
-		batch.dispose();
-		img.dispose();
+		//batch.dispose();
+		//img.dispose();
 	}
 
 	@Override

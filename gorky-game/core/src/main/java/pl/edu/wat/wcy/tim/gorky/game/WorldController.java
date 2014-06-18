@@ -1,15 +1,14 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
+import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
-import pl.edu.wat.wcy.tim.gorky.screens.BattleScreen;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
 import pl.edu.wat.wcy.tim.gorky.util.CameraHelper;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -21,15 +20,17 @@ public class WorldController extends InputAdapter {
 	
 	private static final String TAG = WorldController.class.getName();
 	private WorldRenderer worldRenderer;
-	public Game game;
+	public GorkyGame game;
 	public CameraHelper cameraHelper;
 	public Level level;
+	
+	private boolean onCollisionWithEnemy = false;
 	
 	// Detekcja kolizji
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
 	
-	public WorldController(Game game) {
+	public WorldController(GorkyGame game) {
 		this.game = game;
 		init();
 	}
@@ -46,11 +47,14 @@ public class WorldController extends InputAdapter {
 	}
 
 	public void update(float deltaTime) {
-		handleDebugInput(deltaTime);
-		handleInputGame(deltaTime);
-		level.update(deltaTime);
-		testCollisions();
-		cameraHelper.update(deltaTime);
+
+			handleDebugInput(deltaTime);
+			handleInputGame(deltaTime);
+			level.update(deltaTime);
+			testCollisions();
+			cameraHelper.update(deltaTime);
+
+		
 	}
 
 	private void testCollisions() {
@@ -69,21 +73,30 @@ public class WorldController extends InputAdapter {
 		}
 		
 		// sprawdz kolizje z ENEMY
-		for(Enemy e : level.enemies) {
-			r2.set(e.position.x, e.position.y, e.bounds.width, e.bounds.height);
-			
-			if(!r1.overlaps(r2)) {
-				continue;
-			}
-			
-			onCollisionPlayerWithEnemy(e);
-			
-			//level.enemies.removeValue(e, false);
+
+			for(Enemy e : level.enemies) {
+				r2.set(e.position.x, e.position.y, e.bounds.width, e.bounds.height);
+				
+				if(!r1.overlaps(r2)) {
+					continue;
+				}
+				
+				if(onCollisionWithEnemy == true) {
+					continue;
+				}
+				
+				onCollisionPlayerWithEnemy(e);
+				
+				level.enemies.removeValue(e, false);
+
 		}
+		
 	}
 
 	private void onCollisionPlayerWithEnemy(Enemy e) {
-		game.setScreen(new BattleScreen(game));
+		//game.setScreen(new BattleScreen(game));
+		//game.setScreen(game.menuScreen);
+		onCollisionWithEnemy = true;
 	}
 
 	private void onCollisionPlayerWithWall(Wall w) {
@@ -222,7 +235,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void backToMenu() {
-		game.setScreen(new MenuScreen(game));
+		game.setScreen(game.menuScreen);
 	}
 	
 	public WorldRenderer getWorldRenderer() {
@@ -231,6 +244,10 @@ public class WorldController extends InputAdapter {
 
 	public void setWorldRenderer(WorldRenderer worldRenderer) {
 		this.worldRenderer = worldRenderer;
+	}
+
+	public boolean isCollisionWithEnemy() {
+		return onCollisionWithEnemy;
 	}
 
 }

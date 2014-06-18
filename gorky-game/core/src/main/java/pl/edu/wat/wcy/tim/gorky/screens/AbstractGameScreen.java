@@ -1,16 +1,14 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
-import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 
 public abstract class AbstractGameScreen implements Screen {
-	protected Game game;
+	protected GorkyGame game;
 	
-	public AbstractGameScreen(Game game) {
+	public AbstractGameScreen(GorkyGame game) {
 		this.game = game;
 	}
 
@@ -33,7 +31,7 @@ public abstract class AbstractGameScreen implements Screen {
 
 	@Override
 	public void resume() {
-		Assets.load();
+		//Assets.load();
 	}
 
 	@Override

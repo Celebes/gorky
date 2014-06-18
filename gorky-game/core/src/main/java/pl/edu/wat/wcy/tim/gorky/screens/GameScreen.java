@@ -1,9 +1,9 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
+import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.game.WorldController;
 import pl.edu.wat.wcy.tim.gorky.game.WorldRenderer;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,22 +16,28 @@ public class GameScreen extends AbstractGameScreen {
 	
 	private boolean paused;
 
-	public GameScreen(Game game) {
+	public GameScreen(GorkyGame game) {
 		super(game);
 	}
 	
 	@Override
 	public void render(float deltaTime) {
 		
-		if(!paused) {
-			worldController.update(deltaTime);
+		if(worldController.isCollisionWithEnemy()) {
+			game.setScreen(game.battleScreen);
+		} else {
+			if(!paused) {
+				worldController.update(deltaTime);
+			}
+			
+			// kolor jasnozielony
+			Gdx.gl.glClearColor(57.0f / 255.0f, 181.0f / 225.0f, 115.0f / 255.0f, 1.0f);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+			worldRenderer.render();
 		}
 		
-		// kolor jasnozielony
-		Gdx.gl.glClearColor(57.0f / 255.0f, 181.0f / 225.0f, 115.0f / 255.0f, 1.0f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		worldRenderer.render();
 	}
 
 	@Override
