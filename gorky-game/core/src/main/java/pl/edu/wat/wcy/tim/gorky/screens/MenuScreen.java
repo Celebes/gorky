@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ public class MenuScreen extends AbstractGameScreen {
 	
 	public MenuScreen(Game game) {
 		super(game);
+		img = Assets.loadTexture(Constants.MENU_SPLASH_SCREEN);
 	}
 	
 	@Override
@@ -45,7 +47,6 @@ public class MenuScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		img = Assets.instance.menuTexture;
 	}
 
 	@Override

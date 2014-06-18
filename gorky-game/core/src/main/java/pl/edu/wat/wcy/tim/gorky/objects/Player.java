@@ -63,9 +63,9 @@ public class Player extends AbstractGameObject {
 		dimension.set(1.0f, 1.0f);
 		origin.set(dimension.x / 2, dimension.y / 2);
 		
-		regPlayerUp = Assets.instance.player.player_up;
-		regPlayerRight = Assets.instance.player.player_right;
-		regPlayerDown = Assets.instance.player.player_down;
+		regPlayerUp = Assets.player_up;
+		regPlayerRight = Assets.player_right;
+		regPlayerDown = Assets.player_down;
 		
 		viewDirection = VIEW_DIRECTION.DOWN;
 		

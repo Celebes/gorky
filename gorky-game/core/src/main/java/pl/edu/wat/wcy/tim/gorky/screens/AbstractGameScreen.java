@@ -33,11 +33,11 @@ public abstract class AbstractGameScreen implements Screen {
 
 	@Override
 	public void resume() {
-		Assets.instance.init(new AssetManager());
+		Assets.load();
 	}
 
 	@Override
 	public void dispose() {
-		Assets.instance.dispose();
+		//Assets2.instance.dispose();
 	}
 }

@@ -9,6 +9,10 @@ public class Constants {
 	// lokalizacja pliku zawieraj¹cego atlas textur
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/gorky.pack";
 	
+	// splash screeny
+	public static final String MENU_SPLASH_SCREEN = "images/LOGO_TIM.png";
+	public static final String BATTLE_SPLASH_SCREEN = "images/BATTLE_UNDER_CONSTRUCTION.gif";
+	
 	// lokalizacja pliku opisujacego poziom 01
 	public static final String LEVEL_01 = "levels/level-01.png";
 	public static final String LEVEL_02 = "levels/level-02.png";

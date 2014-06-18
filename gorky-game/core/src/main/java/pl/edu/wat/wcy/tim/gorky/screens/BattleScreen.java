@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ public class BattleScreen extends AbstractGameScreen {
 
 	public BattleScreen(Game game) {
 		super(game);
+		img = Assets.loadTexture(Constants.BATTLE_SPLASH_SCREEN);
 	}
 
 	@Override
@@ -45,13 +47,12 @@ public class BattleScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		img = Assets.instance.battleTexture;
 	}
 
 	@Override
 	public void hide() {
 		batch.dispose();
-		//img.dispose();
+		img.dispose();
 	}
 
 	@Override

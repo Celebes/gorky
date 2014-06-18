@@ -16,7 +16,7 @@ public class Wall extends AbstractGameObject {
 		dimension.set(1.0f, 1.0f);
 		origin.set(0.5f, 0.5f);
 		bounds.set(0, 0, dimension.x, dimension.y);
-		regWall = Assets.instance.wall.wall;
+		regWall = Assets.wall;
 	}
 
 	@Override
