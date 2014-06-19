@@ -19,8 +19,6 @@ public class MenuScreen extends AbstractGameScreen {
 	
 	public MenuScreen(GorkyGame game) {
 		super(game);
-		Gdx.app.log(TAG, "KONSTRUKTOR() | img: " + img + " | batch: " + batch);
-		img = Assets.loadTexture(Constants.MENU_SPLASH_SCREEN);
 	}
 	
 	@Override
@@ -29,15 +27,11 @@ public class MenuScreen extends AbstractGameScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		if(img == null) {
-			Gdx.app.log(TAG, "RENDER() | img: " + img + " | batch: " + batch);
-		}
 		batch.draw(img, 0, 0);
 		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-			Gdx.app.log(TAG, "RENDER() | img: " + img + " | batch: " + batch);
-			game.setScreen(game.gameScreen);
+			game.setScreen(new GameScreen(game));
 		}
 	}
 
@@ -51,13 +45,14 @@ public class MenuScreen extends AbstractGameScreen {
 
 	@Override
 	public void show() {
-		Gdx.app.log(TAG, "SHOW() | img: " + img + " | batch: " + batch);
 		batch = new SpriteBatch();
+		img = Assets.instance.loadTexture(Constants.MENU_SPLASH_SCREEN);
 	}
 
 	@Override
 	public void hide() {
-		//batch.dispose();
+		batch.dispose();
+		img.dispose();
 	}
 
 	@Override

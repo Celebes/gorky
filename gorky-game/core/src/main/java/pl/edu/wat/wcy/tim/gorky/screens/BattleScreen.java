@@ -19,7 +19,7 @@ public class BattleScreen extends AbstractGameScreen {
 
 	public BattleScreen(GorkyGame game) {
 		super(game);
-		img = Assets.loadTexture(Constants.BATTLE_SPLASH_SCREEN);
+		
 	}
 
 	@Override
@@ -27,14 +27,12 @@ public class BattleScreen extends AbstractGameScreen {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if(img != null) {
-			batch.begin();
-			batch.draw(img, 0, 0);
-			batch.end();
-		}
+		batch.begin();
+		batch.draw(img, 0, 0);
+		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-			game.setScreen(game.menuScreen);
+			game.setScreen(new GameScreen(game));
 		}
 	}
 
@@ -49,12 +47,13 @@ public class BattleScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
+		img = Assets.instance.loadTexture(Constants.BATTLE_SPLASH_SCREEN);
 	}
 
 	@Override
 	public void hide() {
-		//batch.dispose();
-		//img.dispose();
+		batch.dispose();
+		img.dispose();
 	}
 
 	@Override

@@ -47,14 +47,11 @@ public class WorldController extends InputAdapter {
 	}
 
 	public void update(float deltaTime) {
-
-			handleDebugInput(deltaTime);
-			handleInputGame(deltaTime);
-			level.update(deltaTime);
-			testCollisions();
-			cameraHelper.update(deltaTime);
-
-		
+		handleDebugInput(deltaTime);
+		handleInputGame(deltaTime);
+		level.update(deltaTime);
+		testCollisions();
+		cameraHelper.update(deltaTime);
 	}
 
 	private void testCollisions() {
@@ -74,28 +71,25 @@ public class WorldController extends InputAdapter {
 		
 		// sprawdz kolizje z ENEMY
 
-			for(Enemy e : level.enemies) {
-				r2.set(e.position.x, e.position.y, e.bounds.width, e.bounds.height);
-				
-				if(!r1.overlaps(r2)) {
-					continue;
-				}
-				
-				if(onCollisionWithEnemy == true) {
-					continue;
-				}
-				
-				onCollisionPlayerWithEnemy(e);
-				
-				level.enemies.removeValue(e, false);
-
+		for(Enemy e : level.enemies) {
+			r2.set(e.position.x, e.position.y, e.bounds.width, e.bounds.height);
+			
+			if(!r1.overlaps(r2)) {
+				continue;
+			}
+			
+			if(onCollisionWithEnemy == true) {
+				continue;
+			}
+			
+			onCollisionPlayerWithEnemy(e);
+			
+			//level.enemies.removeValue(e, false);
 		}
 		
 	}
 
 	private void onCollisionPlayerWithEnemy(Enemy e) {
-		//game.setScreen(new BattleScreen(game));
-		//game.setScreen(game.menuScreen);
 		onCollisionWithEnemy = true;
 	}
 
@@ -235,7 +229,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void backToMenu() {
-		game.setScreen(game.menuScreen);
+		game.setScreen(new MenuScreen(game));
 	}
 	
 	public WorldRenderer getWorldRenderer() {

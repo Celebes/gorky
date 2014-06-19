@@ -16,7 +16,7 @@ public class Enemy extends AbstractGameObject {
 	private void init() {
 		dimension.set(1.0f, 1.0f);
 		origin.set(dimension.x / 2, dimension.y / 2);
-		regEnemy = Assets.enemy;
+		regEnemy = Assets.instance.enemy.enemy;
 		bounds.set(0, 0, dimension.x, dimension.y);
 	}
 

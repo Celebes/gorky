@@ -16,7 +16,7 @@ public class Grass extends AbstractGameObject {
 	private void init() {
 		dimension.set(1.0f, 1.0f);
 		origin.set(0.5f, 0.5f);
-		regGrass = Assets.grass;
+		regGrass = Assets.instance.grass.grass;
 	}
 
 	@Override
