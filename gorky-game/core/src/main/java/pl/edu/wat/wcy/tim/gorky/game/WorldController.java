@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.database.DBTest;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
@@ -223,6 +224,11 @@ public class WorldController extends InputAdapter {
 		// wroc do menu
 		else if(keycode == Keys.ESCAPE || keycode == Keys.BACK) {
 			backToMenu();
+		}
+		
+		// test bazy danych
+		else if(keycode == Keys.F) {
+			DBTest dbtest = new DBTest();
 		}
 		
 		return false;
