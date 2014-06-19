@@ -1,0 +1,61 @@
+
+gorky-ui.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 1, 429
+  size: 800, 480
+  orig: 800, 480
+  offset: 0, 0
+  index: -1
+knight
+  rotate: false
+  xy: 1, 152
+  size: 164, 275
+  orig: 164, 275
+  offset: 0, 0
+  index: -1
+info
+  rotate: false
+  xy: 167, 347
+  size: 348, 80
+  orig: 348, 80
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 167, 229
+  size: 302, 116
+  orig: 302, 116
+  offset: 0, 0
+  index: -1
+options-up
+  rotate: false
+  xy: 803, 759
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+options-dn
+  rotate: false
+  xy: 1, 1
+  size: 150, 149
+  orig: 150, 149
+  offset: 0, 0
+  index: -1
+play-dn
+  rotate: false
+  xy: 803, 608
+  size: 150, 149
+  orig: 150, 149
+  offset: 0, 0
+  index: -1
+play-up
+  rotate: false
+  xy: 803, 457
+  size: 150, 149
+  orig: 150, 149
+  offset: 0, 0
+  index: -1

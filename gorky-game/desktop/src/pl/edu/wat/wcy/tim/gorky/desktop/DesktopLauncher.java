@@ -20,7 +20,7 @@ public class DesktopLauncher {
 			settings.maxHeight = 1024;
 			settings.debug = drawDebugOutline;
 			TexturePacker2.process(settings, "assets-raw/images", "../android/assets/images", "gorky.pack");
-			//TexturePacker2.process(settings, "assets-raw/images-ui", "../android/assets/images", "gorky-ui.pack");
+			TexturePacker2.process(settings, "assets-raw/images-ui", "../android/assets/images", "gorky-ui.pack");
 		}
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
