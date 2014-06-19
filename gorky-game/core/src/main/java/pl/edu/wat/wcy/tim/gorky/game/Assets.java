@@ -79,6 +79,9 @@ public class Assets implements Disposable, AssetErrorListener {
 			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		}
 		
+		// utworz czcionki
+		fonts = new AssetFonts();
+		
 		// utworz obiekty
 		grass = new AssetGrass(atlasGameScreen);
 		wall = new AssetWall(atlasGameScreen);

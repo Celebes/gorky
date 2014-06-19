@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MenuScreen extends AbstractGameScreen {
 	
@@ -373,12 +374,14 @@ public class MenuScreen extends AbstractGameScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		//stage.setViewport(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+		Gdx.input.setInputProcessor(stage);
+		rebuildStage();
 	}
 
 	@Override
 	public void show() {
-		stage = new Stage();
+		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
 	}

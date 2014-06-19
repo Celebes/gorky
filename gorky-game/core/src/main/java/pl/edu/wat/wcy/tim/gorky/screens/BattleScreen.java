@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BattleScreen extends AbstractGameScreen {
 	
@@ -160,11 +161,15 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+		Gdx.input.setInputProcessor(stage);
+		rebuildStage();
+	}
 
 	@Override
 	public void show() {
-		stage = new Stage();
+		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
 	}
