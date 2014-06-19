@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Gdx;
@@ -25,11 +26,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class MenuScreen extends AbstractGameScreen {
 	
 	private static final String TAG = MenuScreen.class.getName();
-	
-	//private SpriteBatch batch;
-	//private Texture img;
-	
-	// GUI
+
 	private Stage stage;
 	private Skin skinGorky;
 	
@@ -37,7 +34,7 @@ public class MenuScreen extends AbstractGameScreen {
 	private Image imgBackground;
 	private Image imgLogo;
 	private Image imgInfo;
-	private Image imgKnight;
+	private KnightActor knightActor;
 	private Button btnMenuPlay;
 	private Button btnMenuOptions;
 	
@@ -103,7 +100,6 @@ public class MenuScreen extends AbstractGameScreen {
 	private Table buildControlsLayer() {
 		Table layer = new Table();
 		layer.right().bottom();
-		layer.setPosition(5, 5);
 
 		// PLAY
 		btnMenuPlay = new Button(skinGorky, "play");
@@ -175,9 +171,9 @@ public class MenuScreen extends AbstractGameScreen {
 	private Table buildObjectsLayer() {
 		Table layer = new Table();
 		
-		imgKnight = new Image(skinGorky, "knight");
-		layer.addActor(imgKnight);
-		imgKnight.setPosition(115, 85);
+		knightActor = new KnightActor();
+		layer.addActor(knightActor);
+		knightActor.setPosition(115, 115);
 		
 		return layer;
 	}

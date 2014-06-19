@@ -27,7 +27,14 @@ public class Constants {
 	public static final float VIEWPORT_GUI_HEIGHT = 480.0f;
 	
 	public static final String TEXTURE_ATLAS_UI = "images/gorky-ui.pack";
+	public static final String SKIN_GORKY_UI = "images/gorky-ui.json";
+	
 	public static final String TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
 	public static final String SKIN_LIBGDX_UI = "images/uiskin.json";
-	public static final String SKIN_GORKY_UI = "images/gorky-ui.json";
+	
+	public static final String TEXTURE_ATLAS_BATTLE = "images/gorky-battle.pack";
+	public static final String SKIN_GORKY_BATTLE = "images/gorky-battle.json";
+	
+	public static final String TEXTURE_ATLAS_KNIGHT_BATTLE = "images/gorky-knight.pack";
+	
 }

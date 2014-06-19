@@ -8,8 +8,10 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 public class Assets implements Disposable, AssetErrorListener {
@@ -23,9 +25,8 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetPlayer player;
 	public AssetEnemy enemy;
 	
-	// obrazki
-	public Texture menuTexture;
-	public Texture battleTexture;
+	// animowanie aktorzy z battle screen
+	public AssetKnightBattle knight;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -43,12 +44,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		// ustaw error handlera
 		assetManager.setErrorListener(this);
 		
-		// wczytaj atlas textur
+		// wczytaj atlas textur dla GameScreen
 		assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
-		
-		// wczytaj tekstury
-		assetManager.load(Constants.MENU_SPLASH_SCREEN, Texture.class);
-		assetManager.load(Constants.BATTLE_SPLASH_SCREEN, Texture.class);
+		assetManager.load(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE, TextureAtlas.class);
 		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
@@ -59,22 +57,21 @@ public class Assets implements Disposable, AssetErrorListener {
 			Gdx.app.debug(TAG, "asset: " + a);
 		}
 		
-		TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
-		
-		// zapisz tekstury do zmiennych
-		menuTexture = assetManager.get(Constants.MENU_SPLASH_SCREEN, Texture.class);
-		battleTexture = assetManager.get(Constants.BATTLE_SPLASH_SCREEN, Texture.class);
+		TextureAtlas atlasGameScreen = assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
 		
 		// wlacz filtrowanie pixeli zeby byly bardziej gladkie
-		for(Texture t : atlas.getTextures()) {
+		for(Texture t : atlasGameScreen.getTextures()) {
 			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		}
 		
 		// utworz obiekty
-		grass = new AssetGrass(atlas);
-		wall = new AssetWall(atlas);
-		player = new AssetPlayer(atlas);
-		enemy = new AssetEnemy(atlas);
+		grass = new AssetGrass(atlasGameScreen);
+		wall = new AssetWall(atlasGameScreen);
+		player = new AssetPlayer(atlasGameScreen);
+		enemy = new AssetEnemy(atlasGameScreen);
+		
+		TextureAtlas atlasKnightBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE);
+		knight = new AssetKnightBattle(atlasKnightBattleScreen);
 	}
 	
 	@Override
@@ -112,6 +109,34 @@ public class Assets implements Disposable, AssetErrorListener {
 			player_down = atlas.findRegion("player_knight_down");
 			player_right = atlas.findRegion("player_knight_right");
 			player_up = atlas.findRegion("player_knight_up");
+		}
+	}
+	
+	// postac gracza w czasie walki
+	public class AssetKnightBattle {
+		public final Animation animNormal;
+		public final Animation animDash;
+		public final Animation animAttack;
+		public final Animation animDamage;
+		
+		public AssetKnightBattle(TextureAtlas atlas) {
+			Array<AtlasRegion> regions = null;
+			
+			// normal
+			regions = atlas.findRegions("anim_knight_normal");
+			animNormal = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			
+			// dash
+			regions = atlas.findRegions("anim_knight_dash");
+			animDash = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			
+			// attack
+			regions = atlas.findRegions("anim_knight_attack");
+			animAttack = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			
+			// damage
+			regions = atlas.findRegions("anim_knight_damage");
+			animDamage = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 		}
 	}
 	

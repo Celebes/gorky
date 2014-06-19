@@ -1,54 +1,54 @@
 
-gorky-ui.png
+gorky-battle.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 503
+  xy: 1, 1
   size: 800, 480
   orig: 800, 480
   offset: 0, 0
   index: -1
-info
+attack-dn
   rotate: false
-  xy: 1, 421
-  size: 348, 80
-  orig: 348, 80
+  xy: 803, 381
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-logo
+attack-up
   rotate: false
-  xy: 1, 303
-  size: 302, 116
-  orig: 302, 116
+  xy: 803, 279
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-options-up
+heal-dn
   rotate: false
-  xy: 803, 833
-  size: 150, 150
-  orig: 150, 150
+  xy: 905, 381
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-options-dn
+heal-up
   rotate: false
-  xy: 1, 152
-  size: 150, 149
-  orig: 150, 149
+  xy: 803, 177
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-play-dn
+magic-dn
   rotate: false
-  xy: 803, 682
-  size: 150, 149
-  orig: 150, 149
+  xy: 905, 279
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-play-up
+magic-up
   rotate: false
-  xy: 1, 1
-  size: 150, 149
-  orig: 150, 149
+  xy: 803, 75
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1

@@ -9,17 +9,31 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 public class BattleScreen extends AbstractGameScreen {
 	
 	private static final String TAG = BattleScreen.class.getName();
 	
-	private SpriteBatch batch;
-	private Texture img;
+	private Stage stage;
+	private Skin skinGorkyBattle;
+	
+	private Image imgBackground;
+	private Button btnAttack;
+	private Button btnMagic;
+	private Button btnHeal;
 
 	public BattleScreen(GorkyGame game) {
 		super(game);
-		
 	}
 
 	@Override
@@ -27,13 +41,85 @@ public class BattleScreen extends AbstractGameScreen {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		stage.act(deltaTime);
+		stage.draw();
+		Table.drawDebug(stage);
+	}
+	
+	private void rebuildStage () {
+		skinGorkyBattle = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_BATTLE), new TextureAtlas(Constants.TEXTURE_ATLAS_BATTLE));
 		
-		if(Gdx.input.isTouched()) {
-			game.setScreen(new GameScreen(game));
-		}
+		Table layerBackground = buildBackgroundLayer();
+		Table layerControls = buildControlsLayer();
+		
+		stage.clear();
+		Stack stack = new Stack();
+		stage.addActor(stack);
+		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
+		stack.add(layerBackground);
+		stack.add(layerControls);
+	}
+
+	private Table buildControlsLayer() {
+		Table layer = new Table();
+		
+		layer.center().bottom();
+		
+		// ATTACK
+		btnAttack = new Button(skinGorkyBattle, "attack");
+		layer.add(btnAttack).pad(10);
+		
+		btnAttack.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onAttackClicked();
+			}
+		});
+		
+		// MAGIC
+		btnMagic = new Button(skinGorkyBattle, "magic");
+		layer.add(btnMagic).pad(10);
+		
+		btnMagic.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onMagicClicked();
+			}
+		});
+		
+		// HEAL
+		btnHeal = new Button(skinGorkyBattle, "heal");
+		layer.add(btnHeal).pad(10);
+		
+		btnHeal.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onHealClicked();
+			}
+		});
+		
+		return layer;
+	}
+	
+	private void onAttackClicked() {
+		game.setScreen(new GameScreen(game));
+	}
+	
+	private void onMagicClicked() {
+			
+	}
+	
+	private void onHealClicked() {
+		
+	}
+
+	private Table buildBackgroundLayer() {
+		Table layer = new Table();
+		
+		imgBackground = new Image(skinGorkyBattle, "background");
+		layer.add(imgBackground);
+		
+		return layer;
 	}
 
 	@Override
@@ -46,14 +132,14 @@ public class BattleScreen extends AbstractGameScreen {
 
 	@Override
 	public void show() {
-		batch = new SpriteBatch();
-		img = Assets.instance.loadTexture(Constants.BATTLE_SPLASH_SCREEN);
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		rebuildStage();
 	}
 
 	@Override
 	public void hide() {
-		batch.dispose();
-		img.dispose();
+		stage.dispose();
 	}
 
 	@Override
