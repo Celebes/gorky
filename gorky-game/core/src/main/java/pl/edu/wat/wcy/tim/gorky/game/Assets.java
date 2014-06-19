@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.I18NBundle;
 
 public class Assets implements Disposable, AssetErrorListener {
 	public static final String TAG = Assets.class.getName();
@@ -29,6 +31,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetKnightBattle knight;
 	public AssetOrcBattle orc;
 	
+	// lokalizacja
+	public I18NBundle stringBundle;
+	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
 	
@@ -41,6 +46,10 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	public void init(AssetManager assetManager) {
 		this.assetManager = assetManager;
+		
+		// wczytaj locale
+		FileHandle baseFileHandle = Gdx.files.internal("i18n/strings");
+		stringBundle = I18NBundle.createBundle(baseFileHandle);
 		
 		// ustaw error handlera
 		assetManager.setErrorListener(this);
