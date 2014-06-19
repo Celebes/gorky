@@ -180,8 +180,6 @@ public class MenuScreen extends AbstractGameScreen {
 
 	private Table buildOptionsWindowLayer () {
 		winOptions = new Window(Assets.instance.stringBundle.get("menu_options_header_window"), skinLibgdx);
-		//winOptions.setSize(500, 500);
-		winOptions.setScale(1.2f);
 		// + Audio Settings: Sound/Music CheckBox and Volume Slider
 		winOptions.add(buildOptWinAudioSettings()).row();
 		// + Debug: Show FPS Counter
@@ -196,7 +194,7 @@ public class MenuScreen extends AbstractGameScreen {
 		// Let TableLayout recalculate widget sizes and positions
 		winOptions.pack();
 		// Move options window to bottom right corner
-		winOptions.setPosition(Constants.VIEWPORT_GUI_WIDTH - winOptions.getWidth() - 125, 50);
+		winOptions.setPosition(Constants.VIEWPORT_GUI_WIDTH - winOptions.getWidth() - 50, 50);
 		
 		return winOptions;
 	}
@@ -219,6 +217,7 @@ public class MenuScreen extends AbstractGameScreen {
 		// + Checkbox, "Sound" label, sound volume slider
 		chkSound = new CheckBox("", skinLibgdx);
 		chkSound.padBottom(10);
+		chkSound.padTop(10);
 		chkSound.getCells().get(0).size(CUSTOM_CHECKBOX_SIZE);
 		tbl.add(chkSound);
 		tbl.add(new Label(Assets.instance.stringBundle.get("menu_options_audio_sound"), skinLibgdx));
@@ -240,14 +239,15 @@ public class MenuScreen extends AbstractGameScreen {
 		Table tbl = new Table();
 		// + Title: "Debug"
 		tbl.pad(10, 10, 0, 10);
-		tbl.add(new Label("Debug", skinLibgdx, "default-font", Color.RED)).colspan(3);
+		tbl.add(new Label(Assets.instance.stringBundle.get("menu_options_header_debug"), skinLibgdx, "default-font", Color.RED)).colspan(3);
 		tbl.row();
 		tbl.columnDefaults(0).padRight(10);
 		tbl.columnDefaults(1).padRight(10);
 		// + Checkbox, "Show FPS Counter" label
 		chkShowFpsCounter = new CheckBox("", skinLibgdx);
 		chkShowFpsCounter.getCells().get(0).size(CUSTOM_CHECKBOX_SIZE);
-		tbl.add(new Label("Show FPS Counter", skinLibgdx));
+		chkShowFpsCounter.padTop(10);
+		tbl.add(new Label(Assets.instance.stringBundle.get("menu_options_debug_fps"), skinLibgdx));
 		tbl.add(chkShowFpsCounter);
 		tbl.row();
 		return tbl;
@@ -270,7 +270,7 @@ public class MenuScreen extends AbstractGameScreen {
 		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
 		tbl.row();
 		// + Save Button with event handler
-		btnWinOptSave = new TextButton("Save", skinLibgdx);
+		btnWinOptSave = new TextButton(Assets.instance.stringBundle.get("global_save"), skinLibgdx);
 		tbl.add(btnWinOptSave).padRight(30);
 		btnWinOptSave.addListener(new ChangeListener() {
 			@Override
@@ -279,7 +279,7 @@ public class MenuScreen extends AbstractGameScreen {
 			}
 		});
 		// + Cancel Button with event handler
-		btnWinOptCancel = new TextButton("Cancel", skinLibgdx);
+		btnWinOptCancel = new TextButton(Assets.instance.stringBundle.get("global_cancel"), skinLibgdx);
 		tbl.add(btnWinOptCancel);
 		btnWinOptCancel.addListener(new ChangeListener() {
 			@Override

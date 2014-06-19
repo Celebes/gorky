@@ -10,6 +10,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
@@ -33,6 +34,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	// lokalizacja
 	public I18NBundle stringBundle;
+	
+	// czcionka
+	public AssetFonts fonts;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -171,6 +175,28 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		public AssetEnemy(TextureAtlas atlas) {
 			enemy = atlas.findRegion("enemy");
+		}
+	}
+	
+	public class AssetFonts {
+		public final BitmapFont defaultSmall;
+		public final BitmapFont defaultNormal;
+		public final BitmapFont defaultBig;
+		
+		public AssetFonts() {
+			defaultSmall = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
+			defaultNormal = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
+			defaultBig = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
+			
+			// rozmiary czcionek
+			defaultSmall.setScale(0.75f);
+			defaultNormal.setScale(1.0f);
+			defaultBig.setScale(2.0f);
+			
+			// wlacz 'linear-filtering' by wygladzic czcionki
+			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		}
 	}
 	
