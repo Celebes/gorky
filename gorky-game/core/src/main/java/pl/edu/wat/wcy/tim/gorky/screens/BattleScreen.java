@@ -1,6 +1,9 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.actors.AnimatedActor;
+import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
+import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
@@ -31,6 +34,10 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnAttack;
 	private Button btnMagic;
 	private Button btnHeal;
+	
+	// aktorzy bioracy udzial w walce..
+	private KnightActor knightActor;
+	private AnimatedActor enemyActor;
 
 	public BattleScreen(GorkyGame game) {
 		super(game);
@@ -51,13 +58,38 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		Table layerBackground = buildBackgroundLayer();
 		Table layerControls = buildControlsLayer();
+		Table layerPlayer = buildPlayerLayer();
+		Table layerEnemy = buildEnemyLayer();
 		
 		stage.clear();
 		Stack stack = new Stack();
 		stage.addActor(stack);
 		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
 		stack.add(layerBackground);
+		stack.add(layerPlayer);
+		stack.add(layerEnemy);
 		stack.add(layerControls);
+	}
+
+	private Table buildEnemyLayer() {
+		Table layer = new Table();
+		
+		// tymczasowo ORC zawsze, pozniej bedzie w konsruktorze zmieniany enemy losowo..
+		enemyActor = new OrcActor();
+		layer.addActor(enemyActor);
+		enemyActor.setPosition(550, 115);
+		
+		return layer;
+	}
+
+	private Table buildPlayerLayer() {
+		Table layer = new Table();
+		
+		knightActor = new KnightActor();
+		layer.addActor(knightActor);
+		knightActor.setPosition(115, 115);
+		
+		return layer;
 	}
 
 	private Table buildControlsLayer() {

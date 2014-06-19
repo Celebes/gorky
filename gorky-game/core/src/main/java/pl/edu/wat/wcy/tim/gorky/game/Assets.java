@@ -27,6 +27,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	// animowanie aktorzy z battle screen
 	public AssetKnightBattle knight;
+	public AssetOrcBattle orc;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -47,6 +48,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		// wczytaj atlas textur dla GameScreen
 		assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE, TextureAtlas.class);
+		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
 		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
@@ -72,6 +74,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlasKnightBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE);
 		knight = new AssetKnightBattle(atlasKnightBattleScreen);
+		
+		TextureAtlas atlasOrcBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_ORC_BATTLE);
+		orc = new AssetOrcBattle(atlasOrcBattleScreen);
 	}
 	
 	@Override
@@ -124,19 +129,31 @@ public class Assets implements Disposable, AssetErrorListener {
 			
 			// normal
 			regions = atlas.findRegions("anim_knight_normal");
-			animNormal = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animNormal = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 			
 			// dash
 			regions = atlas.findRegions("anim_knight_dash");
-			animDash = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animDash = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 			
 			// attack
 			regions = atlas.findRegions("anim_knight_attack");
-			animAttack = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animAttack = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 			
 			// damage
 			regions = atlas.findRegions("anim_knight_damage");
-			animDamage = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animDamage = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+		}
+	}
+	
+	public class AssetOrcBattle {
+		public final Animation animNormal;
+		
+		public AssetOrcBattle(TextureAtlas atlas) {
+			Array<AtlasRegion> regions = null;
+			
+			// normal
+			regions = atlas.findRegions("anim_orc_normal");
+			animNormal = new Animation(1.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 		}
 	}
 	

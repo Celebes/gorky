@@ -36,5 +36,6 @@ public class Constants {
 	public static final String SKIN_GORKY_BATTLE = "images/gorky-battle.json";
 	
 	public static final String TEXTURE_ATLAS_KNIGHT_BATTLE = "images/gorky-knight.pack";
+	public static final String TEXTURE_ATLAS_ORC_BATTLE = "images/gorky-orc.pack";
 	
 }

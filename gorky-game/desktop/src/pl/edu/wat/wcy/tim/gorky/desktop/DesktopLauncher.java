@@ -23,6 +23,7 @@ public class DesktopLauncher {
 			TexturePacker2.process(settings, "assets-raw/images-ui", "../android/assets/images", "gorky-ui.pack");
 			TexturePacker2.process(settings, "assets-raw/images-battle", "../android/assets/images", "gorky-battle.pack");
 			TexturePacker2.process(settings, "assets-raw/images-knight", "../android/assets/images", "gorky-knight.pack");
+			TexturePacker2.process(settings, "assets-raw/images-orc", "../android/assets/images", "gorky-orc.pack");
 		}
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();

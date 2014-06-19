@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 public class KnightActor extends AnimatedActor {
 	
-	// animacje
 	private Animation animNormal;
 	private Animation animDash;
 	private Animation animAttack;

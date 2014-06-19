@@ -1,0 +1,19 @@
+
+gorky-orc.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+anim_orc_normal
+  rotate: false
+  xy: 1, 1
+  size: 170, 242
+  orig: 170, 242
+  offset: 0, 0
+  index: 2
+anim_orc_normal
+  rotate: false
+  xy: 173, 4
+  size: 167, 239
+  orig: 167, 239
+  offset: 0, 0
+  index: 1
