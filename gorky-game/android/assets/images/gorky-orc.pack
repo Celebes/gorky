@@ -3,59 +3,122 @@ gorky-orc.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+anim_orc_attack
+  rotate: false
+  xy: 1, 736
+  size: 289, 286
+  orig: 289, 286
+  offset: 0, 0
+  index: 4
+anim_orc_attack
+  rotate: false
+  xy: 1, 471
+  size: 254, 263
+  orig: 254, 263
+  offset: 0, 0
+  index: 11
 anim_orc_damage
   rotate: false
-  xy: 1, 203
+  xy: 292, 741
   size: 188, 281
   orig: 188, 281
   offset: 0, 0
   index: 1
+anim_orc_attack
+  rotate: false
+  xy: 482, 831
+  size: 266, 191
+  orig: 266, 191
+  offset: 0, 0
+  index: 10
 anim_orc_damage
   rotate: false
-  xy: 191, 200
+  xy: 1, 185
   size: 173, 284
   orig: 173, 284
   offset: 0, 0
   index: 2
+anim_orc_attack
+  rotate: false
+  xy: 750, 846
+  size: 269, 176
+  orig: 269, 176
+  offset: 0, 0
+  index: 8
+anim_orc_attack
+  rotate: false
+  xy: 1, 1
+  size: 254, 182
+  orig: 254, 182
+  offset: 0, 0
+  index: 9
+anim_orc_attack
+  rotate: false
+  xy: 482, 674
+  size: 284, 155
+  orig: 284, 155
+  offset: 0, 0
+  index: 5
+anim_orc_attack
+  rotate: false
+  xy: 176, 201
+  size: 146, 268
+  orig: 146, 268
+  offset: 0, 0
+  index: 1
+anim_orc_attack
+  rotate: false
+  xy: 768, 614
+  size: 170, 230
+  orig: 170, 230
+  offset: 0, 0
+  index: 13
+anim_orc_attack
+  rotate: false
+  xy: 257, 474
+  size: 167, 260
+  orig: 167, 260
+  offset: 0, 0
+  index: 12
+anim_orc_attack
+  rotate: false
+  xy: 426, 517
+  size: 284, 155
+  orig: 284, 155
+  offset: 0, 0
+  index: 7
+anim_orc_attack
+  rotate: false
+  xy: 324, 204
+  size: 147, 268
+  orig: 147, 268
+  offset: 0, 0
+  index: 3
+anim_orc_attack
+  rotate: false
+  xy: 473, 250
+  size: 150, 265
+  orig: 150, 265
+  offset: 0, 0
+  index: 2
 anim_orc_normal
   rotate: false
-  xy: 366, 242
+  xy: 625, 273
   size: 170, 242
   orig: 170, 242
   offset: 0, 0
   index: 2
 anim_orc_normal
   rotate: false
-  xy: 538, 245
+  xy: 797, 373
   size: 167, 239
   orig: 167, 239
   offset: 0, 0
   index: 1
 anim_orc_attack
   rotate: false
-  xy: 1, 1
-  size: 188, 200
-  orig: 188, 200
+  xy: 257, 47
+  size: 283, 152
+  orig: 283, 152
   offset: 0, 0
-  index: 4
-anim_orc_attack
-  rotate: false
-  xy: 707, 296
-  size: 197, 188
-  orig: 197, 188
-  offset: 0, 0
-  index: 1
-anim_orc_attack
-  rotate: false
-  xy: 191, 10
-  size: 174, 188
-  orig: 174, 188
-  offset: 0, 0
-  index: 3
-anim_orc_attack
-  rotate: false
-  xy: 367, 46
-  size: 138, 194
-  orig: 138, 194
-  offset: 0, 0
-  index: 2
+  index: 6
