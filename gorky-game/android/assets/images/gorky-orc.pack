@@ -3,17 +3,59 @@ gorky-orc.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+anim_orc_damage
+  rotate: false
+  xy: 1, 203
+  size: 188, 281
+  orig: 188, 281
+  offset: 0, 0
+  index: 1
+anim_orc_damage
+  rotate: false
+  xy: 191, 200
+  size: 173, 284
+  orig: 173, 284
+  offset: 0, 0
+  index: 2
 anim_orc_normal
   rotate: false
-  xy: 1, 1
+  xy: 366, 242
   size: 170, 242
   orig: 170, 242
   offset: 0, 0
   index: 2
 anim_orc_normal
   rotate: false
-  xy: 173, 4
+  xy: 538, 245
   size: 167, 239
   orig: 167, 239
   offset: 0, 0
   index: 1
+anim_orc_attack
+  rotate: false
+  xy: 1, 1
+  size: 188, 200
+  orig: 188, 200
+  offset: 0, 0
+  index: 4
+anim_orc_attack
+  rotate: false
+  xy: 707, 296
+  size: 197, 188
+  orig: 197, 188
+  offset: 0, 0
+  index: 1
+anim_orc_attack
+  rotate: false
+  xy: 191, 10
+  size: 174, 188
+  orig: 174, 188
+  offset: 0, 0
+  index: 3
+anim_orc_attack
+  rotate: false
+  xy: 367, 46
+  size: 138, 194
+  orig: 138, 194
+  offset: 0, 0
+  index: 2

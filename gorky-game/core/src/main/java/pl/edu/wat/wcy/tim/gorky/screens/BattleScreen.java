@@ -1,27 +1,31 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.AnimatedActor;
+import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
-import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BattleScreen extends AbstractGameScreen {
@@ -37,8 +41,11 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnHeal;
 	
 	// aktorzy bioracy udzial w walce..
-	private KnightActor knightActor;
-	private AnimatedActor enemyActor;
+	private BattleActor knightActor;
+	private BattleActor enemyActor;
+	
+	// tura
+	private boolean playerTurn = true;
 
 	public BattleScreen(GorkyGame game) {
 		super(game);
@@ -52,6 +59,18 @@ public class BattleScreen extends AbstractGameScreen {
 		stage.act(deltaTime);
 		stage.draw();
 		Table.drawDebug(stage);
+		
+		if(playerTurn == true) {
+			if(knightActor.isTurnFinished()) {
+				playerTurn = false;
+				enemyActor.setAttackAnimation();
+			}
+		} else {
+			if(enemyActor.isTurnFinished()) {
+				playerTurn = true;
+				showMenuButtons(true);
+			}
+		}
 	}
 	
 	private void rebuildStage () {
@@ -135,15 +154,41 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void onAttackClicked() {
-		game.setScreen(new GameScreen(game));
+		knightActor.setAttackAnimation();
+		showMenuButtons(false);
 	}
 	
 	private void onMagicClicked() {
-			
+
 	}
 	
 	private void onHealClicked() {
+		game.setScreen(new GameScreen(game));
+	}
+	
+	private void showMenuButtons (boolean visible) {
+		float moveDuration = 1.0f;
+		Interpolation moveEasing = Interpolation.swing;
+		float delayOptionsButton = 0.25f;
+
+		float moveY = 150 * (visible ? 1 : -1);
+		float moveX = 0 * (visible ? -1 : 1);
+		final Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		btnAttack.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		btnMagic.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		btnHeal.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+
+		SequenceAction seq = sequence();
+		if (visible) seq.addAction(delay(delayOptionsButton + moveDuration));
+		seq.addAction(run(new Runnable() {
+			public void run () {
+				btnMagic.setTouchable(touchEnabled);
+				btnHeal.setTouchable(touchEnabled);
+				btnAttack.setTouchable(touchEnabled);
+			}
+		}));
 		
+		stage.addAction(seq);
 	}
 
 	private Table buildBackgroundLayer() {

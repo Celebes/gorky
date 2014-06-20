@@ -5,119 +5,98 @@ filter: Nearest,Nearest
 repeat: none
 anim_knight_attack
   rotate: false
-  xy: 1, 750
+  xy: 1, 757
   size: 311, 266
   orig: 311, 266
   offset: 0, 0
   index: 3
 anim_knight_attack
   rotate: false
-  xy: 1, 536
+  xy: 314, 811
   size: 170, 212
   orig: 170, 212
   offset: 0, 0
   index: 4
 anim_knight_damage
   rotate: false
-  xy: 314, 824
+  xy: 314, 617
   size: 143, 192
   orig: 143, 192
   offset: 0, 0
   index: 4
 anim_knight_attack
   rotate: false
-  xy: 1, 357
+  xy: 1, 578
   size: 155, 177
   orig: 155, 177
   offset: 0, 0
   index: 5
 anim_knight_attack
   rotate: false
-  xy: 459, 831
+  xy: 158, 570
   size: 143, 185
   orig: 143, 185
   offset: 0, 0
   index: 1
-anim_knight_damage
-  rotate: false
-  xy: 173, 542
-  size: 122, 206
-  orig: 122, 206
-  offset: 0, 0
-  index: 1
-anim_knight_dash
-  rotate: false
-  xy: 1, 179
-  size: 149, 176
-  orig: 149, 176
-  offset: 0, 0
-  index: 2
-anim_knight_dash
-  rotate: false
-  xy: 604, 840
-  size: 146, 176
-  orig: 146, 176
-  offset: 0, 0
-  index: 3
 anim_knight_attack
   rotate: false
-  xy: 752, 860
-  size: 164, 156
-  orig: 164, 156
-  offset: 0, 0
-  index: 6
-anim_knight_dash
-  rotate: false
-  xy: 1, 1
-  size: 141, 176
-  orig: 141, 176
-  offset: 0, 0
-  index: 1
-anim_knight_attack
-  rotate: false
-  xy: 297, 557
+  xy: 1, 385
   size: 132, 191
   orig: 132, 191
   offset: 0, 0
   index: 2
+anim_knight_attack
+  rotate: false
+  xy: 303, 459
+  size: 164, 156
+  orig: 164, 156
+  offset: 0, 0
+  index: 6
 anim_knight_damage
   rotate: false
-  xy: 158, 345
+  xy: 135, 362
+  size: 122, 206
+  orig: 122, 206
+  offset: 0, 0
+  index: 1
+anim_knight_damage
+  rotate: false
+  xy: 1, 194
   size: 120, 189
   orig: 120, 189
   offset: 0, 0
   index: 2
 anim_knight_damage
   rotate: false
-  xy: 152, 157
+  xy: 1, 6
   size: 119, 186
   orig: 119, 186
   offset: 0, 0
   index: 3
 anim_knight_normal
   rotate: false
-  xy: 280, 349
+  xy: 122, 1
   size: 114, 191
   orig: 114, 191
   offset: 0, 0
   index: 3
 anim_knight_normal
   rotate: false
-  xy: 396, 364
+  xy: 238, 169
   size: 113, 191
   orig: 113, 191
   offset: 0, 0
   index: 4
 anim_knight_normal
   rotate: false
-  xy: 273, 155
+  xy: 353, 269
   size: 113, 188
   orig: 113, 188
   offset: 0, 0
   index: 2
 anim_knight_normal
   rotate: false
-  xy: 388, 162
+  xy: 353, 82
   size: 114, 185
   orig: 114, 185
   offset: 0, 0

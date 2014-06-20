@@ -136,7 +136,6 @@ public class Assets implements Disposable, AssetErrorListener {
 	// postac gracza w czasie walki
 	public class AssetKnightBattle {
 		public final Animation animNormal;
-		public final Animation animDash;
 		public final Animation animAttack;
 		public final Animation animDamage;
 		
@@ -147,22 +146,20 @@ public class Assets implements Disposable, AssetErrorListener {
 			regions = atlas.findRegions("anim_knight_normal");
 			animNormal = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
 			
-			// dash
-			regions = atlas.findRegions("anim_knight_dash");
-			animDash = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
-			
 			// attack
 			regions = atlas.findRegions("anim_knight_attack");
-			animAttack = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animAttack = new Animation(1.0f / 10.0f, regions);
 			
 			// damage
 			regions = atlas.findRegions("anim_knight_damage");
-			animDamage = new Animation(1.0f / 5.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			animDamage = new Animation(1.0f / 5.0f, regions);
 		}
 	}
 	
 	public class AssetOrcBattle {
 		public final Animation animNormal;
+		public final Animation animAttack;
+		public final Animation animDamage;
 		
 		public AssetOrcBattle(TextureAtlas atlas) {
 			Array<AtlasRegion> regions = null;
@@ -170,6 +167,14 @@ public class Assets implements Disposable, AssetErrorListener {
 			// normal
 			regions = atlas.findRegions("anim_orc_normal");
 			animNormal = new Animation(1.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			
+			// attack
+			regions = atlas.findRegions("anim_orc_attack");
+			animAttack = new Animation(1.0f / 10.0f, regions);
+			
+			// damage
+			regions = atlas.findRegions("anim_orc_damage");
+			animDamage = new Animation(1.0f / 5.0f, regions);
 		}
 	}
 	
