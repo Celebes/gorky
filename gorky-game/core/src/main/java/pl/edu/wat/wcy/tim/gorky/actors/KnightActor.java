@@ -11,11 +11,6 @@ public class KnightActor extends BattleActor {
 	public KnightActor() {
 		init();
 	}
-	
-	public KnightActor(BattleGameObject player) {
-		super(player);
-		init();
-	}
 
 	private void init() {
 		animNormal = Assets.instance.knight.animNormal;

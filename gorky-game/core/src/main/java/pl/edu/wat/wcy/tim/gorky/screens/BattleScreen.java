@@ -11,8 +11,6 @@ import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
 import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
-import pl.edu.wat.wcy.tim.gorky.runnables.AttackRunnable;
-import pl.edu.wat.wcy.tim.gorky.runnables.ReceiveDamageRunnable;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Gdx;
@@ -51,8 +49,8 @@ public class BattleScreen extends AbstractGameScreen {
 	private Player player;
 	private Enemy enemy;
 	
-	private float playerDMG = 0.0f;
-	private float enemyDMG = 0.0f;
+	// koniec walki
+	private boolean battleEnd = false;
 	
 	// tura
 	private boolean playerTurn = true;
@@ -72,11 +70,11 @@ public class BattleScreen extends AbstractGameScreen {
 		CharacterAttributes enemyAttributes = new CharacterAttributes();
 		
 		// podstawowe statystyki
-		enemyAttributes.setAtk(3);
+		enemyAttributes.setAtk(9);
 		enemyAttributes.setDef(2);
 		enemyAttributes.setMagAtk(0);
 		enemyAttributes.setMagDef(5);
-		enemyAttributes.setMaxHP(20);
+		enemyAttributes.setMaxHP(15);
 		enemyAttributes.setMaxMP(5);
 		enemyAttributes.setHP(enemyAttributes.getMaxHP());
 		enemyAttributes.setMP(enemyAttributes.getMaxMP());
@@ -93,30 +91,68 @@ public class BattleScreen extends AbstractGameScreen {
 		stage.draw();
 		Table.drawDebug(stage);
 		
-		if(playerTurn == true) {
+		if(battleEnd == true) {
+			System.out.println("KONIEC WALKI!");
 			
-			if(knightActor.isAttackFinished() == true) {
-				receiveDamageAction(enemyActor, playerDMG);
-				playerDMG = 0f;
-			}
+			// zapisz stan gry
 			
-			if(enemyActor.isDamageFinished() == true) {
-				playerTurn = false;
-				attackAction(enemyActor);
-			}
-			
+			// zmien ekran
+			game.setScreen(new GameScreen(game));
 		} else {
 			
-			if(enemyActor.isAttackFinished() == true) {
-				receiveDamageAction(knightActor, enemyDMG);
-				enemyDMG = 0f;
+			if(playerTurn == true) {
+				
+				if(knightActor.isAttackFinished() == true) {
+					// pobierz obrazenia gracza
+					float playerDMG = player.getCalculatedDamage();
+					
+					// odejmij HP wroga
+					int dmgReceivedByEnemy = enemy.receiveDamage(playerDMG);
+					
+					// wlacz animacje dostawania obrazen u wroga
+					startDamageAnimation(enemyActor);
+					
+					// zrob cos z dmgReceivedByEnemy..
+					System.out.println("WOW! Gracz uderzyl przeciwnika zabierajac mu " + dmgReceivedByEnemy + " punktow zycia!");
+					
+					// jesli wrog zginal, zakoncz walke
+					if(enemy.getCharacterAttributes().getHP() <= 0) {
+						battleEnd = true;
+					}
+				}
+				
+				if(enemyActor.isDamageFinished() == true) {
+					playerTurn = false;
+					startAttackAnimation(enemyActor);
+				}
+				
+			} else {
+				
+				if(enemyActor.isAttackFinished() == true) {
+					// pobierz obrazenia wroga
+					float enemyDMG = enemy.getCalculatedDamage();
+					
+					// odejmij HP gracza
+					int dmgReceivedByPlayer = player.receiveDamage(enemyDMG);
+					
+					// wlacz animacje dostawania obrazen u wroga
+					startDamageAnimation(knightActor);
+					
+					// zrob cos z dmgReceivedByPlayer..
+					System.out.println("WOW! Przeciwnik uderzyl gracza zabierajac mu " + dmgReceivedByPlayer + " punktow zycia!");
+					
+					// jesli gracz zginal, zakoncz walke
+					if(player.getCharacterAttributes().getHP() <= 0) {
+						battleEnd = true;
+					}
+				}
+				
+				if(knightActor.isDamageFinished()) {
+					playerTurn = true;
+					showMenuButtons(true);
+				}
+				
 			}
-			
-			if(knightActor.isDamageFinished()) {
-				playerTurn = true;
-				showMenuButtons(true);
-			}
-			
 		}
 	}
 	
@@ -142,7 +178,7 @@ public class BattleScreen extends AbstractGameScreen {
 		Table layer = new Table();
 		
 		// tymczasowo ORC zawsze, pozniej bedzie w konsruktorze zmieniany enemy losowo..
-		enemyActor = new OrcActor(enemy);
+		enemyActor = new OrcActor();
 		layer.addActor(enemyActor);
 		enemyActor.setPosition(550, 115);
 		
@@ -152,7 +188,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private Table buildPlayerLayer() {
 		Table layer = new Table();
 		
-		knightActor = new KnightActor(player);
+		knightActor = new KnightActor();
 		layer.addActor(knightActor);
 		knightActor.setPosition(115, 115);
 		
@@ -202,37 +238,37 @@ public class BattleScreen extends AbstractGameScreen {
 	
 	private void onAttackClicked() {
 		showMenuButtons(false);
-		playerDMG = attackAction(knightActor);
+		startAttackAnimation(knightActor);
 	}
 	
-	private float attackAction(BattleActor attacker) {
+	private void startAttackAnimation(final BattleActor attacker) {
 		float attackDelay = 1.0f;
 		SequenceAction seq = sequence();
 		seq.addAction(delay(attackDelay));
 		
-		AttackRunnable attackRunnable = new AttackRunnable(attacker);
-		
-		seq.addAction(run(attackRunnable));
+		seq.addAction(run(new Runnable() {
+			
+			@Override
+			public void run() {
+				attacker.startAttackAnimation();
+			}
+		}));
 
 		stage.addAction(seq);
-		
-		System.out.println("PLAYER TURN = " + playerTurn + " | PLAYER HP: " + player.getCharacterAttributes().getHP() + " | ENEMY HP: " + enemy.getCharacterAttributes().getHP());
-		
-		return attackRunnable.getAttackDMG();
 	}
 	
-	private float receiveDamageAction(BattleActor defender, float dmg) {
+	private void startDamageAnimation(final BattleActor defender) {
 		SequenceAction seq = sequence();
 		
-		ReceiveDamageRunnable receiveDamageRunnable = new ReceiveDamageRunnable(defender, dmg);
-		
-		seq.addAction(run(receiveDamageRunnable));
+		seq.addAction(run(new Runnable() {
+			
+			@Override
+			public void run() {
+				defender.startDamageAnimation();
+			}
+		}));
 
 		stage.addAction(seq);
-		
-		System.out.println("PLAYER TURN = " + playerTurn + " | PLAYER HP: " + player.getCharacterAttributes().getHP() + " | ENEMY HP: " + enemy.getCharacterAttributes().getHP());
-		
-		return receiveDamageRunnable.getDamageReceived();
 	}
 	
 	private void onMagicClicked() {

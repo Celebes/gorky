@@ -6,6 +6,7 @@ import pl.edu.wat.wcy.tim.gorky.objects.Grass;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -86,7 +87,8 @@ public class Level {
 				// gracz
 				else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 					obj = new Player();
-					obj.position.set(pixelX,baseHeight * obj.dimension.y);
+					obj.position.set(SaveStatePreferences.instance.playerPositionX, SaveStatePreferences.instance.playerPositionY);
+					//System.out.println("PLAYER: " + pixelX + " | " + pixelY);
 					player = (Player)obj;
 				}
 				

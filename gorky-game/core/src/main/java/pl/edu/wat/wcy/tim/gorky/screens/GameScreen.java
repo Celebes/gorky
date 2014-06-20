@@ -3,6 +3,7 @@ package pl.edu.wat.wcy.tim.gorky.screens;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.game.WorldController;
 import pl.edu.wat.wcy.tim.gorky.game.WorldRenderer;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -18,6 +19,7 @@ public class GameScreen extends AbstractGameScreen {
 
 	public GameScreen(GorkyGame game) {
 		super(game);
+		SaveStatePreferences.instance.load();
 	}
 	
 	@Override
@@ -25,6 +27,7 @@ public class GameScreen extends AbstractGameScreen {
 		
 		if(worldController.isCollisionWithEnemy()) {
 			
+			SaveStatePreferences.instance.save();
 			game.setScreen(new BattleScreen(game, worldController.level.player));
 			
 		} else {

@@ -29,13 +29,16 @@ public class Equipment {
 		
 		if(currentEquipment[index] != null) {
 			currentEquipment[index].unequip(characterAttributes);
-			Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
+			//Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
+			System.out.println("Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 		}
 		
 		currentEquipment[index] = item;
 		currentEquipment[index].equip(characterAttributes);
 		
-		Gdx.app.debug(TAG, "Weapon \"" + currentEquipment[index].getName() + "\" has been equipped");		
+		System.out.println("Weapon \"" + currentEquipment[index].getName() + "\" has been equipped");
+		
+		//Gdx.app.debug(TAG, "Weapon \"" + currentEquipment[index].getName() + "\" has been equipped");	
 	}
 	
 	public EquipableItem getEquipableItemByType(EquipmentSlot equipmentSlot) {
@@ -45,7 +48,8 @@ public class Equipment {
 	public void unequipItemByType(EquipmentSlot equipmentSlot) {
 		int index = equipmentSlot.ordinal();
 		currentEquipment[index].unequip(characterAttributes);
-		Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
+		//Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
+		System.out.println("Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 		currentEquipment[index] = null;
 	}
 }

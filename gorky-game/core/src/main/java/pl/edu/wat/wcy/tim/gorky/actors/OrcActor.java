@@ -12,11 +12,6 @@ public class OrcActor extends BattleActor {
 	public OrcActor() {
 		init();
 	}
-	
-	public OrcActor(BattleGameObject enemy) {
-		super(enemy);
-		init();
-	}
 
 	private void init() {
 		animNormal = Assets.instance.orc.animNormal;

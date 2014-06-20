@@ -19,7 +19,7 @@ public class GamePreferences {
 
 	// singleton - prywatny konstruktor
 	private GamePreferences() {
-		prefs = Gdx.app.getPreferences(Constants.PREFERENCES);
+		prefs = Gdx.app.getPreferences(Constants.GAME_PREFERENCES);
 	}
 	
 	public void load () {

@@ -4,6 +4,7 @@ import pl.edu.wat.wcy.tim.gorky.equipment.Equipable;
 import pl.edu.wat.wcy.tim.gorky.equipment.Equipment;
 import pl.edu.wat.wcy.tim.gorky.equipment.Sword;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,19 +28,10 @@ public class Player extends BattleGameObject {
 	private volatile boolean followingTouch;
 	private float distance;
 	
-	// ekwipunek
-	Equipment ekwipunek;
-	
 	public Player() {
 		init();
 		initCharacterAttributes();
 		initEquipment();
-	}
-	
-	private void initEquipment() {
-		// podstawowy ekwipunek
-		Equipable startingSword = new Sword("Drewniany miecz wstydu", 3);
-		//ekwipunek.
 	}
 
 	private void initCharacterAttributes() {
@@ -50,10 +42,19 @@ public class Player extends BattleGameObject {
 		characterAttributes.setDef(5);
 		characterAttributes.setMagAtk(15);
 		characterAttributes.setMagDef(5);
-		characterAttributes.setMaxHP(100);
-		characterAttributes.setMaxMP(100);
+		characterAttributes.setMaxHP(50);
+		characterAttributes.setMaxMP(20);
 		characterAttributes.setHP(characterAttributes.getMaxHP());
 		characterAttributes.setMP(characterAttributes.getMaxMP());
+	}
+	
+	private void initEquipment() {
+		// ekwipunek startowy
+		this.equipment = new Equipment(characterAttributes);
+		
+		// zaloz miecz
+		Sword sword = new Sword("Drewniany miecz wstydu", 5);
+		this.equipment.equipItem(sword);
 	}
 
 	private void init() {
@@ -110,7 +111,6 @@ public class Player extends BattleGameObject {
 			}
 		}
 		
-		
 		if(followingTouch == true) {
 			velocity.add(direction);
 			direction = stop.cpy().sub(position.cpy()).nor();
@@ -119,6 +119,10 @@ public class Player extends BattleGameObject {
 				followingTouch = false;
 			}
 		}
+		
+		// zapisz polozenie w swiecie
+		SaveStatePreferences.instance.playerPositionX = position.x;
+		SaveStatePreferences.instance.playerPositionY = position.y;
 	}
 
 	public void setMoveToVector(Vector2 moveToVector) {
@@ -135,14 +139,6 @@ public class Player extends BattleGameObject {
 
 	public void setFollowingTouch(boolean moving) {
 		this.followingTouch = moving;
-	}
-
-	public Equipment getEkwipunek() {
-		return ekwipunek;
-	}
-
-	public void setEkwipunek(Equipment ekwipunek) {
-		this.ekwipunek = ekwipunek;
 	}
 
 }

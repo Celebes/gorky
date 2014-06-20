@@ -20,7 +20,8 @@ public class Constants {
 	public static float CURRENT_MAP_WIDTH = 0.0f;
 	public static float CURRENT_MAP_HEIGHT = 0.0f;
 	
-	public static final String PREFERENCES = "gorky.prefs";
+	public static final String GAME_PREFERENCES = "game_preferences.prefs";
+	public static final String SAVE_STATE_PREFERENCES = "save_state.prefs";
 	
 	// GUI
 	public static final float VIEWPORT_GUI_WIDTH = 800.0f;

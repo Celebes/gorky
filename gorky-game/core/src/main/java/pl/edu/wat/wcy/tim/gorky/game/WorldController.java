@@ -8,6 +8,7 @@ import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
 import pl.edu.wat.wcy.tim.gorky.util.CameraHelper;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -43,7 +44,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void initLevel() {
-		level = new Level(Constants.LEVEL_02);
+		level = new Level(SaveStatePreferences.instance.currentLevel);
 		cameraHelper.setTarget(level.player);
 	}
 
@@ -235,6 +236,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void backToMenu() {
+		SaveStatePreferences.instance.save();
 		game.setScreen(new MenuScreen(game));
 	}
 	

@@ -18,14 +18,7 @@ public class BattleActor extends AnimatedActor {
 	protected Animation animDamage;
 	protected Animation animSwordSwing;
 	
-	private BattleGameObject battleGameObject;
-	
-	private float damageToBeReceived = 0.0f;
-	
-	public BattleActor() {}
-	
-	public BattleActor(BattleGameObject battleGameObject) {
-		this.battleGameObject = battleGameObject;
+	public BattleActor() {
 		this.animSwordSwing = Assets.instance.swordSwing.animSwordSwing;
 	}
 	
@@ -68,8 +61,6 @@ public class BattleActor extends AnimatedActor {
 			
 			if(animation.isAnimationFinished(stateTime)) {
 				setAnimation(animNormal);
-				battleGameObject.receiveDamage(damageToBeReceived);
-				damageToBeReceived = 0.0f;
 				damageFinished = true;
 			}
 			
@@ -77,29 +68,17 @@ public class BattleActor extends AnimatedActor {
 		
 	}
 	
-	public float attack() {
-		// oblicza obrazenia, ktore zostana zadane
-		float attackDamage = battleGameObject.dealDamage();
-		
+	public void startAttackAnimation() {		
 		// uruchamia animacje
 		setAnimation(animAttack);
-		
-		// zwraca obrazenia
-		return attackDamage;
 	}
 	
-	public float receiveDamage(float dmg) {
-		// oblicza obrazenia, ktore zostana otrzymane i zapisuje je na pozniej
-		this.damageToBeReceived = battleGameObject.calculateReceivedDamage(dmg);
-		
+	public void startDamageAnimation() {	
 		// uruchamia animacje
 		setAnimation(animDamage);
 		
 		// ustaw poczatek animacji otrzymywania ciosu
 		animateSwordSwing = true;
-		
-		// zwraca obrazenia
-		return this.damageToBeReceived;
 	}
 	
 	@Override
@@ -116,7 +95,6 @@ public class BattleActor extends AnimatedActor {
 		// dorysuj efekt ruchu mieczem
 		if(animation == animDamage && animateSwordSwing == true) {
 			TextureRegion reg = animSwordSwing.getKeyFrame(stateTime, true);
-			//batch.draw(reg, getX(), getY(), reg.getRegionWidth(), reg.getRegionHeight());	
 			batch.draw(reg, getX(), getY(), getOriginX(), getOriginY(), reg.getRegionWidth(), reg.getRegionHeight(), 1.5f, 1.5f, 1.0f);
 		}
 	}
