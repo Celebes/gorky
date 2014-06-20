@@ -8,6 +8,8 @@ import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
+import pl.edu.wat.wcy.tim.gorky.actors.Text;
+import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
@@ -43,7 +45,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnHeal;
 	
 	// aktorzy bioracy udzial w walce..
-	private BattleActor knightActor;
+	private BattleActor playerActor;
 	private BattleActor enemyActor;
 	
 	private Player player;
@@ -102,7 +104,7 @@ public class BattleScreen extends AbstractGameScreen {
 			
 			if(playerTurn == true) {
 				
-				if(knightActor.isAttackFinished() == true) {
+				if(playerActor.isAttackFinished() == true) {
 					// pobierz obrazenia gracza
 					float playerDMG = player.getCalculatedDamage();
 					
@@ -113,7 +115,8 @@ public class BattleScreen extends AbstractGameScreen {
 					startDamageAnimation(enemyActor);
 					
 					// zrob cos z dmgReceivedByEnemy..
-					System.out.println("WOW! Gracz uderzyl przeciwnika zabierajac mu " + dmgReceivedByEnemy + " punktow zycia!");
+					System.out.println("Gracz uderzyl przeciwnika zabierajac mu " + dmgReceivedByEnemy + " punktow zycia!");
+					showTextAboveActor(enemyActor, String.valueOf(dmgReceivedByEnemy));
 					
 					// jesli wrog zginal, zakoncz walke
 					if(enemy.getCharacterAttributes().getHP() <= 0) {
@@ -136,10 +139,11 @@ public class BattleScreen extends AbstractGameScreen {
 					int dmgReceivedByPlayer = player.receiveDamage(enemyDMG);
 					
 					// wlacz animacje dostawania obrazen u wroga
-					startDamageAnimation(knightActor);
+					startDamageAnimation(playerActor);
 					
 					// zrob cos z dmgReceivedByPlayer..
-					System.out.println("WOW! Przeciwnik uderzyl gracza zabierajac mu " + dmgReceivedByPlayer + " punktow zycia!");
+					System.out.println("Przeciwnik uderzyl gracza zabierajac mu " + dmgReceivedByPlayer + " punktow zycia!");
+					showTextAboveActor(playerActor, String.valueOf(dmgReceivedByPlayer));
 					
 					// jesli gracz zginal, zakoncz walke
 					if(player.getCharacterAttributes().getHP() <= 0) {
@@ -147,13 +151,19 @@ public class BattleScreen extends AbstractGameScreen {
 					}
 				}
 				
-				if(knightActor.isDamageFinished()) {
+				if(playerActor.isDamageFinished()) {
 					playerTurn = true;
 					showMenuButtons(true);
 				}
 				
 			}
 		}
+	}
+	
+	private void showTextAboveActor(BattleActor actor, String text) {
+		Text dmgText = new Text(Assets.instance.battleFonts.defaultBig, text);
+		dmgText.setPosition(actor.getX() + actor.getWidth()/2 - dmgText.getWidth()/2, actor.getY() + actor.getHeight() + (int)(1.5*dmgText.getHeight()));
+		stage.addActor(dmgText);
 	}
 	
 	private void rebuildStage () {
@@ -188,9 +198,9 @@ public class BattleScreen extends AbstractGameScreen {
 	private Table buildPlayerLayer() {
 		Table layer = new Table();
 		
-		knightActor = new KnightActor();
-		layer.addActor(knightActor);
-		knightActor.setPosition(115, 115);
+		playerActor = new KnightActor();
+		layer.addActor(playerActor);
+		playerActor.setPosition(115, 115);
 		
 		return layer;
 	}
@@ -238,7 +248,7 @@ public class BattleScreen extends AbstractGameScreen {
 	
 	private void onAttackClicked() {
 		showMenuButtons(false);
-		startAttackAnimation(knightActor);
+		startAttackAnimation(playerActor);
 	}
 	
 	private void startAttackAnimation(final BattleActor attacker) {

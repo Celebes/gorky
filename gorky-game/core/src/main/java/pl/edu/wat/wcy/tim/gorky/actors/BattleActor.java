@@ -98,4 +98,14 @@ public class BattleActor extends AnimatedActor {
 			batch.draw(reg, getX(), getY(), getOriginX(), getOriginY(), reg.getRegionWidth(), reg.getRegionHeight(), 1.5f, 1.5f, 1.0f);
 		}
 	}
+	
+	@Override
+	public float getWidth() {
+		return animation.getKeyFrame(stateTime).getRegionWidth();
+	}
+	
+	@Override
+	public float getHeight() {
+		return animation.getKeyFrame(stateTime).getRegionHeight();
+	}
 }

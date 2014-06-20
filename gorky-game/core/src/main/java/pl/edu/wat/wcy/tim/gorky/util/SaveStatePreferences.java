@@ -25,10 +25,15 @@ public class SaveStatePreferences {
 		currentLevel = prefs.getString("currentLevel", Constants.LEVEL_02);
 	}
 	
-	public void save () {
+	public void save() {
 		prefs.putFloat("playerPositionX", playerPositionX);
 		prefs.putFloat("playerPositionY", playerPositionY);
 		prefs.putString("currentLevel", currentLevel);
+		prefs.flush();
+	}
+	
+	public void reset() {
+		prefs.clear();
 		prefs.flush();
 	}
 }

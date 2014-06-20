@@ -40,6 +40,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	// czcionka
 	public AssetFonts fonts;
+	public AssetFonts battleFonts;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -84,7 +85,8 @@ public class Assets implements Disposable, AssetErrorListener {
 		}
 		
 		// utworz czcionki
-		fonts = new AssetFonts();
+		fonts = new AssetFonts("images/arial_pl.fnt", true);
+		battleFonts = new AssetFonts("images/battle_font.fnt", false);
 		
 		// utworz obiekty
 		grass = new AssetGrass(atlasGameScreen);
@@ -210,10 +212,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final BitmapFont defaultNormal;
 		public final BitmapFont defaultBig;
 		
-		public AssetFonts() {
-			defaultSmall = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
-			defaultNormal = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
-			defaultBig = new BitmapFont(Gdx.files.internal("images/arial_pl.fnt"), true);
+		public AssetFonts(String fontName, boolean flip) {
+			defaultSmall = new BitmapFont(Gdx.files.internal(fontName), flip);
+			defaultNormal = new BitmapFont(Gdx.files.internal(fontName), flip);
+			defaultBig = new BitmapFont(Gdx.files.internal(fontName), flip);
 			
 			// rozmiary czcionek
 			defaultSmall.setScale(0.75f);
