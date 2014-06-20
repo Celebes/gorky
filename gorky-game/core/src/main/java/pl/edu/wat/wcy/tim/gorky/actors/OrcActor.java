@@ -1,6 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.actors;
 
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.objects.BattleGameObject;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -9,6 +10,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class OrcActor extends BattleActor {
 
 	public OrcActor() {
+		init();
+	}
+	
+	public OrcActor(BattleGameObject enemy) {
+		super(enemy);
 		init();
 	}
 

@@ -5,7 +5,7 @@ import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Enemy extends AbstractGameObject {
+public class Enemy extends BattleGameObject {
 	
 	private TextureRegion regEnemy;
 	

@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends AbstractGameObject {
+public class Player extends BattleGameObject {
 	
 	public enum VIEW_DIRECTION { UP, RIGHT, DOWN, LEFT }
 	
@@ -26,9 +26,6 @@ public class Player extends AbstractGameObject {
 	private Vector2 direction;
 	private volatile boolean followingTouch;
 	private float distance;
-	
-	// statystyki
-	CharacterAttributes characterAttributes;
 	
 	// ekwipunek
 	Equipment ekwipunek;
@@ -56,7 +53,7 @@ public class Player extends AbstractGameObject {
 		characterAttributes.setMaxHP(100);
 		characterAttributes.setMaxMP(100);
 		characterAttributes.setHP(characterAttributes.getMaxHP());
-		characterAttributes.setHP(characterAttributes.getMaxMP());
+		characterAttributes.setMP(characterAttributes.getMaxMP());
 	}
 
 	private void init() {
@@ -105,14 +102,6 @@ public class Player extends AbstractGameObject {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		
-		/*if (velocity.x != 0) {
-			viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT : VIEW_DIRECTION.RIGHT;
-		}
-		
-		if (velocity.y != 0) {
-			viewDirection = velocity.y > 0 ? VIEW_DIRECTION.UP : VIEW_DIRECTION.DOWN;
-		}*/
-		
 		if(velocity.x != 0 || velocity.y != 0) {
 			if(Math.abs(velocity.x) > Math.abs(velocity.y)) {
 				viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT : VIEW_DIRECTION.RIGHT;
@@ -154,14 +143,6 @@ public class Player extends AbstractGameObject {
 
 	public void setEkwipunek(Equipment ekwipunek) {
 		this.ekwipunek = ekwipunek;
-	}
-
-	public CharacterAttributes getCharacterAttributes() {
-		return characterAttributes;
-	}
-
-	public void setCharacterAttributes(CharacterAttributes characterAttributes) {
-		this.characterAttributes = characterAttributes;
 	}
 
 }

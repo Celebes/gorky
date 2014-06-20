@@ -25,7 +25,7 @@ public class GameScreen extends AbstractGameScreen {
 		
 		if(worldController.isCollisionWithEnemy()) {
 			
-			game.setScreen(new BattleScreen(game));
+			game.setScreen(new BattleScreen(game, worldController.level.player));
 			
 		} else {
 			

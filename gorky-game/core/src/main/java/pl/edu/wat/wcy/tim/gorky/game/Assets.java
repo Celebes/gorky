@@ -152,7 +152,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			
 			// damage
 			regions = atlas.findRegions("anim_knight_damage");
-			animDamage = new Animation(1.0f / 5.0f, regions);
+			animDamage = new Animation(1.0f / 10.0f, regions);
 		}
 	}
 	
