@@ -27,9 +27,7 @@ public class OrcActor extends BattleActor {
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		float offsetX = 0;
-		float offsetY = 0;
-		
+
 		if(animation == animAttack) {
 			int currentFrame = animation.getKeyFrameIndex(stateTime);
 			
@@ -76,8 +74,12 @@ public class OrcActor extends BattleActor {
 			}
 		}
 		
-		TextureRegion reg = animation.getKeyFrame(stateTime, true);
-		batch.draw(reg, getX() + offsetX, getY() + offsetY, reg.getRegionWidth(), reg.getRegionHeight());
+		else if(animation == animDamage) {
+			offsetX = 25;
+		}
+
+		super.draw(batch, parentAlpha);
+
 	}
 
 }

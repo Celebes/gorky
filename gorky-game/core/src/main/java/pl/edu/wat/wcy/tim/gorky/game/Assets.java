@@ -32,6 +32,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetKnightBattle knight;
 	public AssetOrcBattle orc;
 	
+	// animacje atakow
+	public AssetSwordSwing swordSwing;
+	
 	// lokalizacja
 	public I18NBundle stringBundle;
 	
@@ -62,6 +65,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
+		assetManager.load(Constants.TEXTURE_ATLAS_BATTLE, TextureAtlas.class);
 		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
@@ -93,6 +97,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlasOrcBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_ORC_BATTLE);
 		orc = new AssetOrcBattle(atlasOrcBattleScreen);
+		
+		TextureAtlas atlasBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_BATTLE);
+		swordSwing = new AssetSwordSwing(atlasBattleScreen);
 	}
 	
 	@Override
@@ -170,11 +177,23 @@ public class Assets implements Disposable, AssetErrorListener {
 			
 			// attack
 			regions = atlas.findRegions("anim_orc_attack");
-			animAttack = new Animation(1.0f / 10.0f, regions);
+			animAttack = new Animation(1.0f / 15.0f, regions);
 			
 			// damage
 			regions = atlas.findRegions("anim_orc_damage");
 			animDamage = new Animation(1.0f / 5.0f, regions);
+		}
+	}
+	
+	public class AssetSwordSwing {
+		public final Animation animSwordSwing;
+		
+		public AssetSwordSwing(TextureAtlas atlas) {
+			Array<AtlasRegion> regions = null;
+			
+			// normal
+			regions = atlas.findRegions("anim_sword_swing");
+			animSwordSwing = new Animation(1.0f / 10.0f, regions, Animation.PlayMode.NORMAL);
 		}
 	}
 	

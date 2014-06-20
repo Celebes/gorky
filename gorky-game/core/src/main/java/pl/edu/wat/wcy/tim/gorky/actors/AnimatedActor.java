@@ -12,6 +12,10 @@ public abstract class AnimatedActor extends Actor {
 	public float stateTime;
 	public Animation animation;
 	
+	// przesuniecie w zaleznosci od klatki
+	protected float offsetX = 0;
+	protected float offsetY = 0;
+	
 	public AnimatedActor() {
 
 	}
@@ -25,9 +29,10 @@ public abstract class AnimatedActor extends Actor {
 	public void draw(Batch batch, float parentAlpha) {
 		TextureRegion reg = animation.getKeyFrame(stateTime, true);
 		
-		batch.draw(reg, getX(), getY(), reg.getRegionWidth(), reg.getRegionHeight());
+		batch.draw(reg, getX() + offsetX, getY() + offsetY, reg.getRegionWidth(), reg.getRegionHeight());
 		
-		super.draw(batch, parentAlpha);
+		offsetX = 0;
+		offsetY = 0;
 	}
 
 	@Override

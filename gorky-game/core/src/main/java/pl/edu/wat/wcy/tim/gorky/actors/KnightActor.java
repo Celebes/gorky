@@ -1,5 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.actors;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.BattleGameObject;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;

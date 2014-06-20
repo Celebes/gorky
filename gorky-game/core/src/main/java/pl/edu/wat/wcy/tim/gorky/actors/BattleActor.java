@@ -1,18 +1,22 @@
 package pl.edu.wat.wcy.tim.gorky.actors;
 
+import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.BattleGameObject;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BattleActor extends AnimatedActor {
 	
 	protected boolean attackFinished = false;
-	protected boolean turnFinished = false;
 	protected boolean damageFinished = false;
+	protected boolean animateSwordSwing = false;
 	
 	protected Animation animNormal;
 	protected Animation animAttack;
 	protected Animation animDamage;
+	protected Animation animSwordSwing;
 	
 	private BattleGameObject battleGameObject;
 	
@@ -22,18 +26,11 @@ public class BattleActor extends AnimatedActor {
 	
 	public BattleActor(BattleGameObject battleGameObject) {
 		this.battleGameObject = battleGameObject;
+		this.animSwordSwing = Assets.instance.swordSwing.animSwordSwing;
 	}
 	
 	public boolean isDamageFinished() {
 		return damageFinished;
-	}
-
-	public boolean isTurnFinished() {
-		return turnFinished;
-	}
-	
-	public void setTurnFinished(boolean turnFinished) {
-		this.turnFinished = turnFinished;
 	}
 	
 	public boolean isAttackFinished() {
@@ -44,11 +41,11 @@ public class BattleActor extends AnimatedActor {
 	public void act(float delta) {
 		super.act(delta);
 		
+		if(animSwordSwing != null && animSwordSwing.isAnimationFinished(stateTime)) {
+			animateSwordSwing = false;
+		}
+		
 		if(animation == animNormal) {
-			
-			/*if(turnFinished == true) {
-				turnFinished = false;
-			}*/
 			
 			if(attackFinished == true) {
 				attackFinished = false;
@@ -74,7 +71,6 @@ public class BattleActor extends AnimatedActor {
 				battleGameObject.receiveDamage(damageToBeReceived);
 				damageToBeReceived = 0.0f;
 				damageFinished = true;
-				//turnFinished = true;
 			}
 			
 		}
@@ -99,7 +95,29 @@ public class BattleActor extends AnimatedActor {
 		// uruchamia animacje
 		setAnimation(animDamage);
 		
+		// ustaw poczatek animacji otrzymywania ciosu
+		animateSwordSwing = true;
+		
 		// zwraca obrazenia
 		return this.damageToBeReceived;
+	}
+	
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		
+		if(animation == animDamage) {
+			batch.setColor(1, 0, 0, 1);
+		}
+		
+		super.draw(batch, parentAlpha);
+		
+		batch.setColor(1, 1, 1, 1);
+		
+		// dorysuj efekt ruchu mieczem
+		if(animation == animDamage && animateSwordSwing == true) {
+			TextureRegion reg = animSwordSwing.getKeyFrame(stateTime, true);
+			//batch.draw(reg, getX(), getY(), reg.getRegionWidth(), reg.getRegionHeight());	
+			batch.draw(reg, getX(), getY(), getOriginX(), getOriginY(), reg.getRegionWidth(), reg.getRegionHeight(), 1.5f, 1.5f, 1.0f);
+		}
 	}
 }
