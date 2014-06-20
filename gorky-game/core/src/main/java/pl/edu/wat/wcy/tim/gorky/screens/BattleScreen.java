@@ -1,9 +1,11 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
@@ -17,6 +19,7 @@ import pl.edu.wat.wcy.tim.gorky.util.Constants;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -26,10 +29,15 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BattleScreen extends AbstractGameScreen {
@@ -38,11 +46,16 @@ public class BattleScreen extends AbstractGameScreen {
 	
 	private Stage stage;
 	private Skin skinGorkyBattle;
+	private Skin skinLibgdx;
 	
 	private Image imgBackground;
 	private Button btnAttack;
 	private Button btnMagic;
 	private Button btnHeal;
+	
+	// okienka na koniec walki
+	private Window popupWindow;
+	private TextButton popupOKButton;
 	
 	// aktorzy bioracy udzial w walce..
 	private BattleActor playerActor;
@@ -76,7 +89,7 @@ public class BattleScreen extends AbstractGameScreen {
 		enemyAttributes.setDef(2);
 		enemyAttributes.setMagAtk(0);
 		enemyAttributes.setMagDef(5);
-		enemyAttributes.setMaxHP(15);
+		enemyAttributes.setMaxHP(25);
 		enemyAttributes.setMaxMP(5);
 		enemyAttributes.setHP(enemyAttributes.getMaxHP());
 		enemyAttributes.setMP(enemyAttributes.getMaxMP());
@@ -99,7 +112,7 @@ public class BattleScreen extends AbstractGameScreen {
 			// zapisz stan gry
 			
 			// zmien ekran
-			game.setScreen(new GameScreen(game));
+			
 		} else {
 			
 			if(playerTurn == true) {
@@ -167,12 +180,14 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void rebuildStage () {
+		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		skinGorkyBattle = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_BATTLE), new TextureAtlas(Constants.TEXTURE_ATLAS_BATTLE));
 		
 		Table layerBackground = buildBackgroundLayer();
 		Table layerControls = buildControlsLayer();
 		Table layerPlayer = buildPlayerLayer();
 		Table layerEnemy = buildEnemyLayer();
+		Table popupWindow = buildpopupWindow();
 		
 		stage.clear();
 		Stack stack = new Stack();
@@ -182,6 +197,88 @@ public class BattleScreen extends AbstractGameScreen {
 		stack.add(layerPlayer);
 		stack.add(layerEnemy);
 		stack.add(layerControls);
+		stage.addActor(popupWindow);
+	}
+
+	private Table buildpopupWindow() {
+		popupWindow = new Window("ZWYCIÊSTWO!", skinLibgdx);
+		
+		// dodaj informacje jakies
+		popupWindow.add(buildPlayerPopupInfoSection()).row();
+		
+		// dodaj przycisk OK
+		popupWindow.add(buildPlayerPopupButtonSection()).pad(10, 0, 10, 0);
+		
+		// ustaw kolor lekko przezroczysty
+		popupWindow.setColor(1, 1, 1, 0.8f);
+		
+		// domyslnie ukryj
+		//showPopupWindow(false, false);
+		
+		// przelicz rozmiar
+		popupWindow.pack();
+		
+		// ustaw na srodku ekranu
+		popupWindow.setPosition((Constants.VIEWPORT_GUI_WIDTH/2) - (popupWindow.getWidth()/2), (Constants.VIEWPORT_GUI_HEIGHT/2) - (popupWindow.getHeight()/2));
+		
+		return popupWindow;
+	}
+	
+	private void showPopupWindow (boolean visible, boolean animated) {
+		float alphaTo = visible ? 0.8f : 0.0f;
+		float duration = animated ? 1.0f : 0.0f;
+		Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		popupWindow.addAction(sequence(touchable(touchEnabled), alpha(alphaTo, duration)));
+	}
+
+	private Table buildPlayerPopupInfoSection() {
+		Table tbl = new Table();
+		
+		tbl.pad(10, 10, 0, 10);
+		tbl.add(new Label("TESTOWA WIADOMOSC", skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.row();
+		tbl.columnDefaults(0).padRight(10);
+		tbl.columnDefaults(1).padRight(10);
+		
+		return tbl;
+	}
+	
+	private Table buildPlayerPopupButtonSection() {
+		Table tbl = new Table();
+		
+		// + Separator
+		Label lbl = null;
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.75f, 0.75f, 0.75f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 0, 0, 1);
+		tbl.row();
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.5f, 0.5f, 0.5f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
+		tbl.row();
+		
+		// + Save Button with event handler
+		popupOKButton = new TextButton("OK", skinLibgdx);
+		popupOKButton.getCells().get(0).size(35);
+		tbl.add(popupOKButton).bottom().center().padLeft(popupOKButton.getWidth());
+		
+		popupOKButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				onPopupOKClicked();
+			}
+		});
+		
+		return tbl;
+	}
+	
+	private void onPopupOKClicked() {
+		System.out.println("OK!");
+		game.setScreen(new GameScreen(game));
 	}
 
 	private Table buildEnemyLayer() {
