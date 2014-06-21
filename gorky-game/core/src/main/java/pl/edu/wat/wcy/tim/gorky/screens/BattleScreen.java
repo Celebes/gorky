@@ -91,7 +91,7 @@ public class BattleScreen extends AbstractGameScreen {
 		CharacterAttributes enemyAttributes = new CharacterAttributes();
 		
 		// podstawowe statystyki
-		enemyAttributes.setAtk(59);
+		enemyAttributes.setAtk(9);
 		enemyAttributes.setDef(2);
 		enemyAttributes.setMagAtk(0);
 		enemyAttributes.setMagDef(5);
@@ -115,7 +115,6 @@ public class BattleScreen extends AbstractGameScreen {
 		if(battleEnd == true) {
 			// zapisz gre
 			if(saveGameAfterBattle == true) {
-				
 				saveGameAfterBattle = false;
 			}
 			
@@ -173,6 +172,9 @@ public class BattleScreen extends AbstractGameScreen {
 					// jesli wrog zginal, zakoncz walke
 					if(enemy.getCharacterAttributes().getHP() <= 0) {
 						battleEnd = true;
+						
+						// wyswietl animacje smierci wroga
+						enemyActor.startDeathAnimation();
 					}
 				}
 				
@@ -200,6 +202,9 @@ public class BattleScreen extends AbstractGameScreen {
 					// jesli gracz zginal, zakoncz walke
 					if(player.getCharacterAttributes().getHP() <= 0) {
 						battleEnd = true;
+						
+						// wyswietl animacje smierci gracza
+						playerActor.startDeathAnimation();
 					}
 				}
 				

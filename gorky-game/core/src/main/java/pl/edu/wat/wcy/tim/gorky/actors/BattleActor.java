@@ -18,6 +18,11 @@ public class BattleActor extends AnimatedActor {
 	protected Animation animDamage;
 	protected Animation animSwordSwing;
 	
+	// animacja smierci
+	protected boolean deathAnimation = false;
+	protected float deathAnimationOffsetY = 0.0f;
+	protected float deathAnimationAlphaChannel = 1.0f;
+	
 	public BattleActor() {
 		this.animSwordSwing = Assets.instance.swordSwing.animSwordSwing;
 	}
@@ -60,10 +65,24 @@ public class BattleActor extends AnimatedActor {
 		else if(animation == animDamage) {
 			
 			if(animation.isAnimationFinished(stateTime)) {
-				setAnimation(animNormal);
-				damageFinished = true;
+				
+				
+				if(deathAnimation == false) {
+					setAnimation(animNormal);
+					damageFinished = true;
+				}
 			}
 			
+		}
+		
+		if(deathAnimation == true) {
+			deathAnimationAlphaChannel -= 0.07f;
+			deathAnimationOffsetY += 0.3f;
+			this.offsetY += deathAnimationOffsetY;
+			
+			if(deathAnimationAlphaChannel <= 0) {
+				this.remove();
+			}
 		}
 		
 	}
@@ -81,11 +100,18 @@ public class BattleActor extends AnimatedActor {
 		animateSwordSwing = true;
 	}
 	
+	public void startDeathAnimation() {
+		deathAnimation = true;
+		
+		// uruchamia animacje
+		setAnimation(animDamage);
+	}
+	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		
-		if(animation == animDamage) {
-			batch.setColor(1, 0, 0, 1);
+		if(animation == animDamage || deathAnimation == true) {
+			batch.setColor(1, 0, 0, deathAnimationAlphaChannel);
 		}
 		
 		super.draw(batch, parentAlpha);
