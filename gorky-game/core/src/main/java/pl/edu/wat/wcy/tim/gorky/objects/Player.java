@@ -38,14 +38,18 @@ public class Player extends BattleGameObject {
 		characterAttributes = new CharacterAttributes();
 		
 		// podstawowe statystyki
-		characterAttributes.setAtk(5);
-		characterAttributes.setDef(5);
-		characterAttributes.setMagAtk(15);
-		characterAttributes.setMagDef(5);
-		characterAttributes.setMaxHP(50);
-		characterAttributes.setMaxMP(20);
-		characterAttributes.setHP(characterAttributes.getMaxHP());
-		characterAttributes.setMP(characterAttributes.getMaxMP());
+		characterAttributes.setAtk(SaveStatePreferences.instance.atk);
+		characterAttributes.setDef(SaveStatePreferences.instance.def);
+		characterAttributes.setMagAtk(SaveStatePreferences.instance.magAtk);
+		characterAttributes.setMagDef(SaveStatePreferences.instance.magDef);
+		characterAttributes.setMaxHP(SaveStatePreferences.instance.maxHP);
+		characterAttributes.setMaxMP(SaveStatePreferences.instance.maxMP);
+		characterAttributes.setHP(SaveStatePreferences.instance.HP);
+		characterAttributes.setMP(SaveStatePreferences.instance.MP);
+		
+		characterAttributes.setExp(SaveStatePreferences.instance.exp);
+		characterAttributes.setLevel(SaveStatePreferences.instance.level);
+		characterAttributes.setGold(SaveStatePreferences.instance.gold);
 	}
 	
 	private void initEquipment() {

@@ -13,6 +13,20 @@ public class SaveStatePreferences {
 	public float playerPositionX;
 	public float playerPositionY;
 	public String currentLevel;
+	
+	// character attributes
+	public int atk;				// sila ataku
+	public int def;				// obrona przeciwko atakom fizycznym
+	public int magAtk;			// sila ataku magicznego
+	public int magDef;			// obrona przeciwko atakom magicznym
+	public int HP;				// aktualne punkty zycia
+	public int maxHP;			// max punkty zycia
+	public int MP;				// aktualne punkty many
+	public int maxMP;			// max punkty many
+	
+	public int gold;			// ilosc posiadanego zlota
+	public int exp;				// ilosc posiadanego doswiadczenia
+	public int level;			// aktualny poziom postaci
 
 	// singleton - prywatny konstruktor
 	private SaveStatePreferences() {
@@ -23,12 +37,39 @@ public class SaveStatePreferences {
 		playerPositionX = prefs.getFloat("playerPositionX", 11.0f);
 		playerPositionY = prefs.getFloat("playerPositionY", 13.0f);
 		currentLevel = prefs.getString("currentLevel", Constants.LEVEL_02);
+		
+		// character attributes
+		atk = prefs.getInteger("atk", 5);
+		def = prefs.getInteger("def", 5);
+		magAtk = prefs.getInteger("magAtk", 15);
+		magDef = prefs.getInteger("magDef", 5);
+		HP = prefs.getInteger("HP", 50);
+		maxHP = prefs.getInteger("maxHP", 50);
+		MP = prefs.getInteger("MP", 25);
+		maxMP = prefs.getInteger("maxMP", 25);
+		gold = prefs.getInteger("gold", 100);
+		exp = prefs.getInteger("exp", 0);
+		level = prefs.getInteger("level", 1);
 	}
 	
 	public void save() {
 		prefs.putFloat("playerPositionX", playerPositionX);
 		prefs.putFloat("playerPositionY", playerPositionY);
 		prefs.putString("currentLevel", currentLevel);
+		
+		// character attributes
+		prefs.putInteger("atk", atk);
+		prefs.putInteger("def", def);
+		prefs.putInteger("magAtk", magAtk);
+		prefs.putInteger("magDef", magDef);
+		prefs.putInteger("HP", HP);
+		prefs.putInteger("maxHP", maxHP);
+		prefs.putInteger("MP", MP);
+		prefs.putInteger("maxMP", maxMP);
+		prefs.putInteger("gold", gold);
+		prefs.putInteger("exp", exp);
+		prefs.putInteger("level", level);
+		
 		prefs.flush();
 	}
 	

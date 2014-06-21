@@ -3,6 +3,8 @@ package pl.edu.wat.wcy.tim.gorky.objects;
 import java.util.Random;
 
 import pl.edu.wat.wcy.tim.gorky.equipment.Equipment;
+import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 public abstract class BattleGameObject extends AbstractGameObject {
 	
@@ -48,6 +50,78 @@ public abstract class BattleGameObject extends AbstractGameObject {
 
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
+	}
+	
+	/*
+	 * Zarzadza zdobywaniem poziomow - dostaje EXP, sprawdza czy zwiekszyc poziom doswiadczenia itp
+	 */
+	public boolean increaseExperience(int exp) {
+		boolean result = false;
+		
+		int currentEXP = characterAttributes.getExp();
+		int currentLevel = characterAttributes.getLevel();
+		int expToLevelUp = GameplayFormulas.getExpForNextLevel(currentLevel);
+		int expToBeAdded = exp;
+		
+		if(currentEXP + exp > expToLevelUp) {
+			result = true;
+			
+			expToBeAdded = (currentEXP + exp) % expToLevelUp;
+			
+			// zwieksz poziom
+			characterAttributes.setLevel(currentLevel + 1);
+			
+			// dopisz doswiadczenie modulo poprzedni poziom
+			characterAttributes.setExp(expToBeAdded);
+			
+			// losuj nowe atrybuty
+			Random r = new Random();
+			
+			int newAtk = characterAttributes.getAtk() + (r.nextInt(3) + 3);
+			int newDef = characterAttributes.getDef() + (r.nextInt(3) + 2);
+			int newMagAtk = characterAttributes.getMagAtk() + (r.nextInt(3) + 5);
+			int newMagDef = characterAttributes.getMagDef() + (r.nextInt(3) + 2);
+			int newMaxHP = characterAttributes.getAtk() + (r.nextInt(10) + 10);
+			int newMaxMP = characterAttributes.getAtk() + (r.nextInt(5) + 5);
+			
+			characterAttributes.setAtk(newAtk);
+			characterAttributes.setDef(newDef);
+			characterAttributes.setMagAtk(newMagAtk);
+			characterAttributes.setMagDef(newMagDef);
+			characterAttributes.setMaxHP(newMaxHP);
+			characterAttributes.setMaxMP(newMaxMP);
+			
+			// odnow HP
+			characterAttributes.setHP(characterAttributes.getMaxHP());
+			characterAttributes.setMP(characterAttributes.getMaxMP());
+		} else {
+			characterAttributes.setExp(currentEXP + expToBeAdded); 
+		}
+		
+		// zapisz stan gry
+		SaveStatePreferences.instance.save();
+		
+		System.out.println("Zwiekszono doswiadczenie gracza o " + exp + "!");
+		
+		if(result == true) {
+			System.out.println("Gracz osiagnal nowy poziom: " + characterAttributes.getLevel());
+		}
+		
+		// zwroc TRUE jesli zwiekszono poziom
+		return result;
+	}
+	
+	public void increaseGold(int gold) {
+		int currentGold = characterAttributes.getGold();
+		characterAttributes.setGold(currentGold + gold);
+	}
+	
+	/*
+	 * Zmniejsza doswiadczenie o polowe w przypadku smierci
+	 */
+	public void deathExpPenalty() {
+		int currentEXP = characterAttributes.getExp();
+		characterAttributes.setExp(currentEXP/2);
 	}
 
 }

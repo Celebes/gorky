@@ -74,9 +74,6 @@ public class WorldController extends InputAdapter {
 		
 		// sprawdza czy na ekranie jest mniej niz 3 wrogow - jesli tak, to dodaje nowych
 		while(level.enemies.size < numberOfEnemies) {
-			
-			System.out.println("HEHE");
-			
 			// losuje spawnpoint
 			int losowyIndexSpawna = r.nextInt(level.enemySpawnpoints.size);
 			EnemySpawnpoint es = level.enemySpawnpoints.get(losowyIndexSpawna);
@@ -107,8 +104,6 @@ public class WorldController extends InputAdapter {
 			Enemy newEnemy = new Enemy();
 			newEnemy.position = es.position;
 			level.enemies.add(newEnemy);
-			
-			System.out.println("NEW ENEMY POSITION: " + es.position);
 		}
 	}
 

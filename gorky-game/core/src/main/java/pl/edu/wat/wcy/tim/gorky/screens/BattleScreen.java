@@ -6,6 +6,9 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
+
+import java.util.Random;
+
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
@@ -16,6 +19,8 @@ import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
+import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -30,14 +35,13 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BattleScreen extends AbstractGameScreen {
@@ -75,6 +79,8 @@ public class BattleScreen extends AbstractGameScreen {
 	
 	// tura
 	private boolean playerTurn = true;
+	
+	Random r = new Random();
 
 	public BattleScreen(GorkyGame game, Player player) {
 		super(game);
@@ -99,6 +105,7 @@ public class BattleScreen extends AbstractGameScreen {
 		enemyAttributes.setMaxMP(5);
 		enemyAttributes.setHP(enemyAttributes.getMaxHP());
 		enemyAttributes.setMP(enemyAttributes.getMaxMP());
+		enemyAttributes.setLevel(r.nextInt(3) + 1);       // 1 - 3
 
 		enemy.setCharacterAttributes(enemyAttributes);
 	}
@@ -113,31 +120,45 @@ public class BattleScreen extends AbstractGameScreen {
 		Table.drawDebug(stage);
 		
 		if(battleEnd == true) {
-			// zapisz gre
-			if(saveGameAfterBattle == true) {
-				saveGameAfterBattle = false;
-			}
 			
+			boolean playerWON = (player.getCharacterAttributes().getHP() > 0);
+
 			// ustaw teksty do popupa
 			if(assignPopupStrings == true) {
 				StringBuilder sb = new StringBuilder();
 				
-				if(player.getCharacterAttributes().getHP() <= 0) {
+				if(playerWON == false) {
 					// gracz przegral
 					popupHeader = Assets.instance.stringBundle.get("battle_popup_defeat_header");
 					popupInfo = Assets.instance.stringBundle.get("battle_popup_defeat_info");
 				} else {
 					// gracz wygral
+					
+					// losuj jakies przedmioty w nagrode albo zloto
+					int expPointsAfterWin = GameplayFormulas.getExpFromEnemy(enemy.getCharacterAttributes().getLevel());
+					int goldCoinsAfterWin = GameplayFormulas.getGoldFromEnemy(enemy.getCharacterAttributes().getLevel());
+					
+					// dodaj expa
+					boolean levelUP = player.increaseExperience(expPointsAfterWin);
+					
+					// dodaj golda
+					player.increaseGold(goldCoinsAfterWin);
+					
+					// utworz okienko					
 					popupHeader = Assets.instance.stringBundle.get("battle_popup_victory_header");
 					
-					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_exp_info", 55));
-					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_gold_info", 20));
+					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_exp_info", expPointsAfterWin));
+					
+					if(levelUP) {
+						sb.append(Assets.instance.stringBundle.format("battle_popup_victory_level_info", player.getCharacterAttributes().getLevel()));
+					}
+					
+					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_gold_info", goldCoinsAfterWin));
+					
 					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_item_info", "LELE"));
 					
 					popupInfo = sb.toString();
 					sb.setLength(0);
-					
-					// losuj jakies przedmioty w nagrode albo zloto
 				}
 				
 				assignPopupStrings = false;
@@ -149,6 +170,12 @@ public class BattleScreen extends AbstractGameScreen {
 				showPopupWindow(true, true);
 				
 				showPopup = false;
+			}
+			
+			// zapisz gre
+			if(saveGameAfterBattle == true) {
+				SaveStatePreferences.instance.save();
+				saveGameAfterBattle = false;
 			}
 			
 		} else {
