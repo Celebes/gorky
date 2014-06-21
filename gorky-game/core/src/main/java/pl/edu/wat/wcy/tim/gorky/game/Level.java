@@ -109,7 +109,7 @@ public class Level {
 				}
 				
 				// teleport do innego poziomu
-				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
+				else if(BLOCK_TYPE.NEXT_LEVEL.sameColor(currentPixel)) {
 					obj = new NextLevelTeleport();
 					obj.position.set(pixelX,baseHeight * obj.dimension.y);
 					nextLevelTeleports.add((NextLevelTeleport)obj);

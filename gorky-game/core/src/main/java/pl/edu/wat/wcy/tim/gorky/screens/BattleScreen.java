@@ -11,11 +11,11 @@ import java.util.Random;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
+import pl.edu.wat.wcy.tim.gorky.actors.DamageText;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
 import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
-import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
@@ -49,6 +49,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private static final String TAG = BattleScreen.class.getName();
 	
 	private Stage stage;
+	private Stage stageVersusGui;
 	private Skin skinGorkyBattle;
 	private Skin skinLibgdx;
 	
@@ -56,6 +57,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnAttack;
 	private Button btnMagic;
 	private Button btnHeal;
+	private Image imgVersus;
 	
 	// okienka na koniec walki
 	private Window popupWindow;
@@ -72,7 +74,6 @@ public class BattleScreen extends AbstractGameScreen {
 	private boolean battleEnd = false;
 	private boolean assignPopupStrings = true;
 	private boolean showPopup = true;
-	private boolean saveGameAfterBattle = true;
 	
 	String popupHeader;
 	String popupInfo;
@@ -92,22 +93,10 @@ public class BattleScreen extends AbstractGameScreen {
 	private void initEnemy() {
 		// tworzy losowego przeciwnika
 		enemy = new Enemy();
-		
-		// statystyki
-		CharacterAttributes enemyAttributes = new CharacterAttributes();
-		
-		// podstawowe statystyki
-		enemyAttributes.setAtk(9);
-		enemyAttributes.setDef(2);
-		enemyAttributes.setMagAtk(0);
-		enemyAttributes.setMagDef(5);
-		enemyAttributes.setMaxHP(25);
-		enemyAttributes.setMaxMP(5);
-		enemyAttributes.setHP(enemyAttributes.getMaxHP());
-		enemyAttributes.setMP(enemyAttributes.getMaxMP());
-		enemyAttributes.setLevel(r.nextInt(3) + 1);       // 1 - 3
 
-		enemy.setCharacterAttributes(enemyAttributes);
+		enemy.setCharacterAttributes(GameplayFormulas.generateEnemyAttributes());
+		
+		System.out.println("Rozpoczeto walke z przeciwnikiem o poziomie: " + enemy.getCharacterAttributes().getLevel());
 	}
 
 	@Override
@@ -117,6 +106,12 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		stage.act(deltaTime);
 		stage.draw();
+		
+		// tutaj narysuj prostokaciki z HP, MP itp
+		
+		stageVersusGui.act(deltaTime);
+		stageVersusGui.draw();
+		
 		Table.drawDebug(stage);
 		
 		if(battleEnd == true) {
@@ -131,6 +126,8 @@ public class BattleScreen extends AbstractGameScreen {
 					// gracz przegral
 					popupHeader = Assets.instance.stringBundle.get("battle_popup_defeat_header");
 					popupInfo = Assets.instance.stringBundle.get("battle_popup_defeat_info");
+					
+					player.deathExpPenalty();
 				} else {
 					// gracz wygral
 					
@@ -162,6 +159,8 @@ public class BattleScreen extends AbstractGameScreen {
 				}
 				
 				assignPopupStrings = false;
+				
+				System.out.println("STATSY PO WALCE:\nLEVEL = " + SaveStatePreferences.instance.level + " | HP = " + SaveStatePreferences.instance.HP + " | EXP = " + SaveStatePreferences.instance.exp);
 			}
 			
 			if(showPopup == true) {
@@ -170,12 +169,6 @@ public class BattleScreen extends AbstractGameScreen {
 				showPopupWindow(true, true);
 				
 				showPopup = false;
-			}
-			
-			// zapisz gre
-			if(saveGameAfterBattle == true) {
-				SaveStatePreferences.instance.save();
-				saveGameAfterBattle = false;
 			}
 			
 		} else {
@@ -245,7 +238,7 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void showTextAboveActor(BattleActor actor, String text) {
-		Text dmgText = new Text(Assets.instance.battleFonts.defaultBig, text);
+		DamageText dmgText = new DamageText(Assets.instance.battleFonts.defaultBig, text);
 		dmgText.setPosition(actor.getX() + actor.getWidth()/2 - dmgText.getWidth()/2, actor.getY() + actor.getHeight() + (int)(1.5*dmgText.getHeight()));
 		stage.addActor(dmgText);
 	}
@@ -269,6 +262,44 @@ public class BattleScreen extends AbstractGameScreen {
 		stack.add(layerEnemy);
 		stack.add(layerControls);
 		
+	}
+	
+	private void rebuildStageVersusGui() {
+		skinGorkyBattle = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_BATTLE), new TextureAtlas(Constants.TEXTURE_ATLAS_BATTLE));
+		
+		Table layerVersus = buildVersusLayer();
+		
+		stageVersusGui.clear();
+		Stack stack = new Stack();
+		stageVersusGui.addActor(stack);
+		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
+		stack.add(layerVersus);
+		
+		showPlayerNameAndLevel();
+		showEnemyNameAndLevel();
+	}
+
+	private void showPlayerNameAndLevel() {
+		Text playerNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Player Lv. " + player.getCharacterAttributes().getLevel());
+		playerNameAndLevelText.setPosition(10 + (196/2) - (playerNameAndLevelText.getWidth()/2), 10 + 75 + 5 + playerNameAndLevelText.getHeight());
+		stageVersusGui.addActor(playerNameAndLevelText);
+	}
+	
+	private void showEnemyNameAndLevel() {
+		Text playerNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Orc Lv. " + enemy.getCharacterAttributes().getLevel());
+		playerNameAndLevelText.setPosition(800 - (10 + (196/2) + (playerNameAndLevelText.getWidth()/2)), 10 + 75 + 5 + playerNameAndLevelText.getHeight());
+		stageVersusGui.addActor(playerNameAndLevelText);
+	}
+
+	private Table buildVersusLayer() {
+		Table layer = new Table();
+		
+		layer.center().bottom().padBottom(10);
+
+		imgVersus = new Image(skinGorkyBattle, "versus_gui");
+		layer.add(imgVersus);
+		
+		return layer;
 	}
 
 	private Table buildpopupWindow(String popupHeader, String popupInfo) {
@@ -358,7 +389,7 @@ public class BattleScreen extends AbstractGameScreen {
 		// tymczasowo ORC zawsze, pozniej bedzie w konsruktorze zmieniany enemy losowo..
 		enemyActor = new OrcActor();
 		layer.addActor(enemyActor);
-		enemyActor.setPosition(550, 115);
+		enemyActor.setPosition(550, 130);
 		
 		return layer;
 	}
@@ -368,7 +399,7 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		playerActor = new KnightActor();
 		layer.addActor(playerActor);
-		playerActor.setPosition(115, 115);
+		playerActor.setPosition(115, 130);
 		
 		return layer;
 	}
@@ -499,20 +530,25 @@ public class BattleScreen extends AbstractGameScreen {
 	@Override
 	public void resize(int width, int height) {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+		stageVersusGui = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
+		rebuildStageVersusGui();
 	}
 
 	@Override
 	public void show() {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+		stageVersusGui = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
+		rebuildStageVersusGui();
 	}
 
 	@Override
 	public void hide() {
 		stage.dispose();
+		stageVersusGui.dispose();
 	}
 
 	@Override

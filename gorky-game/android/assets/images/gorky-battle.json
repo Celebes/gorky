@@ -6,5 +6,6 @@
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Image: {
 		background: { drawable: background },
+		versus_gui: { drawable: versus_gui },
 	},
 }

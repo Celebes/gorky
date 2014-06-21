@@ -22,6 +22,8 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		
 		float calculatedDMG = characterAttributes.getAtk() + (int)Math.ceil(r.nextInt(characterAttributes.getAtk() + 1) / 4.0);
 		
+		System.out.println("ATK = " + characterAttributes.getAtk() + " | CALCULATED DMG = " + calculatedDMG);
+		
 		return calculatedDMG;
 	}
 	
@@ -33,7 +35,7 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		float hpBefore = characterAttributes.getHP();
 		characterAttributes.setHP((int)(hpBefore - calculatedHPDecrease));
 		
-		return (calculatedHPDecrease < 0 ? 0 : calculatedHPDecrease);
+		return (calculatedHPDecrease < 0 ? 1 : calculatedHPDecrease);
 	}
 	
 	public CharacterAttributes getCharacterAttributes() {
@@ -81,8 +83,8 @@ public abstract class BattleGameObject extends AbstractGameObject {
 			int newDef = characterAttributes.getDef() + (r.nextInt(3) + 2);
 			int newMagAtk = characterAttributes.getMagAtk() + (r.nextInt(3) + 5);
 			int newMagDef = characterAttributes.getMagDef() + (r.nextInt(3) + 2);
-			int newMaxHP = characterAttributes.getAtk() + (r.nextInt(10) + 10);
-			int newMaxMP = characterAttributes.getAtk() + (r.nextInt(5) + 5);
+			int newMaxHP = characterAttributes.getMaxHP() + (r.nextInt(10) + 10);
+			int newMaxMP = characterAttributes.getMaxMP() + (r.nextInt(5) + 5);
 			
 			characterAttributes.setAtk(newAtk);
 			characterAttributes.setDef(newDef);
@@ -99,7 +101,7 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		}
 		
 		// zapisz stan gry
-		SaveStatePreferences.instance.save();
+		saveCharacterStats();
 		
 		System.out.println("Zwiekszono doswiadczenie gracza o " + exp + "!");
 		
@@ -111,6 +113,23 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		return result;
 	}
 	
+	private void saveCharacterStats() {
+		SaveStatePreferences.instance.atk = characterAttributes.getAtk();
+		SaveStatePreferences.instance.def = characterAttributes.getDef();
+		SaveStatePreferences.instance.magAtk = characterAttributes.getMagAtk();
+		SaveStatePreferences.instance.magDef = characterAttributes.getMagDef();
+		SaveStatePreferences.instance.maxHP = characterAttributes.getMaxHP();
+		SaveStatePreferences.instance.maxMP = characterAttributes.getMaxMP();
+		SaveStatePreferences.instance.HP = characterAttributes.getHP();
+		SaveStatePreferences.instance.MP = characterAttributes.getMP();
+		
+		SaveStatePreferences.instance.exp = characterAttributes.getExp();
+		SaveStatePreferences.instance.level = characterAttributes.getLevel();
+		SaveStatePreferences.instance.gold = characterAttributes.getGold();
+		
+		SaveStatePreferences.instance.save();
+	}
+
 	public void increaseGold(int gold) {
 		int currentGold = characterAttributes.getGold();
 		characterAttributes.setGold(currentGold + gold);
@@ -122,6 +141,9 @@ public abstract class BattleGameObject extends AbstractGameObject {
 	public void deathExpPenalty() {
 		int currentEXP = characterAttributes.getExp();
 		characterAttributes.setExp(currentEXP/2);
+		
+		SaveStatePreferences.instance.exp = characterAttributes.getExp();
+		SaveStatePreferences.instance.save();
 	}
 
 }

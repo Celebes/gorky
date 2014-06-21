@@ -2,6 +2,8 @@ package pl.edu.wat.wcy.tim.gorky.util;
 
 import java.util.Random;
 
+import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
+
 public class GameplayFormulas {
 	public static int getExpForNextLevel(int level) {
 		double a = 4 * Math.pow(level, 3);
@@ -11,10 +13,33 @@ public class GameplayFormulas {
 	}
 	
 	public static int getExpFromEnemy(int enemyLevel) {
-		return enemyLevel*5 + (new Random()).nextInt(enemyLevel*3) + 1;
+		return enemyLevel*10 + (new Random()).nextInt(enemyLevel*5) + 1;
 	}
 	
 	public static int getGoldFromEnemy(int enemyLevel) {
 		return enemyLevel*8 + (new Random()).nextInt(enemyLevel*5);
+	}
+	
+	public static CharacterAttributes generateEnemyAttributes() {
+		CharacterAttributes enemyAttr = new CharacterAttributes();
+		
+		Random r = new Random();
+		int enemyLevel = r.nextInt(3) + 1;		// od 1 do 3
+		
+		int atk = 7 + 2 * enemyLevel;
+		int def = 0 + 2 * enemyLevel;
+		int maxHP = 11 + 8 * enemyLevel;
+		
+		enemyAttr.setAtk(atk);
+		enemyAttr.setDef(def);
+		enemyAttr.setMaxHP(maxHP);
+		enemyAttr.setHP(maxHP);
+		
+		enemyAttr.setMP(5);
+		enemyAttr.setMaxMP(5);
+		
+		enemyAttr.setLevel(enemyLevel);
+		
+		return enemyAttr;
 	}
 }

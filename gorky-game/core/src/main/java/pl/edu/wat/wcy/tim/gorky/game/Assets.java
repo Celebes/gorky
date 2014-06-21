@@ -41,6 +41,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	// czcionka
 	public AssetFonts fonts;
 	public AssetFonts battleFonts;
+	public AssetFonts battleFontsSmall;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -87,6 +88,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		// utworz czcionki
 		fonts = new AssetFonts("images/arial_pl.fnt", true);
 		battleFonts = new AssetFonts("images/battle_font.fnt", false);
+		battleFontsSmall = new AssetFonts("images/battle_font_small.fnt", false);
 		
 		// utworz obiekty
 		grass = new AssetGrass(atlasGameScreen);

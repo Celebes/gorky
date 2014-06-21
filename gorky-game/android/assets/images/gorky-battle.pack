@@ -5,84 +5,91 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 465
+  xy: 1, 542
   size: 800, 480
   orig: 800, 480
   offset: 0, 0
   index: -1
+versus_gui
+  rotate: false
+  xy: 1, 465
+  size: 780, 75
+  orig: 780, 75
+  offset: 0, 0
+  index: -1
 anim_sword_swing
   rotate: false
-  xy: 1, 335
+  xy: 803, 894
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 1
 anim_sword_swing
   rotate: false
-  xy: 803, 817
+  xy: 1, 335
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 2
 anim_sword_swing
   rotate: false
-  xy: 1, 205
+  xy: 803, 764
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 3
 anim_sword_swing
   rotate: false
-  xy: 131, 335
+  xy: 1, 205
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 4
 anim_sword_swing
   rotate: false
-  xy: 803, 687
+  xy: 131, 335
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 5
 attack-dn
   rotate: false
-  xy: 1, 103
+  xy: 803, 662
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 attack-up
   rotate: false
-  xy: 131, 233
+  xy: 1, 103
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 heal-dn
   rotate: false
-  xy: 261, 363
+  xy: 131, 233
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 heal-up
   rotate: false
-  xy: 803, 585
+  xy: 261, 363
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 magic-dn
   rotate: false
-  xy: 1, 1
+  xy: 803, 560
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 magic-up
   rotate: false
-  xy: 363, 363
+  xy: 1, 1
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
