@@ -84,7 +84,7 @@ public class WorldController extends InputAdapter {
 			// sprawdza czy w tym miejscu nie stoi juz gracz
 			float distanceFromPlayer = (es.position).dst(level.player.position);
 			
-			if(distanceFromPlayer < 1) {
+			if(distanceFromPlayer < 3) {
 				continue;
 			}
 			
@@ -93,7 +93,7 @@ public class WorldController extends InputAdapter {
 			for(Enemy e : level.enemies) {
 				float distanceFromEnemy = (es.position).dst(e.position);
 				
-				if(distanceFromEnemy < 1) {
+				if(distanceFromEnemy < 3) {
 					enemyPlaceTaken = true;
 				}
 			}
