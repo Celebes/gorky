@@ -25,7 +25,11 @@ public class GameScreen extends AbstractGameScreen {
 	@Override
 	public void render(float deltaTime) {
 		
-		if(worldController.isCollisionWithEnemy()) {
+		if(worldController.isOnCollisionWithTeleport()) {
+			game.setScreen(new GameScreen(game));
+		}
+		
+		else if(worldController.isCollisionWithEnemy()) {
 			
 			SaveStatePreferences.instance.save();
 			game.setScreen(new BattleScreen(game, worldController.level.player));

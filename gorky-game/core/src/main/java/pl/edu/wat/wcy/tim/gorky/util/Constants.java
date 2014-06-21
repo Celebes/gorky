@@ -16,9 +16,12 @@ public class Constants {
 	// lokalizacja pliku opisujacego poziom 01
 	public static final String LEVEL_01 = "levels/level-01.png";
 	public static final String LEVEL_02 = "levels/level-02.png";
+	public static final String LEVEL_03 = "levels/level-03.png";
 	
 	// ilosc przeciwnikow w poziomach
+	public static final int LEVEL_01_ENEMY_COUNT = 0;
 	public static final int LEVEL_02_ENEMY_COUNT = 5;
+	public static final int LEVEL_03_ENEMY_COUNT = 2;
 	
 	public static float CURRENT_MAP_WIDTH = 0.0f;
 	public static float CURRENT_MAP_HEIGHT = 0.0f;

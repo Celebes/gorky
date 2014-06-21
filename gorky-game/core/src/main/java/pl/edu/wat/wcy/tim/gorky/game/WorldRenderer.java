@@ -2,6 +2,7 @@ package pl.edu.wat.wcy.tim.gorky.game;
 
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GamePreferences;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -59,10 +60,34 @@ private static final String TAG = WorldRenderer.class.getName();
 		if (GamePreferences.instance.showFpsCounter) {
 			renderGuiFpsCounter(batch);
 		}
+		
+		if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
+			renderSacredLandInfo(batch);
+		}
 
 		batch.end();
 	}
 	
+	private void renderSacredLandInfo(SpriteBatch batch) {
+		BitmapFont fpsFont = Assets.instance.fonts.defaultBig;
+		
+		String sacredLandInfo1 = Assets.instance.stringBundle.get("sacred_land_info_1");
+		String sacredLandInfo2 = Assets.instance.stringBundle.get("sacred_land_info_2");
+		
+		float x1 = cameraGUI.viewportWidth / 2 - fpsFont.getBounds(sacredLandInfo1).width/2;
+		float y1 = cameraGUI.viewportHeight - 150;
+		
+		float x2 = cameraGUI.viewportWidth / 2 - fpsFont.getBounds(sacredLandInfo2).width/2;
+		float y2 = cameraGUI.viewportHeight - 150 + fpsFont.getBounds(sacredLandInfo1).height + 10;
+		
+		fpsFont.setColor(0, 1, 0, 1);
+		
+		fpsFont.draw(batch, sacredLandInfo1, x1, y1);
+		fpsFont.draw(batch, sacredLandInfo2, x2, y2);
+		
+		fpsFont.setColor(1, 1, 1, 1); // white
+	}
+
 	private void renderGuiFpsCounter(SpriteBatch batch) {
 		float x = cameraGUI.viewportWidth - 85;
 		float y = cameraGUI.viewportHeight - 25;
