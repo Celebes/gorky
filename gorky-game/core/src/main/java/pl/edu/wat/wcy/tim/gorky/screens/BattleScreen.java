@@ -66,6 +66,12 @@ public class BattleScreen extends AbstractGameScreen {
 	
 	// koniec walki
 	private boolean battleEnd = false;
+	private boolean assignPopupStrings = true;
+	private boolean showPopup = true;
+	private boolean saveGameAfterBattle = true;
+	
+	String popupHeader;
+	String popupInfo;
 	
 	// tura
 	private boolean playerTurn = true;
@@ -85,7 +91,7 @@ public class BattleScreen extends AbstractGameScreen {
 		CharacterAttributes enemyAttributes = new CharacterAttributes();
 		
 		// podstawowe statystyki
-		enemyAttributes.setAtk(9);
+		enemyAttributes.setAtk(59);
 		enemyAttributes.setDef(2);
 		enemyAttributes.setMagAtk(0);
 		enemyAttributes.setMagDef(5);
@@ -107,11 +113,44 @@ public class BattleScreen extends AbstractGameScreen {
 		Table.drawDebug(stage);
 		
 		if(battleEnd == true) {
-			System.out.println("KONIEC WALKI!");
+			// zapisz gre
+			if(saveGameAfterBattle == true) {
+				
+				saveGameAfterBattle = false;
+			}
 			
-			// zapisz stan gry
+			// ustaw teksty do popupa
+			if(assignPopupStrings == true) {
+				StringBuilder sb = new StringBuilder();
+				
+				if(player.getCharacterAttributes().getHP() <= 0) {
+					// gracz przegral
+					popupHeader = Assets.instance.stringBundle.get("battle_popup_defeat_header");
+					popupInfo = Assets.instance.stringBundle.get("battle_popup_defeat_info");
+				} else {
+					// gracz wygral
+					popupHeader = Assets.instance.stringBundle.get("battle_popup_victory_header");
+					
+					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_exp_info", 55));
+					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_gold_info", 20));
+					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_item_info", "LELE"));
+					
+					popupInfo = sb.toString();
+					sb.setLength(0);
+					
+					// losuj jakies przedmioty w nagrode albo zloto
+				}
+				
+				assignPopupStrings = false;
+			}
 			
-			// zmien ekran
+			if(showPopup == true) {
+				Table popupWindow = buildpopupWindow(popupHeader, popupInfo);
+				stage.addActor(popupWindow);
+				showPopupWindow(true, true);
+				
+				showPopup = false;
+			}
 			
 		} else {
 			
@@ -187,7 +226,7 @@ public class BattleScreen extends AbstractGameScreen {
 		Table layerControls = buildControlsLayer();
 		Table layerPlayer = buildPlayerLayer();
 		Table layerEnemy = buildEnemyLayer();
-		Table popupWindow = buildpopupWindow();
+		
 		
 		stage.clear();
 		Stack stack = new Stack();
@@ -197,14 +236,14 @@ public class BattleScreen extends AbstractGameScreen {
 		stack.add(layerPlayer);
 		stack.add(layerEnemy);
 		stack.add(layerControls);
-		stage.addActor(popupWindow);
+		
 	}
 
-	private Table buildpopupWindow() {
-		popupWindow = new Window("ZWYCIÊSTWO!", skinLibgdx);
+	private Table buildpopupWindow(String popupHeader, String popupInfo) {
+		popupWindow = new Window(popupHeader, skinLibgdx);
 		
 		// dodaj informacje jakies
-		popupWindow.add(buildPlayerPopupInfoSection()).row();
+		popupWindow.add(buildPlayerPopupInfoSection(popupInfo)).row();
 		
 		// dodaj przycisk OK
 		popupWindow.add(buildPlayerPopupButtonSection()).pad(10, 0, 10, 0);
@@ -213,7 +252,7 @@ public class BattleScreen extends AbstractGameScreen {
 		popupWindow.setColor(1, 1, 1, 0.8f);
 		
 		// domyslnie ukryj
-		//showPopupWindow(false, false);
+		showPopupWindow(false, false);
 		
 		// przelicz rozmiar
 		popupWindow.pack();
@@ -231,11 +270,11 @@ public class BattleScreen extends AbstractGameScreen {
 		popupWindow.addAction(sequence(touchable(touchEnabled), alpha(alphaTo, duration)));
 	}
 
-	private Table buildPlayerPopupInfoSection() {
+	private Table buildPlayerPopupInfoSection(String popupInfo) {
 		Table tbl = new Table();
 		
 		tbl.pad(10, 10, 0, 10);
-		tbl.add(new Label("TESTOWA WIADOMOSC", skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.add(new Label(popupInfo, skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
 		tbl.row();
 		tbl.columnDefaults(0).padRight(10);
 		tbl.columnDefaults(1).padRight(10);
