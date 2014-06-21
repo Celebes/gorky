@@ -1,8 +1,12 @@
 package pl.edu.wat.wcy.tim.gorky.game;
 
+import java.util.Random;
+
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.database.DBTest;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
+import pl.edu.wat.wcy.tim.gorky.objects.EnemySpawnpoint;
+import pl.edu.wat.wcy.tim.gorky.objects.Grass;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
@@ -51,9 +55,61 @@ public class WorldController extends InputAdapter {
 	public void update(float deltaTime) {
 		handleDebugInput(deltaTime);
 		handleInputGame(deltaTime);
+		
+		generateEnemies();
+		
 		level.update(deltaTime);
 		testCollisions();
 		cameraHelper.update(deltaTime);
+	}
+
+	private void generateEnemies() {
+		Random r = new Random();
+		boolean enemyPlaceTaken = false;
+		int numberOfEnemies = 0;
+		
+		if(level.fileName.equals(Constants.LEVEL_02)) {
+			numberOfEnemies = Constants.LEVEL_02_ENEMY_COUNT;
+		}
+		
+		// sprawdza czy na ekranie jest mniej niz 3 wrogow - jesli tak, to dodaje nowych
+		while(level.enemies.size < numberOfEnemies) {
+			
+			System.out.println("HEHE");
+			
+			// losuje spawnpoint
+			int losowyIndexSpawna = r.nextInt(level.enemySpawnpoints.size);
+			EnemySpawnpoint es = level.enemySpawnpoints.get(losowyIndexSpawna);
+			
+			// sprawdza czy w tym miejscu nie stoi juz gracz
+			float distanceFromPlayer = (es.position).dst(level.player.position);
+			
+			if(distanceFromPlayer < 1) {
+				continue;
+			}
+			
+			// sprawdza czy w tym miejscu nie stoi juz inny potwor
+			
+			for(Enemy e : level.enemies) {
+				float distanceFromEnemy = (es.position).dst(e.position);
+				
+				if(distanceFromEnemy < 1) {
+					enemyPlaceTaken = true;
+				}
+			}
+			
+			if(enemyPlaceTaken) {
+				enemyPlaceTaken = false;
+				continue;
+			}
+			
+			// jesli wszystko ok to utworz enemy i dodaj go
+			Enemy newEnemy = new Enemy();
+			newEnemy.position = es.position;
+			level.enemies.add(newEnemy);
+			
+			System.out.println("NEW ENEMY POSITION: " + es.position);
+		}
 	}
 
 	private void testCollisions() {
@@ -85,8 +141,6 @@ public class WorldController extends InputAdapter {
 			}
 			
 			onCollisionPlayerWithEnemy(e);
-			
-			//level.enemies.removeValue(e, false);
 		}
 		
 	}

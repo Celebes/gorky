@@ -2,7 +2,9 @@ package pl.edu.wat.wcy.tim.gorky.game;
 
 import pl.edu.wat.wcy.tim.gorky.objects.AbstractGameObject;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
+import pl.edu.wat.wcy.tim.gorky.objects.EnemySpawnpoint;
 import pl.edu.wat.wcy.tim.gorky.objects.Grass;
+import pl.edu.wat.wcy.tim.gorky.objects.NextLevelTeleport;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
@@ -21,6 +23,7 @@ public class Level {
 		EMPTY(255, 255, 255),					// bialy
 		PLAYER_SPAWNPOINT(255, 0, 0),			// czerwony
 		ENEMY_SPAWNPOINT(0, 255, 0),			// zielony
+		NEXT_LEVEL(255, 0, 255),				// magneta
 		WALL(0, 0, 0);							// czarny
 		
 		private int color;
@@ -41,18 +44,24 @@ public class Level {
 	public Array<Wall> wallTiles;
 	public Array<Grass> grassTiles;
 	public Array<Enemy> enemies;
+	public Array<EnemySpawnpoint> enemySpawnpoints;
+	public Array<NextLevelTeleport> nextLevelTeleports;
 	public Player player;
+	public String fileName;
 	
 	public Level (String filename) {
 		init(filename);
 	}
 	
 	private void init(String filename) {
+		this.fileName = filename;
 		player = null;
 		
 		wallTiles = new Array<>();
 		grassTiles = new Array<>();
 		enemies = new Array<>();
+		enemySpawnpoints = new Array<>();
+		nextLevelTeleports = new Array<>();
 		
 		// wczytaj obrazek z opisem poziomu
 		Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -94,9 +103,16 @@ public class Level {
 				
 				// potworek
 				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
-					obj = new Enemy();
+					obj = new EnemySpawnpoint();
 					obj.position.set(pixelX,baseHeight * obj.dimension.y);
-					enemies.add((Enemy)obj);
+					enemySpawnpoints.add((EnemySpawnpoint)obj);
+				}
+				
+				// teleport do innego poziomu
+				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
+					obj = new NextLevelTeleport();
+					obj.position.set(pixelX,baseHeight * obj.dimension.y);
+					nextLevelTeleports.add((NextLevelTeleport)obj);
 				}
 				
 				// murek
