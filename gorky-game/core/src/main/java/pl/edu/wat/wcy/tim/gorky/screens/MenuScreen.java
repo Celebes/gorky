@@ -9,6 +9,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GamePreferences;
 
@@ -360,11 +361,13 @@ public class MenuScreen extends AbstractGameScreen {
 	private void onSaveClicked () {
 		saveSettings();
 		onCancelClicked();
+		AudioManager.instance.onSettingsUpdated();
 	}
 
 	private void onCancelClicked () {
 		showMenuButtons(true);
 		showOptionsWindow(false, true);
+		AudioManager.instance.onSettingsUpdated();
 	}
 
 	@Override
@@ -384,6 +387,7 @@ public class MenuScreen extends AbstractGameScreen {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
+		AudioManager.instance.play(Assets.instance.music.menuMusic);
 	}
 
 	@Override

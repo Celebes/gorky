@@ -9,6 +9,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 
 import java.util.Random;
 
+import javax.sound.midi.Sequence;
+
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.DamageText;
@@ -20,12 +22,14 @@ import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
+import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
 import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -145,8 +149,18 @@ public class BattleScreen extends AbstractGameScreen {
 					popupInfo = Assets.instance.stringBundle.get("battle_popup_defeat_info");
 					
 					player.deathExpPenalty();
+					
+					// wywal gracza na poziom numer 1
+					SaveStatePreferences.instance.currentLevel = Constants.LEVEL_01;
+					SaveStatePreferences.instance.playerPositionX = 6;
+					SaveStatePreferences.instance.playerPositionY = 4;
+					
+					SaveStatePreferences.instance.save();
 				} else {
 					// gracz wygral
+					
+					// wlacz muzyczke
+					AudioManager.instance.play(Assets.instance.music.victoryMusic);
 					
 					// losuj jakies przedmioty w nagrode albo zloto
 					int expPointsAfterWin = GameplayFormulas.getExpFromEnemy(enemy.getCharacterAttributes().getLevel());
@@ -180,7 +194,7 @@ public class BattleScreen extends AbstractGameScreen {
 					
 					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_gold_info", goldCoinsAfterWin));
 					
-					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_item_info", "LELE"));
+					//sb.append(Assets.instance.stringBundle.format("battle_popup_victory_item_info", "LELE"));
 					
 					popupInfo = sb.toString();
 					sb.setLength(0);
@@ -213,6 +227,9 @@ public class BattleScreen extends AbstractGameScreen {
 					// wlacz animacje dostawania obrazen u wroga
 					startDamageAnimation(enemyActor);
 					
+					// dzwiek obrazen wroga
+					AudioManager.instance.play(Assets.instance.sounds.enemyHit);
+					
 					// aktualizuj pasek zdrowia
 					enemyHPBar.setPercent(enemy.calculateHpPercent());
 					
@@ -229,12 +246,17 @@ public class BattleScreen extends AbstractGameScreen {
 						
 						// wyswietl animacje smierci wroga
 						enemyActor.startDeathAnimation();
+						
+						// dzwiek obrazen wroga
+						AudioManager.instance.play(Assets.instance.sounds.enemyHit);
 					}
 				}
 				
 				if(enemyActor.isDamageFinished() == true) {
 					playerTurn = false;
 					startAttackAnimation(enemyActor);
+					// dzwiek ataku przeciwnika
+					playSoundWithDelay(0.7f, Assets.instance.sounds.enemyAttack);
 				}
 				
 			} else {
@@ -248,6 +270,9 @@ public class BattleScreen extends AbstractGameScreen {
 					
 					// wlacz animacje dostawania obrazen u gracza
 					startDamageAnimation(playerActor);
+					
+					// dzwiek obrazen gracza
+					AudioManager.instance.play(Assets.instance.sounds.playerHit);
 					
 					// aktualizuj pasek zdrowia
 					playerHPBar.setPercent(player.calculateHpPercent());
@@ -265,6 +290,9 @@ public class BattleScreen extends AbstractGameScreen {
 						
 						// wyswietl animacje smierci gracza
 						playerActor.startDeathAnimation();
+						
+						// dzwiek obrazen gracza
+						AudioManager.instance.play(Assets.instance.sounds.playerHit);
 					}
 				}
 				
@@ -539,6 +567,9 @@ public class BattleScreen extends AbstractGameScreen {
 	private void onAttackClicked() {
 		showMenuButtons(false);
 		startAttackAnimation(playerActor);
+		
+		// dzwiek ataku gracza
+		playSoundWithDelay(0.7f, Assets.instance.sounds.playerAttack);
 	}
 	
 	private void startAttackAnimation(final BattleActor attacker) {
@@ -612,6 +643,21 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		return layer;
 	}
+	
+	private void playSoundWithDelay(float delay, final Sound s) {
+		SequenceAction seq = sequence();
+		seq.addAction(delay(delay));
+		
+		seq.addAction(run(new Runnable() {
+			
+			@Override
+			public void run() {
+				AudioManager.instance.play(s);
+			}
+		}));
+		
+		stage.addAction(seq);
+	}
 
 	@Override
 	public InputProcessor getInputProcessor() {
@@ -634,6 +680,7 @@ public class BattleScreen extends AbstractGameScreen {
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
 		rebuildStageVersusGui();
+		AudioManager.instance.play(Assets.instance.music.battleMusic);
 	}
 
 	@Override

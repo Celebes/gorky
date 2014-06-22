@@ -1,8 +1,11 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.game.WorldController;
 import pl.edu.wat.wcy.tim.gorky.game.WorldRenderer;
+import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
+import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
@@ -58,6 +61,12 @@ public class GameScreen extends AbstractGameScreen {
 		worldController = new WorldController(game);
 		worldRenderer = new WorldRenderer(worldController);
 		Gdx.input.setCatchBackKey(true);
+		
+		if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
+			AudioManager.instance.play(Assets.instance.music.sacredMusic);
+		} else {
+			AudioManager.instance.play(Assets.instance.music.gameMusic);
+		}
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -31,6 +33,10 @@ public class Assets implements Disposable, AssetErrorListener {
 	// animowanie aktorzy z battle screen
 	public AssetKnightBattle knight;
 	public AssetOrcBattle orc;
+	
+	// dzwieki
+	public AssetSounds sounds;
+	public AssetMusic music;
 	
 	// animacje atakow
 	public AssetSwordSwing swordSwing;
@@ -69,6 +75,19 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_BATTLE, TextureAtlas.class);
 		
+		// wczytaj dzwieki
+		assetManager.load("sounds/player_attack.ogg", Sound.class);
+		assetManager.load("sounds/player_hit.ogg", Sound.class);
+		assetManager.load("sounds/orc_attack.ogg", Sound.class);
+		assetManager.load("sounds/orc_hit.ogg", Sound.class);
+		
+		// wczytaj muzyke
+		assetManager.load("music/music_battle.ogg", Music.class);
+		assetManager.load("music/music_game.ogg", Music.class);
+		assetManager.load("music/music_menu.ogg", Music.class);
+		assetManager.load("music/music_victory.ogg", Music.class);
+		assetManager.load("music/music_sacred.ogg", Music.class);
+		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
 		
@@ -104,6 +123,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlasBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_BATTLE);
 		swordSwing = new AssetSwordSwing(atlasBattleScreen);
+		
+		// dzwieki
+		sounds = new AssetSounds(assetManager);
+		music = new AssetMusic(assetManager);
 	}
 	
 	@Override
@@ -228,6 +251,36 @@ public class Assets implements Disposable, AssetErrorListener {
 			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		}
+	}
+	
+	public class AssetSounds {
+		public final Sound playerAttack;
+		public final Sound playerHit;
+		public final Sound enemyAttack;
+		public final Sound enemyHit;
+
+		public AssetSounds(AssetManager am) {
+			playerAttack = am.get("sounds/player_attack.ogg", Sound.class);
+			playerHit = am.get("sounds/player_hit.ogg", Sound.class);
+			enemyAttack = am.get("sounds/orc_attack.ogg", Sound.class);
+			enemyHit = am.get("sounds/orc_hit.ogg", Sound.class);
+		}
+	}
+	
+	public class AssetMusic {
+		public final Music menuMusic;
+		public final Music gameMusic;
+		public final Music battleMusic;
+		public final Music victoryMusic;
+		public final Music sacredMusic;
+
+		public AssetMusic(AssetManager am) {
+			menuMusic = am.get("music/music_menu.ogg", Music.class);
+			gameMusic = am.get("music/music_game.ogg", Music.class);
+			battleMusic = am.get("music/music_battle.ogg", Music.class);
+			victoryMusic = am.get("music/music_victory.ogg", Music.class);
+			sacredMusic = am.get("music/music_sacred.ogg", Music.class);
 		}
 	}
 	

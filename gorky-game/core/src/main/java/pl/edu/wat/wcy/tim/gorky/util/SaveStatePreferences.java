@@ -39,12 +39,12 @@ public class SaveStatePreferences {
 	}
 	
 	public void load () {
-		playerPositionX = prefs.getFloat("playerPositionX", 11.0f);
-		playerPositionY = prefs.getFloat("playerPositionY", 13.0f);
-		currentLevel = prefs.getString("currentLevel", Constants.LEVEL_02);
+		playerPositionX = prefs.getFloat("playerPositionX", 6);
+		playerPositionY = prefs.getFloat("playerPositionY", 4);
+		currentLevel = prefs.getString("currentLevel", Constants.LEVEL_01);
 		
 		// character attributes
-		atk = prefs.getInteger("atk", 5);
+		atk = prefs.getInteger("atk", 8);
 		def = prefs.getInteger("def", 5);
 		magAtk = prefs.getInteger("magAtk", 15);
 		magDef = prefs.getInteger("magDef", 5);

@@ -31,7 +31,7 @@ public class Player extends BattleGameObject {
 	public Player() {
 		init();
 		initCharacterAttributes();
-		initEquipment();
+		//initEquipment();
 	}
 
 	private void initCharacterAttributes() {
