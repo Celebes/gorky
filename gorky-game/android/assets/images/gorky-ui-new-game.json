@@ -1,0 +1,11 @@
+{
+	com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+		newgame: { down: newgame-dn, up: newgame-up },
+		continue: { down: continue-dn, up: continue-up },
+		login: { down: login-dn, up: login-up },
+		logout: { down: logout-dn, up: logout-up },
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Image: {
+		background: { drawable: background },
+	},
+}

@@ -48,7 +48,9 @@ public class GameScreen extends AbstractGameScreen {
 		
 		if(eqButtonClicked == true) {
 			SaveStatePreferences.instance.save();
-			game.setScreen(new InventoryScreen(game));
+			//game.setScreen(new InventoryScreen(game));
+			//game.setScreen(new NewGameScreen(game));
+			game.setScreen(new LoginScreen(game));
 		}
 		
 		else if(worldController.isOnCollisionWithTeleport()) {

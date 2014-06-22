@@ -273,7 +273,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			// rozmiary czcionek
 			defaultSmall.setScale(0.75f);
 			defaultNormal.setScale(0.95f);
-			defaultBig.setScale(2.0f);
+			defaultBig.setScale(1.5f);
 			
 			// wlacz 'linear-filtering' by wygladzic czcionki
 			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);

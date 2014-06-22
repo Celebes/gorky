@@ -1,7 +1,11 @@
 package pl.edu.wat.wcy.tim.gorky.screens;
 
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.actors.Text;
+import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
+import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -50,7 +54,6 @@ public class InventoryScreen extends AbstractGameScreen {
 		Table layerBg = buildBgLayer();
 		Table layerText = buildTextLayer();
 		Table layerButtons = buildButtonsLayer();
-		
 		
 		stage.clear();
 		Stack stack = new Stack();
@@ -114,7 +117,47 @@ public class InventoryScreen extends AbstractGameScreen {
 	private Table buildTextLayer() {
 		Table layer = new Table();
 		
+		float yPosition;
+		float xPosition = 60;
+		float textHeight;
+		
+		Text statsText = new Text(Assets.instance.fontsUpsideDown.defaultNormal, "Statystyki");
+		yPosition = 480 - 35 - statsText.getHeight()/2;
+		textHeight = statsText.getHeight();
+		statsText.setPosition(222 - statsText.getWidth()/2, yPosition);
+		layer.addActor(statsText);
+		
+		yPosition -= (30 + textHeight);
+		layer.addActor(createText("Imiê Postaci: " + "Brak", xPosition, yPosition));
+		
+		yPosition -= (10 + textHeight);
+		layer.addActor(createText("Poziom doœwiadczenia: " + SaveStatePreferences.instance.level, xPosition, yPosition));
+		
+		yPosition -= (10 + textHeight);
+		layer.addActor(createText("Punkty doœwiadczenia: " + SaveStatePreferences.instance.exp + "/" + GameplayFormulas.getExpForNextLevel(SaveStatePreferences.instance.level), xPosition, yPosition));
+		
+		yPosition -= (20 + textHeight);
+		layer.addActor(createText("Si³a ataku: " + SaveStatePreferences.instance.atk, xPosition, yPosition));
+		
+		yPosition -= (10 + textHeight);
+		layer.addActor(createText("Pancerz: " + SaveStatePreferences.instance.def, xPosition, yPosition));
+		
+		yPosition -= (20 + textHeight);
+		layer.addActor(createText("Punkty ¿ycia: " + SaveStatePreferences.instance.HP + "/" + SaveStatePreferences.instance.maxHP, xPosition, yPosition));
+		
+		yPosition -= (10 + textHeight);
+		layer.addActor(createText("Punkty many: " + SaveStatePreferences.instance.MP + "/" + SaveStatePreferences.instance.maxMP, xPosition, yPosition));
+		
+		yPosition -= (20 + textHeight);
+		layer.addActor(createText("Z³oto: " + SaveStatePreferences.instance.gold, xPosition, yPosition));
+		
 		return layer;
+	}
+	
+	private Text createText(String text, float xPosition, float yPosition) {
+		Text textActor = new Text(Assets.instance.fontsUpsideDown.defaultNormal, text);
+		textActor.setPosition(xPosition, yPosition);
+		return textActor;
 	}
 	
 	@Override
