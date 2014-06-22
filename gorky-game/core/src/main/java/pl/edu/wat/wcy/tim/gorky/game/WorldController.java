@@ -74,6 +74,8 @@ public class WorldController extends InputAdapter {
 		
 		if(level.fileName.equals(Constants.LEVEL_02)) {
 			numberOfEnemies = Constants.LEVEL_02_ENEMY_COUNT;
+		} else if(level.fileName.equals(Constants.LEVEL_03)) {
+			numberOfEnemies = Constants.LEVEL_03_ENEMY_COUNT;
 		}
 		
 		// sprawdza czy na ekranie jest mniej niz 3 wrogow - jesli tak, to dodaje nowych

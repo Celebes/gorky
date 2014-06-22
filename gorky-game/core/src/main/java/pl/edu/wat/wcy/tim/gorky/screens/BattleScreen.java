@@ -13,6 +13,7 @@ import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.DamageText;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
+import pl.edu.wat.wcy.tim.gorky.actors.NumberText;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
 import pl.edu.wat.wcy.tim.gorky.actors.ProgressBarActor;
 import pl.edu.wat.wcy.tim.gorky.actors.Text;
@@ -60,11 +61,20 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnHeal;
 	private Image imgVersus;
 	
+	// nazwa + level
+	private Text playerNameAndLevelText;
+	private Text enemyNameAndLevelText;
+	
 	// paski HP i MP
 	ProgressBarActor playerHPBar;
 	ProgressBarActor playerMPBar;
 	ProgressBarActor enemyHPBar;
 	ProgressBarActor enemyMPBar;
+	
+	NumberText playerHPNumber;
+	NumberText playerMPNumber;
+	NumberText enemyHPNumber;
+	NumberText enemyMPNumber;
 	
 	// okienka na koniec walki
 	private Window popupWindow;
@@ -155,6 +165,17 @@ public class BattleScreen extends AbstractGameScreen {
 					
 					if(levelUP) {
 						sb.append(Assets.instance.stringBundle.format("battle_popup_victory_level_info", player.getCharacterAttributes().getLevel()));
+						
+						// aktualizuj level
+						playerNameAndLevelText.setText("Player Lv. " + player.getCharacterAttributes().getLevel());
+						
+						// dodaj zycia i mane
+						playerHPBar.setPercent(player.calculateHpPercent());
+						playerMPBar.setPercent(player.calculateMpPercent());
+						
+						// aktualizuj cyferki
+						playerHPNumber.setNumber(player.getCharacterAttributes().getHP());
+						playerMPNumber.setNumber(player.getCharacterAttributes().getMP());
 					}
 					
 					sb.append(Assets.instance.stringBundle.format("battle_popup_victory_gold_info", goldCoinsAfterWin));
@@ -195,6 +216,9 @@ public class BattleScreen extends AbstractGameScreen {
 					// aktualizuj pasek zdrowia
 					enemyHPBar.setPercent(enemy.calculateHpPercent());
 					
+					// aktualizuj cyferki HP
+					enemyHPNumber.setNumber(enemy.getCharacterAttributes().getHP());
+					
 					// zrob cos z dmgReceivedByEnemy..
 					System.out.println("Gracz uderzyl przeciwnika zabierajac mu " + dmgReceivedByEnemy + " punktow zycia!");
 					showTextAboveActor(enemyActor, String.valueOf(dmgReceivedByEnemy));
@@ -227,6 +251,9 @@ public class BattleScreen extends AbstractGameScreen {
 					
 					// aktualizuj pasek zdrowia
 					playerHPBar.setPercent(player.calculateHpPercent());
+					
+					// aktualizuj cyferki HP
+					playerHPNumber.setNumber(player.getCharacterAttributes().getHP());
 					
 					// zrob cos z dmgReceivedByPlayer..
 					System.out.println("Przeciwnik uderzyl gracza zabierajac mu " + dmgReceivedByPlayer + " punktow zycia!");
@@ -290,18 +317,47 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		showPlayerNameAndLevel();
 		showEnemyNameAndLevel();
+		
+		showPlayerHPNumber();
+		showPlayerMPNumber();
+		showEnemyHPNumber();
+		showEnemyMPNumber();
+	}
+	
+	private void showEnemyHPNumber() {
+		enemyHPNumber = new NumberText(Assets.instance.battleFontsSmall.defaultNormal, enemy.getCharacterAttributes().getHP());
+		enemyHPNumber.setPosition(783 - enemyHPNumber.getWidth(), 62 + enemyHPNumber.getHeight());
+		stageVersusGui.addActor(enemyHPNumber);
+	}
+
+	private void showEnemyMPNumber() {
+		enemyMPNumber = new NumberText(Assets.instance.battleFontsSmall.defaultNormal, enemy.getCharacterAttributes().getMP());
+		enemyMPNumber.setPosition(783 - enemyMPNumber.getWidth(), 51);
+		stageVersusGui.addActor(enemyMPNumber);
+	}
+
+	private void showPlayerHPNumber() {
+		playerHPNumber = new NumberText(Assets.instance.battleFontsSmall.defaultNormal, player.getCharacterAttributes().getHP());
+		playerHPNumber.setPosition(199 - playerHPNumber.getWidth(), 62 + playerHPNumber.getHeight());
+		stageVersusGui.addActor(playerHPNumber);
+	}
+	
+	private void showPlayerMPNumber() {
+		playerMPNumber = new NumberText(Assets.instance.battleFontsSmall.defaultNormal, player.getCharacterAttributes().getMP());
+		playerMPNumber.setPosition(199 - playerMPNumber.getWidth(), 51);
+		stageVersusGui.addActor(playerMPNumber);
 	}
 
 	private void showPlayerNameAndLevel() {
-		Text playerNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Player Lv. " + player.getCharacterAttributes().getLevel());
+		playerNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Player Lv. " + player.getCharacterAttributes().getLevel());
 		playerNameAndLevelText.setPosition(10 + (196/2) - (playerNameAndLevelText.getWidth()/2), 10 + 75 + 5 + playerNameAndLevelText.getHeight());
 		stageVersusGui.addActor(playerNameAndLevelText);
 	}
 	
 	private void showEnemyNameAndLevel() {
-		Text playerNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Orc Lv. " + enemy.getCharacterAttributes().getLevel());
-		playerNameAndLevelText.setPosition(800 - (10 + (196/2) + (playerNameAndLevelText.getWidth()/2)), 10 + 75 + 5 + playerNameAndLevelText.getHeight());
-		stageVersusGui.addActor(playerNameAndLevelText);
+		enemyNameAndLevelText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Orc Lv. " + enemy.getCharacterAttributes().getLevel());
+		enemyNameAndLevelText.setPosition(800 - (10 + (196/2) + (enemyNameAndLevelText.getWidth()/2)), 10 + 75 + 5 + enemyNameAndLevelText.getHeight());
+		stageVersusGui.addActor(enemyNameAndLevelText);
 	}
 
 	private Table buildVersusLayer() {
@@ -415,7 +471,6 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void onPopupOKClicked() {
-		System.out.println("OK!");
 		game.setScreen(new GameScreen(game));
 	}
 

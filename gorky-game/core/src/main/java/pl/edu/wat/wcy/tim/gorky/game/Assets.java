@@ -221,7 +221,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			
 			// rozmiary czcionek
 			defaultSmall.setScale(0.75f);
-			defaultNormal.setScale(1.0f);
+			defaultNormal.setScale(0.95f);
 			defaultBig.setScale(2.0f);
 			
 			// wlacz 'linear-filtering' by wygladzic czcionki

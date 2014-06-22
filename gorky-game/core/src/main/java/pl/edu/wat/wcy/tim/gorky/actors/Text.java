@@ -28,5 +28,13 @@ public class Text extends Actor {
 	public float getWidth() {
 		return font.getBounds(text).width;
 	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 	
 }
