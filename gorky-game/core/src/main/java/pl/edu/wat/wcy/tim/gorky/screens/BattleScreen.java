@@ -731,6 +731,11 @@ public class BattleScreen extends AbstractGameScreen {
 
 	@Override
 	public void hide() {
+		// zapisz HP gracza na wypadek, gdyby wyszedl z walki
+		SaveStatePreferences.instance.HP = player.getCharacterAttributes().getHP();
+		SaveStatePreferences.instance.MP = player.getCharacterAttributes().getMaxMP();
+		SaveStatePreferences.instance.save();
+		
 		stage.dispose();
 		stageVersusGui.dispose();
 	}
