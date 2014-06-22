@@ -14,6 +14,7 @@ import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.DamageText;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
+import pl.edu.wat.wcy.tim.gorky.actors.ProgressBarActor;
 import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
@@ -58,6 +59,12 @@ public class BattleScreen extends AbstractGameScreen {
 	private Button btnMagic;
 	private Button btnHeal;
 	private Image imgVersus;
+	
+	// paski HP i MP
+	ProgressBarActor playerHPBar;
+	ProgressBarActor playerMPBar;
+	ProgressBarActor enemyHPBar;
+	ProgressBarActor enemyMPBar;
 	
 	// okienka na koniec walki
 	private Window popupWindow;
@@ -185,6 +192,9 @@ public class BattleScreen extends AbstractGameScreen {
 					// wlacz animacje dostawania obrazen u wroga
 					startDamageAnimation(enemyActor);
 					
+					// aktualizuj pasek zdrowia
+					enemyHPBar.setPercent(enemy.calculateHpPercent());
+					
 					// zrob cos z dmgReceivedByEnemy..
 					System.out.println("Gracz uderzyl przeciwnika zabierajac mu " + dmgReceivedByEnemy + " punktow zycia!");
 					showTextAboveActor(enemyActor, String.valueOf(dmgReceivedByEnemy));
@@ -212,8 +222,11 @@ public class BattleScreen extends AbstractGameScreen {
 					// odejmij HP gracza
 					int dmgReceivedByPlayer = player.receiveDamage(enemyDMG);
 					
-					// wlacz animacje dostawania obrazen u wroga
+					// wlacz animacje dostawania obrazen u gracza
 					startDamageAnimation(playerActor);
+					
+					// aktualizuj pasek zdrowia
+					playerHPBar.setPercent(player.calculateHpPercent());
 					
 					// zrob cos z dmgReceivedByPlayer..
 					System.out.println("Przeciwnik uderzyl gracza zabierajac mu " + dmgReceivedByPlayer + " punktow zycia!");
@@ -295,11 +308,34 @@ public class BattleScreen extends AbstractGameScreen {
 		Table layer = new Table();
 		
 		layer.center().bottom().padBottom(10);
-
+		
+		// ustaw paski zdrowia i many
+		playerHPBar = setupProgressBar(Color.RED, 85, 50, 115, 10, player.calculateHpPercent());
+		layer.addActor(playerHPBar);
+		
+		playerMPBar = setupProgressBar(Color.BLUE, 85, 18, 115, 10, player.calculateMpPercent());
+		layer.addActor(playerMPBar);
+		
+		enemyHPBar = setupProgressBar(Color.RED, 670, 50, 115, 10, enemy.calculateHpPercent());
+		layer.addActor(enemyHPBar);
+		
+		enemyMPBar = setupProgressBar(Color.BLUE, 670, 18, 115, 10, enemy.calculateMpPercent());
+		layer.addActor(enemyMPBar);
+		
+		// ustaw tabelki z HP i MP
 		imgVersus = new Image(skinGorkyBattle, "versus_gui");
 		layer.add(imgVersus);
 		
 		return layer;
+	}
+	
+	private ProgressBarActor setupProgressBar(Color c, float posX, float posY, float width, float height, float percent) {
+		ProgressBarActor pba = new ProgressBarActor(percent, c);
+		pba.setPosition(posX, posY);
+		pba.setHeight(height);
+		pba.setWidth(width);
+		
+		return pba;
 	}
 
 	private Table buildpopupWindow(String popupHeader, String popupInfo) {

@@ -27,6 +27,11 @@ public class SaveStatePreferences {
 	public int gold;			// ilosc posiadanego zlota
 	public int exp;				// ilosc posiadanego doswiadczenia
 	public int level;			// aktualny poziom postaci
+	
+	// weapon
+	public boolean weaponEquipped;
+	public String weaponName;
+	public int weaponAtk;
 
 	// singleton - prywatny konstruktor
 	private SaveStatePreferences() {
@@ -50,6 +55,11 @@ public class SaveStatePreferences {
 		gold = prefs.getInteger("gold", 100);
 		exp = prefs.getInteger("exp", 0);
 		level = prefs.getInteger("level", 1);
+		
+		// weapon
+		weaponEquipped = prefs.getBoolean("weaponEquipped", false);
+		weaponName = prefs.getString("weaponName");
+		weaponAtk = prefs.getInteger("weaponAtk");
 	}
 	
 	public void save() {
@@ -69,6 +79,11 @@ public class SaveStatePreferences {
 		prefs.putInteger("gold", gold);
 		prefs.putInteger("exp", exp);
 		prefs.putInteger("level", level);
+		
+		// weapon
+		prefs.putBoolean("weaponEquipped", weaponEquipped);
+		prefs.putString("weaponName", weaponName);
+		prefs.putInteger("weaponAtk", weaponAtk);
 		
 		prefs.flush();
 	}

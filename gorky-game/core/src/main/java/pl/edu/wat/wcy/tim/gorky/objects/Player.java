@@ -58,8 +58,15 @@ public class Player extends BattleGameObject {
 		this.equipment = new Equipment(characterAttributes);
 		
 		// zaloz miecz
-		Sword sword = new Sword("Drewniany miecz wstydu", 3);
-		this.equipment.equipItem(sword);
+		if(SaveStatePreferences.instance.weaponEquipped == false) {
+			Sword sword = new Sword("Drewniany miecz wstydu", 3);
+			
+			SaveStatePreferences.instance.weaponName = "Drewniany miecz wstydu";
+			SaveStatePreferences.instance.weaponAtk = 3;
+			
+			this.equipment.equipItem(sword);
+		}
+		
 	}
 
 	private void init() {

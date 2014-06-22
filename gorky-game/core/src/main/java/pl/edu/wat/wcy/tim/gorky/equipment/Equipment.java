@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.wat.wcy.tim.gorky.objects.CharacterAttributes;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 
@@ -29,7 +30,6 @@ public class Equipment {
 		
 		if(currentEquipment[index] != null) {
 			currentEquipment[index].unequip(characterAttributes);
-			//Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 			System.out.println("Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 		}
 		
@@ -38,7 +38,12 @@ public class Equipment {
 		
 		System.out.println("Weapon \"" + currentEquipment[index].getName() + "\" has been equipped");
 		
-		//Gdx.app.debug(TAG, "Weapon \"" + currentEquipment[index].getName() + "\" has been equipped");	
+		if(index == EquipmentSlot.WEAPON.ordinal()) {
+			System.out.println("Zalozono bron!");
+			SaveStatePreferences.instance.weaponEquipped = true;
+			SaveStatePreferences.instance.save();
+		}
+		
 	}
 	
 	public EquipableItem getEquipableItemByType(EquipmentSlot equipmentSlot) {
@@ -51,5 +56,13 @@ public class Equipment {
 		//Gdx.app.debug(TAG, "Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 		System.out.println("Item \"" + currentEquipment[index].getName() + "\" has been unequipped");
 		currentEquipment[index] = null;
+		
+		if(index == EquipmentSlot.WEAPON.ordinal()) {
+			System.out.println("Zdjeto bron!");
+			SaveStatePreferences.instance.weaponEquipped = true;
+			SaveStatePreferences.instance.weaponName = null;
+			SaveStatePreferences.instance.weaponAtk = 0;
+			SaveStatePreferences.instance.save();
+		}
 	}
 }

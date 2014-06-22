@@ -24,7 +24,19 @@ public class GameplayFormulas {
 		CharacterAttributes enemyAttr = new CharacterAttributes();
 		
 		Random r = new Random();
-		int enemyLevel = r.nextInt(3) + 1;		// od 1 do 3
+		
+		int probability = r.nextInt(100) + 1;
+		int enemyLevel = 1;
+		
+		// 55% szansy na potwora level 1, 35% szansy na level 2, 10% szansy na level 3
+		
+		if(probability > 55) {
+			if(probability > 90) {
+				enemyLevel = 3;
+			} else {
+				enemyLevel = 2;
+			}
+		}
 		
 		int atk = 7 + 2 * enemyLevel;
 		int def = 0 + 2 * enemyLevel;

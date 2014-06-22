@@ -66,6 +66,7 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		int expToBeAdded = exp;
 		
 		if(currentEXP + exp > expToLevelUp) {
+			System.out.println("LEVEL UP!");
 			result = true;
 			
 			expToBeAdded = (currentEXP + exp) % expToLevelUp;
@@ -144,6 +145,14 @@ public abstract class BattleGameObject extends AbstractGameObject {
 		
 		SaveStatePreferences.instance.exp = characterAttributes.getExp();
 		SaveStatePreferences.instance.save();
+	}
+	
+	public float calculateHpPercent() {
+		return this.characterAttributes.getHP() / (this.characterAttributes.getMaxHP()*1.0f);
+	}
+	
+	public float calculateMpPercent() {
+		return this.characterAttributes.getMP() / (this.characterAttributes.getMaxMP()*1.0f);
 	}
 
 }
