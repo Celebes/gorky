@@ -149,7 +149,7 @@ public class MenuScreen extends AbstractGameScreen {
 	}
 	
 	private void onPlayClicked () {
-		game.setScreen(new GameScreen(game));
+		game.setScreen(new GameScreen(game, true));
 	}
 	
 	private void onOptionsClicked () {

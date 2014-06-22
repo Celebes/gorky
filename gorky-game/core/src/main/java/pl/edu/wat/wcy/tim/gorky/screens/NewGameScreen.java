@@ -6,22 +6,19 @@ import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 /*
  * Ekran z ekwipunkiem + statystykami
  */
 
-public class InventoryScreen extends AbstractGameScreen {
+public class NewGameScreen extends AbstractGameScreen {
 
 	private Image imgBackground;
 	private Skin skinGorkyUiEq;
@@ -29,7 +26,7 @@ public class InventoryScreen extends AbstractGameScreen {
 	private Button btnSave;
 	private Button btnContinue;
 
-	public InventoryScreen(GorkyGame game) {
+	public NewGameScreen(GorkyGame game) {
 		super(game);
 	}
 
@@ -45,7 +42,7 @@ public class InventoryScreen extends AbstractGameScreen {
 	}
 	
 	private void rebuildStage() {
-		skinGorkyUiEq = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_EQ), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
+		skinGorkyUiEq = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_NEW_GAME), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
 		
 		Table layerBg = buildBgLayer();
 		Table layerText = buildTextLayer();
@@ -64,51 +61,13 @@ public class InventoryScreen extends AbstractGameScreen {
 	private Table buildBgLayer() {
 		Table layer = new Table();
 		
-		imgBackground = new Image(skinGorkyUiEq, "background");
-		layer.add(imgBackground);
-		
 		return layer;
 	}
 	
 	private Table buildButtonsLayer() {
 		Table layer = new Table();
 		
-		layer.right().top();
-		layer.pad(145);
-		
-		btnSave = new Button(skinGorkyUiEq, "save");
-		layer.add(btnSave).padBottom(10);
-		
-		btnSave.addListener(new ChangeListener() {
-			
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				onSaveClicked();
-			}
-		});
-		
-		layer.row();
-		
-		btnContinue = new Button(skinGorkyUiEq, "continue");
-		layer.add(btnContinue);
-		
-		btnContinue.addListener(new ChangeListener() {
-			
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				onContinueClicked();
-			}
-		});
-		
 		return layer;
-	}
-	
-	private void onSaveClicked() {
-		
-	}
-	
-	private void onContinueClicked() {
-		game.setScreen(new GameScreen(game, false));
 	}
 	
 	private Table buildTextLayer() {

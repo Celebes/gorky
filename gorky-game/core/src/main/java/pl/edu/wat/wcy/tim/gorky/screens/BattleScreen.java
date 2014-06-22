@@ -510,7 +510,7 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void onPopupOKClicked() {
-		game.setScreen(new GameScreen(game));
+		game.setScreen(new GameScreen(game, true));
 	}
 
 	private Table buildEnemyLayer() {
@@ -651,7 +651,7 @@ public class BattleScreen extends AbstractGameScreen {
 				
 				@Override
 				public void run() {
-					game.setScreen(new GameScreen(game));
+					game.setScreen(new GameScreen(game, true));
 				}
 			}));
 			

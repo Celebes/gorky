@@ -48,4 +48,8 @@ public class Constants {
 	public static final String TEXTURE_ATLAS_ORC_BATTLE = "images/gorky-orc.pack";
 	public static final String TEXTURE_ATLAS_HEAL_SPELL = "images/gorky-heal-spell.pack";
 	
+	public static final String TEXTURE_ATLAS_INTEGRATION_UI = "images/gorky-integration-ui.pack";
+	public static final String SKIN_GORKY_LOGIN = "images/gorky-ui-login.json";
+	public static final String SKIN_GORKY_NEW_GAME = "images/gorky-ui-new-game.json";
+	public static final String SKIN_GORKY_EQ = "images/gorky-ui-eq.json";
 }

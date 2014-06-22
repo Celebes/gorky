@@ -34,17 +34,25 @@ public class GameScreen extends AbstractGameScreen {
 	private Button btnEq;
 	
 	private boolean paused;
+	private boolean eqButtonClicked = false;
+	private boolean restartMusic;
 
-	public GameScreen(GorkyGame game) {
+	public GameScreen(GorkyGame game, boolean restartMusic) {
 		super(game);
 		SaveStatePreferences.instance.load();
+		this.restartMusic = restartMusic;
 	}
 	
 	@Override
 	public void render(float deltaTime) {
 		
-		if(worldController.isOnCollisionWithTeleport()) {
-			game.setScreen(new GameScreen(game));
+		if(eqButtonClicked == true) {
+			SaveStatePreferences.instance.save();
+			game.setScreen(new InventoryScreen(game));
+		}
+		
+		else if(worldController.isOnCollisionWithTeleport()) {
+			game.setScreen(new GameScreen(game, worldController.isRestartMusic()));
 		}
 		
 		else if(worldController.isCollisionWithEnemy()) {
@@ -86,10 +94,12 @@ public class GameScreen extends AbstractGameScreen {
 		worldRenderer = new WorldRenderer(worldController);
 		Gdx.input.setCatchBackKey(true);
 		
-		if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
-			AudioManager.instance.play(Assets.instance.music.sacredMusic);
-		} else {
-			AudioManager.instance.play(Assets.instance.music.gameMusic);
+		if(restartMusic == true) {
+			if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
+				AudioManager.instance.play(Assets.instance.music.sacredMusic);
+			} else {
+				AudioManager.instance.play(Assets.instance.music.gameMusic);
+			}
 		}
 		
 		// build EQ gui
@@ -131,6 +141,7 @@ public class GameScreen extends AbstractGameScreen {
 	
 	private void onEqClicked() {
 		System.out.println("EQ!");
+		eqButtonClicked = true;
 	}
 
 	@Override

@@ -82,6 +82,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_HEAL_SPELL, TextureAtlas.class);
+		//assetManager.load(Constants.TEXTURE_ATLAS_INTEGRATION_UI, TextureAtlas.class);
 		
 		// wczytaj dzwieki
 		assetManager.load("sounds/player_attack.ogg", Sound.class);

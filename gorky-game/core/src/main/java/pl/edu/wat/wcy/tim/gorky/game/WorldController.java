@@ -33,6 +33,7 @@ public class WorldController extends InputAdapter {
 	
 	private boolean onCollisionWithEnemy = false;
 	private boolean onCollisionWithTeleport = false;
+	private boolean restartMusic = true;
 	
 	private String nextLevelName;
 	
@@ -165,27 +166,30 @@ public class WorldController extends InputAdapter {
 		
 		if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_02)) {
 			if((int)nlt.position.x == 0 && (int)nlt.position.y == 11) {
+				restartMusic = true;
 				nextLevelName = Constants.LEVEL_01;
 				playerNewX = 11;
 				playerNewY = 4;
 				
 				// przechodzac do poziomu numer 1 rowniez wylecz postac
 				SaveStatePreferences.instance.HP = SaveStatePreferences.instance.maxHP;
-				SaveStatePreferences.instance.MP = SaveStatePreferences.instance.maxMP;
-				
+				SaveStatePreferences.instance.MP = SaveStatePreferences.instance.maxMP;				
 			} else if((int)nlt.position.x == 24 && (int)nlt.position.y == 12) {
+				restartMusic = false;
 				nextLevelName = Constants.LEVEL_03;
 				playerNewX = 1;
 				playerNewY = 7;
 			}
 		} else if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
 			if((int)nlt.position.x == 12 && (int)nlt.position.y == 4) {
+				restartMusic = true;
 				nextLevelName = Constants.LEVEL_02;
 				playerNewX = 1;
 				playerNewY = 11;
 			}
 		} else if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_03)) {
 			if((int)nlt.position.x == 0 && (int)nlt.position.y == 7) {
+				restartMusic = false;
 				nextLevelName = Constants.LEVEL_02;
 				playerNewX = 23;
 				playerNewY = 12;
@@ -366,6 +370,14 @@ public class WorldController extends InputAdapter {
 
 	public boolean isOnCollisionWithTeleport() {
 		return onCollisionWithTeleport;
+	}
+
+	public boolean isRestartMusic() {
+		return restartMusic;
+	}
+
+	public void setRestartMusic(boolean restartMusic) {
+		this.restartMusic = restartMusic;
 	}
 
 }

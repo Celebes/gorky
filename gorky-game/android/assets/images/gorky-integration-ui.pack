@@ -1,0 +1,110 @@
+
+gorky-integration-ui.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 1, 219
+  size: 800, 480
+  orig: 800, 480
+  offset: 0, 0
+  index: -1
+cancel-up
+  rotate: false
+  xy: 1, 164
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+continue-up
+  rotate: false
+  xy: 803, 646
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+login-up
+  rotate: false
+  xy: 1, 109
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+logout-up
+  rotate: false
+  xy: 159, 164
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+newgame-up
+  rotate: false
+  xy: 803, 591
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+ok-up
+  rotate: false
+  xy: 1, 54
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+savegame-up
+  rotate: false
+  xy: 159, 109
+  size: 156, 53
+  orig: 156, 53
+  offset: 0, 0
+  index: -1
+cancel-dn
+  rotate: false
+  xy: 317, 166
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+continue-dn
+  rotate: false
+  xy: 803, 538
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+login-dn
+  rotate: false
+  xy: 1, 1
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+logout-dn
+  rotate: false
+  xy: 159, 56
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+newgame-dn
+  rotate: false
+  xy: 317, 113
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+ok-dn
+  rotate: false
+  xy: 475, 166
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
+savegame-dn
+  rotate: false
+  xy: 803, 485
+  size: 156, 51
+  orig: 156, 51
+  offset: 0, 0
+  index: -1
