@@ -53,6 +53,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	// pasek postepu
 	public AtlasRegion progressBarImg;
 	
+	// czar leczenia
+	public AssetHealSpell healSpell;
+	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
 	
@@ -78,12 +81,14 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.load(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_BATTLE, TextureAtlas.class);
+		assetManager.load(Constants.TEXTURE_ATLAS_HEAL_SPELL, TextureAtlas.class);
 		
 		// wczytaj dzwieki
 		assetManager.load("sounds/player_attack.ogg", Sound.class);
 		assetManager.load("sounds/player_hit.ogg", Sound.class);
 		assetManager.load("sounds/orc_attack.ogg", Sound.class);
 		assetManager.load("sounds/orc_hit.ogg", Sound.class);
+		assetManager.load("sounds/heal_spell.ogg", Sound.class);
 		
 		// wczytaj muzyke
 		assetManager.load("music/music_battle.ogg", Music.class);
@@ -128,6 +133,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlasBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_BATTLE);
 		swordSwing = new AssetSwordSwing(atlasBattleScreen);
+		
+		TextureAtlas atlasHealSpell = assetManager.get(Constants.TEXTURE_ATLAS_HEAL_SPELL);
+		healSpell = new AssetHealSpell(atlasHealSpell);
 		
 		// dzwieki
 		sounds = new AssetSounds(assetManager);
@@ -220,6 +228,17 @@ public class Assets implements Disposable, AssetErrorListener {
 		}
 	}
 	
+	public class AssetHealSpell {
+		public final Animation animHealSpell;
+		
+		public AssetHealSpell(TextureAtlas atlas) {
+			Array<AtlasRegion> regions = null;
+			
+			regions = atlas.findRegions("anim_heal_spell");
+			animHealSpell = new Animation (1.0f / 15.0f, regions);
+		}
+	}
+	
 	public class AssetSwordSwing {
 		public final Animation animSwordSwing;
 		
@@ -267,12 +286,14 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final Sound playerHit;
 		public final Sound enemyAttack;
 		public final Sound enemyHit;
+		public final Sound healSpell;
 
 		public AssetSounds(AssetManager am) {
 			playerAttack = am.get("sounds/player_attack.ogg", Sound.class);
 			playerHit = am.get("sounds/player_hit.ogg", Sound.class);
 			enemyAttack = am.get("sounds/orc_attack.ogg", Sound.class);
 			enemyHit = am.get("sounds/orc_hit.ogg", Sound.class);
+			healSpell = am.get("sounds/heal_spell.ogg", Sound.class);
 		}
 	}
 	

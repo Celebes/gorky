@@ -9,15 +9,15 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 
 import java.util.Random;
 
-import javax.sound.midi.Sequence;
-
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
+import pl.edu.wat.wcy.tim.gorky.actors.AnimatedActor;
 import pl.edu.wat.wcy.tim.gorky.actors.BattleActor;
 import pl.edu.wat.wcy.tim.gorky.actors.DamageText;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.NumberText;
 import pl.edu.wat.wcy.tim.gorky.actors.OrcActor;
 import pl.edu.wat.wcy.tim.gorky.actors.ProgressBarActor;
+import pl.edu.wat.wcy.tim.gorky.actors.SpellActor;
 import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
@@ -88,6 +88,9 @@ public class BattleScreen extends AbstractGameScreen {
 	private BattleActor playerActor;
 	private BattleActor enemyActor;
 	
+	// animacja czaru leczenia
+	private AnimatedActor healSpellActor;
+	
 	private Player player;
 	private Enemy enemy;
 	
@@ -95,7 +98,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private boolean battleEnd = false;
 	private boolean assignPopupStrings = true;
 	private boolean showPopup = true;
-	private boolean escapeFailed = false;
+	private boolean nonAttackActionFinished = false;
 	
 	String popupHeader;
 	String popupInfo;
@@ -254,12 +257,12 @@ public class BattleScreen extends AbstractGameScreen {
 					
 				}
 				
-				if(enemyActor.isDamageFinished() == true || escapeFailed == true) {
+				if(enemyActor.isDamageFinished() == true || nonAttackActionFinished == true) {
 					
 					playerTurn = false;
 					
-					if(escapeFailed == true) {
-						escapeFailed = false;
+					if(nonAttackActionFinished == true) {
+						nonAttackActionFinished = false;
 					}
 					
 					startAttackAnimation(enemyActor);
@@ -581,6 +584,52 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void onHealClicked() {
+		// sprawdz czy gracz ma tyle MP aby rzucic zaklecie
+		
+		if(player.getCharacterAttributes().getMP() >= 5) {
+			showMenuButtons(false);
+			
+			healSpellActor = new SpellActor();
+			healSpellActor.animation = Assets.instance.healSpell.animHealSpell;
+			healSpellActor.setPosition(70, 103);
+			
+			stage.addActor(healSpellActor);
+			
+			SequenceAction seq = sequence();
+			seq.addAction(delay(1.0f));
+			seq.addAction(run(new Runnable() {
+				
+				@Override
+				public void run() {
+					nonAttackActionFinished = true;
+				}
+			}));
+			
+			stage.addAction(seq);
+			
+			// pusc dzwiek leczenia
+			playSoundWithDelay(0.2f, Assets.instance.sounds.healSpell);
+			
+			// pokaz ilosc odzyskanego HP nad graczem
+			showTextAboveActor(playerActor, "+20");
+			
+			// zwieksz hp o 20
+			int hpPoLeczeniu = player.getCharacterAttributes().getHP() + 20;
+			hpPoLeczeniu = (hpPoLeczeniu > player.getCharacterAttributes().getMaxHP() ? player.getCharacterAttributes().getMaxHP() : hpPoLeczeniu);
+			
+			player.getCharacterAttributes().setHP(hpPoLeczeniu);
+			playerHPBar.setPercent(player.calculateHpPercent());
+			playerHPNumber.setNumber(player.getCharacterAttributes().getHP());
+			
+			// zmniejsz MP o 5
+			player.getCharacterAttributes().setMP(player.getCharacterAttributes().getMP() - 5);
+			playerMPBar.setPercent(player.calculateMpPercent());
+			playerMPNumber.setNumber(player.getCharacterAttributes().getMP());
+		} else {
+			DamageText notEnoughMana = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_not_enough_mana"), Color.BLUE, 1.0f);
+			notEnoughMana.setPosition(Constants.VIEWPORT_GUI_WIDTH/2 - notEnoughMana.getWidth()/2, Constants.VIEWPORT_GUI_HEIGHT/2 + notEnoughMana.getHeight()/2);
+			stage.addActor(notEnoughMana);
+		}
 
 	}
 	
@@ -618,7 +667,7 @@ public class BattleScreen extends AbstractGameScreen {
 				
 				@Override
 				public void run() {
-					escapeFailed = true;
+					nonAttackActionFinished = true;
 				}
 			}));
 			
