@@ -592,7 +592,7 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		// 50% szansy na ucieczke
 		if(probability <= 50) {
-			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_success"), Color.WHITE, 1.5f);
+			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_success"), Color.YELLOW, 1.5f);
 			runAwaySuccess.setPosition(Constants.VIEWPORT_GUI_WIDTH/2 - runAwaySuccess.getWidth()/2, Constants.VIEWPORT_GUI_HEIGHT/2 + runAwaySuccess.getHeight()/2);
 			stage.addActor(runAwaySuccess);
 			
@@ -608,7 +608,7 @@ public class BattleScreen extends AbstractGameScreen {
 			
 			stage.addAction(seq);
 		} else {
-			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_fail"), Color.WHITE, 1.5f);
+			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_fail"), Color.YELLOW, 1.5f);
 			runAwaySuccess.setPosition(Constants.VIEWPORT_GUI_WIDTH/2 - runAwaySuccess.getWidth()/2, Constants.VIEWPORT_GUI_HEIGHT/2 + runAwaySuccess.getHeight()/2);
 			stage.addActor(runAwaySuccess);
 			

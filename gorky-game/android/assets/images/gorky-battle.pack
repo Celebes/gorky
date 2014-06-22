@@ -94,3 +94,10 @@ magic-up
   orig: 100, 100
   offset: 0, 0
   index: -1
+progress_bar_img
+  rotate: false
+  xy: 783, 539
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1

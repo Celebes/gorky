@@ -1,5 +1,7 @@
 package pl.edu.wat.wcy.tim.gorky.actors;
 
+import pl.edu.wat.wcy.tim.gorky.game.Assets;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -24,15 +26,11 @@ public class ProgressBarActor extends Actor {
 	}
 	
 	@Override
-    public void draw(Batch batch, float arg1) {
-		batch.end();
-        shapeRenderer.begin(ShapeType.Filled);
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
-        shapeRenderer.setColor(c);
-        shapeRenderer.rect(getX(), getY(), getWidth() * currentPercent, getHeight());
-        shapeRenderer.end();
-        batch.begin();
+    public void draw(Batch batch, float parentAlpha) {		
+		batch.setColor(Color.GRAY);
+		batch.draw(Assets.instance.progressBarImg, getX(), getY(), getWidth(), getHeight());
+		batch.setColor(c);
+		batch.draw(Assets.instance.progressBarImg, getX(), getY(), getWidth() * currentPercent, getHeight());
 	}
 	
 	@Override

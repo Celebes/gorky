@@ -50,6 +50,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetFonts battleFonts;
 	public AssetFonts battleFontsSmall;
 	
+	// pasek postepu
+	public AtlasRegion progressBarImg;
+	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
 	
@@ -129,6 +132,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		// dzwieki
 		sounds = new AssetSounds(assetManager);
 		music = new AssetMusic(assetManager);
+		
+		// pasek postepu
+		progressBarImg = atlasBattleScreen.findRegion("progress_bar_img");
 	}
 	
 	@Override
