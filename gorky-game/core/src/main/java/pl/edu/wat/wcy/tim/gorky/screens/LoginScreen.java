@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class LoginScreen extends AbstractGameScreen {
 
 	private Image imgBackground;
-	private Skin skinGorkyUiEq;
+	private Skin skinGorkyLogin;
 	private Skin skinLibgdx;
 	private Stage stage;
 	private TextField loginTF;
@@ -48,7 +48,7 @@ public class LoginScreen extends AbstractGameScreen {
 	}
 	
 	private void rebuildStage() {
-		skinGorkyUiEq = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_LOGIN), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
+		skinGorkyLogin = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_LOGIN), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
 		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		
 		Table layerBg = buildBgLayer();
@@ -69,7 +69,7 @@ public class LoginScreen extends AbstractGameScreen {
 	private Table buildBgLayer() {
 		Table layer = new Table();
 		
-		imgBackground = new Image(skinGorkyUiEq, "background");
+		imgBackground = new Image(skinGorkyLogin, "background");
 		layer.add(imgBackground);
 		
 		return layer;
@@ -82,7 +82,7 @@ public class LoginScreen extends AbstractGameScreen {
 		layer.padRight(145);
 		layer.padTop(200);
 		
-		btnOk = new Button(skinGorkyUiEq, "ok");
+		btnOk = new Button(skinGorkyLogin, "ok");
 		layer.add(btnOk).padBottom(10);
 		
 		btnOk.addListener(new ChangeListener() {
@@ -95,7 +95,7 @@ public class LoginScreen extends AbstractGameScreen {
 		
 		layer.row();
 		
-		btnCancel = new Button(skinGorkyUiEq, "cancel");
+		btnCancel = new Button(skinGorkyLogin, "cancel");
 		layer.add(btnCancel).padBottom(10);
 		
 		btnCancel.addListener(new ChangeListener() {

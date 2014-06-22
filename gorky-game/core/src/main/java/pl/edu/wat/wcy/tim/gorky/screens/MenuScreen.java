@@ -8,10 +8,13 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
+import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GamePreferences;
+import pl.edu.wat.wcy.tim.gorky.util.LoginPreferences;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -35,7 +38,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.sun.webkit.ContextMenu.ShowContext;
 
 public class MenuScreen extends AbstractGameScreen {
 	
@@ -71,6 +76,18 @@ public class MenuScreen extends AbstractGameScreen {
 	private boolean debugEnabled = false;
 	private float debugRebuildStage;
 	
+	// new game
+	private Skin skinGorkyNewGame;
+	private Button btnLogIn;
+	private Button btnLogOut;
+	private Button btnNewGame;
+	private Button btnContinue;
+	private Button btnNewGameCancel;
+	
+	// aktualnie zalogowany jako..
+	private Text currentLoginTextHeader;
+	private Text currentLoginText;
+	
 	public MenuScreen(GorkyGame game) {
 		super(game);
 	}
@@ -96,6 +113,7 @@ public class MenuScreen extends AbstractGameScreen {
 	private void rebuildStage () {
 		skinGorky = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
 		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		skinGorkyNewGame = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_NEW_GAME), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
 		
 		Table layerBackground = buildBackgroundLayer();
 		Table layerObjects = buildObjectsLayer();
@@ -103,6 +121,9 @@ public class MenuScreen extends AbstractGameScreen {
 		Table layerInfo = buildInfoLayer();
 		Table layerControls = buildControlsLayer();
 		Table layerOptionsWindow = buildOptionsWindowLayer();
+		
+		// new game
+		Table layerButtons = buildNewGameButtonsLayer();
 		
 		stage.clear();
 		Stack stack = new Stack();
@@ -113,7 +134,145 @@ public class MenuScreen extends AbstractGameScreen {
 		stack.add(layerLogo);
 		stack.add(layerInfo);
 		stack.add(layerControls);
+		
+		// new game
+		stack.add(layerButtons);
+		
+		// aktualnie zalogowany uzytkownik
+		if(LoginPreferences.instance.loggedIn == true) {
+			showCurrentLogin();
+		}
+		
 		stage.addActor(layerOptionsWindow);
+	}
+	
+	private Table buildNewGameButtonsLayer() {
+		Table layer = new Table();
+		
+		int offsetY = 0;
+		
+		if(LoginPreferences.instance.loggedIn == false) {
+			offsetY = 50;
+		} else {
+			offsetY = 22;
+		}
+		
+		layer.right().top();
+		layer.padRight(40 - 300);
+		layer.padTop(100 + offsetY);
+		
+		// kontynuacja mozliwa tylko po zalogowaniu
+		
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnContinue = new Button(skinGorkyNewGame, "continue");
+			layer.add(btnContinue).padBottom(10);
+			
+			btnContinue.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onContinueClicked();
+				}
+			});
+			
+			layer.row();
+		}
+		
+		btnNewGame = new Button(skinGorkyNewGame, "newgame");
+		layer.add(btnNewGame).padBottom(10);
+		
+		btnNewGame.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onNewGameClicked();
+			}
+		});
+		
+		layer.row();
+		
+		// logowanie mozliwe tylko jak sie jest wylogowanym
+		
+		if(LoginPreferences.instance.loggedIn == false) {
+			btnLogIn = new Button(skinGorkyNewGame, "login");
+			layer.add(btnLogIn).padBottom(10);
+			
+			btnLogIn.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onLogInClicked();
+				}
+			});
+			
+			layer.row();
+		}
+		
+		// wylogowanie mozliwe tylko po zalogowaniu
+		
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnLogOut = new Button(skinGorkyNewGame, "logout");
+			layer.add(btnLogOut).padBottom(10);
+			
+			btnLogOut.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onLogOutClicked();
+				}
+			});
+			
+			layer.row();
+		}
+		
+		btnNewGameCancel = new Button(skinGorkyNewGame, "cancel");
+		layer.add(btnNewGameCancel);
+		
+		btnNewGameCancel.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onNewGameCancelClicked();
+			}
+		});
+
+		return layer;
+	}
+	
+	private void onLogInClicked() {
+		System.out.println("LOG IN");
+	}
+	
+	private void onLogOutClicked() {
+		System.out.println("LOG OUT");
+	}
+
+	private void onNewGameClicked() {
+		System.out.println("NEW GAME");
+		SaveStatePreferences.instance.reset();
+		game.setScreen(new GameScreen(game, true));
+	}
+	
+	private void onContinueClicked() {
+		//game.setScreen(new GameScreen(game, true));
+		System.out.println("CONTINUE");
+		game.setScreen(new GameScreen(game, true));
+	}
+	
+	private void onNewGameCancelClicked() {
+		System.out.println("CANCEL");
+		showMenuButtons(true);
+		showNewGameButtons(false);
+	}
+	
+	private void showCurrentLogin() {
+		currentLoginTextHeader = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Zalogowany jako:");
+		currentLoginTextHeader.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10);
+		currentLoginText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "ASDSAD_" + LoginPreferences.instance.login);
+		currentLoginText.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10 - 5 - currentLoginText.getHeight());
+		currentLoginText.setColor(Color.GREEN);
+		stage.addActor(currentLoginTextHeader);
+		stage.addActor(currentLoginText);
 	}
 
 	private Table buildControlsLayer() {
@@ -149,7 +308,13 @@ public class MenuScreen extends AbstractGameScreen {
 	}
 	
 	private void onPlayClicked () {
-		game.setScreen(new GameScreen(game, true));
+		//game.setScreen(new GameScreen(game, true));
+		
+		// pokaz przyciski new game
+		showNewGameButtons(true);
+		
+		// ukryj przyciski play/opcje
+		showMenuButtons(false);
 	}
 	
 	private void onOptionsClicked () {
@@ -171,6 +336,40 @@ public class MenuScreen extends AbstractGameScreen {
 
 		SequenceAction seq = sequence();
 		if (visible) seq.addAction(delay(delayOptionsButton + moveDuration));
+		seq.addAction(run(new Runnable() {
+			public void run () {
+				btnMenuPlay.setTouchable(touchEnabled);
+				btnMenuOptions.setTouchable(touchEnabled);
+			}
+		}));
+		stage.addAction(seq);
+	}
+	
+	private void showNewGameButtons(boolean visible) {
+		float moveDuration = 1.0f;
+		Interpolation moveEasing = Interpolation.swing;
+
+		float moveX = 300 * (visible ? -1 : 1);
+		float moveY = 0 * (visible ? -1 : 1);
+		final Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		
+		if(LoginPreferences.instance.loggedIn == false) {
+			btnLogIn.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		}
+		
+		btnNewGame.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		
+		btnNewGameCancel.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnContinue.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			btnLogOut.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			currentLoginTextHeader.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			currentLoginText.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		}
+
+		SequenceAction seq = sequence();
+		if (visible) seq.addAction(delay(moveDuration));
 		seq.addAction(run(new Runnable() {
 			public void run () {
 				btnMenuPlay.setTouchable(touchEnabled);

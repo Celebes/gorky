@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class NewGameScreen extends AbstractGameScreen {
 
 	private Image imgBackground;
-	private Skin skinGorkyUiEq;
+	private Skin skinGorkyNewGame;
 	private Stage stage;
 	private Button btnLogIn;
 	private Button btnLogOut;
@@ -50,11 +50,11 @@ public class NewGameScreen extends AbstractGameScreen {
 	}
 	
 	private void rebuildStage() {
-		skinGorkyUiEq = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_NEW_GAME), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
+		skinGorkyNewGame = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_NEW_GAME), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
 		
 		Table layerBg = buildBgLayer();
 		Table layerText = buildTextLayer();
-		Table layerButtons = buildButtonsLayer();
+		Table layerButtons = buildNewGameButtonsLayer();
 		
 		stage.clear();
 		Stack stack = new Stack();
@@ -68,20 +68,20 @@ public class NewGameScreen extends AbstractGameScreen {
 	private Table buildBgLayer() {
 		Table layer = new Table();
 		
-		imgBackground = new Image(skinGorkyUiEq, "background");
+		imgBackground = new Image(skinGorkyNewGame, "background");
 		layer.add(imgBackground);
 		
 		return layer;
 	}
 	
-	private Table buildButtonsLayer() {
+	private Table buildNewGameButtonsLayer() {
 		Table layer = new Table();
 		
 		layer.right().top();
 		layer.padRight(145);
 		layer.padTop(107);
 		
-		btnContinue = new Button(skinGorkyUiEq, "continue");
+		btnContinue = new Button(skinGorkyNewGame, "continue");
 		layer.add(btnContinue).padBottom(10);
 		
 		btnContinue.addListener(new ChangeListener() {
@@ -94,7 +94,7 @@ public class NewGameScreen extends AbstractGameScreen {
 		
 		layer.row();
 		
-		btnNewGame = new Button(skinGorkyUiEq, "newgame");
+		btnNewGame = new Button(skinGorkyNewGame, "newgame");
 		layer.add(btnNewGame).padBottom(10);
 		
 		btnNewGame.addListener(new ChangeListener() {
@@ -107,7 +107,7 @@ public class NewGameScreen extends AbstractGameScreen {
 		
 		layer.row();
 		
-		btnLogIn = new Button(skinGorkyUiEq, "login");
+		btnLogIn = new Button(skinGorkyNewGame, "login");
 		layer.add(btnLogIn).padBottom(10);
 		
 		btnLogIn.addListener(new ChangeListener() {
@@ -120,7 +120,7 @@ public class NewGameScreen extends AbstractGameScreen {
 		
 		layer.row();
 		
-		btnLogOut = new Button(skinGorkyUiEq, "logout");
+		btnLogOut = new Button(skinGorkyNewGame, "logout");
 		layer.add(btnLogOut);
 		
 		btnLogOut.addListener(new ChangeListener() {

@@ -47,7 +47,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void init() {
-		Gdx.input.setInputProcessor(this);
+		//Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		initLevel();
 	}

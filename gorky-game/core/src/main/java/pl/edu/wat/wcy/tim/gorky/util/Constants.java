@@ -27,6 +27,7 @@ public class Constants {
 	public static float CURRENT_MAP_HEIGHT = 0.0f;
 	
 	public static final String GAME_PREFERENCES = "game_preferences.prefs";
+	public static final String LOGIN_PREFERENCES = "login_preferences.prefs";
 	public static final String SAVE_STATE_PREFERENCES = "save_state.prefs";
 	
 	// GUI

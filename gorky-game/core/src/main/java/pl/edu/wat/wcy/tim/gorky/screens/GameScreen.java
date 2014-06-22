@@ -9,6 +9,7 @@ import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class GameScreen extends AbstractGameScreen {
@@ -27,6 +27,8 @@ public class GameScreen extends AbstractGameScreen {
 	
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
+	
+	private InputMultiplexer multiplexer = new InputMultiplexer();
 	
 	// przycisk na dole
 	private Skin skinGorkyMap;
@@ -83,7 +85,10 @@ public class GameScreen extends AbstractGameScreen {
 	@Override
 	public void resize(int width, int height) {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
-		Gdx.input.setInputProcessor(stage);
+		multiplexer.removeProcessor(stage);
+		multiplexer.addProcessor(stage);
+		//multiplexer.addProcessor(worldController);
+		Gdx.input.setInputProcessor(multiplexer);
 		worldRenderer.resize(width, height);
 		rebuildStageEqGui();
 	}
@@ -91,9 +96,14 @@ public class GameScreen extends AbstractGameScreen {
 	@Override
 	public void show() {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
-		Gdx.input.setInputProcessor(stage);
+	
 		worldController = new WorldController(game);
 		worldRenderer = new WorldRenderer(worldController);
+		
+		multiplexer.addProcessor(stage);
+		multiplexer.addProcessor(worldController);
+		Gdx.input.setInputProcessor(multiplexer);
+		
 		Gdx.input.setCatchBackKey(true);
 		
 		if(restartMusic == true) {
@@ -167,7 +177,7 @@ public class GameScreen extends AbstractGameScreen {
 	
 	@Override
 	public InputProcessor getInputProcessor() {
-		return worldController;
+		return multiplexer;
 	}
 
 }

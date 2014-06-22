@@ -4,6 +4,7 @@
 		continue: { down: continue-dn, up: continue-up },
 		login: { down: login-dn, up: login-up },
 		logout: { down: logout-dn, up: logout-up },
+		cancel: { down: cancel-dn, up: cancel-up },
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Image: {
 		background: { drawable: background },
