@@ -95,6 +95,7 @@ public class BattleScreen extends AbstractGameScreen {
 	private boolean battleEnd = false;
 	private boolean assignPopupStrings = true;
 	private boolean showPopup = true;
+	private boolean escapeFailed = false;
 	
 	String popupHeader;
 	String popupInfo;
@@ -250,10 +251,17 @@ public class BattleScreen extends AbstractGameScreen {
 						// dzwiek obrazen wroga
 						AudioManager.instance.play(Assets.instance.sounds.enemyHit);
 					}
+					
 				}
 				
-				if(enemyActor.isDamageFinished() == true) {
+				if(enemyActor.isDamageFinished() == true || escapeFailed == true) {
+					
 					playerTurn = false;
+					
+					if(escapeFailed == true) {
+						escapeFailed = false;
+					}
+					
 					startAttackAnimation(enemyActor);
 					// dzwiek ataku przeciwnika
 					playSoundWithDelay(0.7f, Assets.instance.sounds.enemyAttack);
@@ -306,7 +314,7 @@ public class BattleScreen extends AbstractGameScreen {
 	}
 	
 	private void showTextAboveActor(BattleActor actor, String text) {
-		DamageText dmgText = new DamageText(Assets.instance.battleFonts.defaultBig, text);
+		DamageText dmgText = new DamageText(Assets.instance.battleFonts.defaultBig, text, Color.WHITE, 1.0f);
 		dmgText.setPosition(actor.getX() + actor.getWidth()/2 - dmgText.getWidth()/2, actor.getY() + actor.getHeight() + (int)(1.5*dmgText.getHeight()));
 		stage.addActor(dmgText);
 	}
@@ -546,7 +554,7 @@ public class BattleScreen extends AbstractGameScreen {
 		btnMagic.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				onMagicClicked();
+				onHealClicked();
 			}
 		});
 		
@@ -557,7 +565,7 @@ public class BattleScreen extends AbstractGameScreen {
 		btnHeal.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				onHealClicked();
+				onRunAwayClicked();
 			}
 		});
 		
@@ -570,6 +578,52 @@ public class BattleScreen extends AbstractGameScreen {
 		
 		// dzwiek ataku gracza
 		playSoundWithDelay(0.7f, Assets.instance.sounds.playerAttack);
+	}
+	
+	private void onHealClicked() {
+
+	}
+	
+	private void onRunAwayClicked() {
+		// schowaj przyciski
+		showMenuButtons(false);
+		
+		int probability = r.nextInt(100) + 1;
+		
+		// 50% szansy na ucieczke
+		if(probability <= 50) {
+			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_success"), Color.WHITE, 1.5f);
+			runAwaySuccess.setPosition(Constants.VIEWPORT_GUI_WIDTH/2 - runAwaySuccess.getWidth()/2, Constants.VIEWPORT_GUI_HEIGHT/2 + runAwaySuccess.getHeight()/2);
+			stage.addActor(runAwaySuccess);
+			
+			SequenceAction seq = sequence();
+			seq.addAction(delay(1.0f));
+			seq.addAction(run(new Runnable() {
+				
+				@Override
+				public void run() {
+					game.setScreen(new GameScreen(game));
+				}
+			}));
+			
+			stage.addAction(seq);
+		} else {
+			DamageText runAwaySuccess = new DamageText(Assets.instance.fontsUpsideDown.defaultBig, Assets.instance.stringBundle.get("battle_run_fail"), Color.WHITE, 1.5f);
+			runAwaySuccess.setPosition(Constants.VIEWPORT_GUI_WIDTH/2 - runAwaySuccess.getWidth()/2, Constants.VIEWPORT_GUI_HEIGHT/2 + runAwaySuccess.getHeight()/2);
+			stage.addActor(runAwaySuccess);
+			
+			SequenceAction seq = sequence();
+			seq.addAction(delay(1.0f));
+			seq.addAction(run(new Runnable() {
+				
+				@Override
+				public void run() {
+					escapeFailed = true;
+				}
+			}));
+			
+			stage.addAction(seq);
+		}
 	}
 	
 	private void startAttackAnimation(final BattleActor attacker) {
@@ -600,14 +654,6 @@ public class BattleScreen extends AbstractGameScreen {
 		}));
 
 		stage.addAction(seq);
-	}
-	
-	private void onMagicClicked() {
-
-	}
-	
-	private void onHealClicked() {
-		game.setScreen(new GameScreen(game));
 	}
 	
 	private void showMenuButtons (boolean visible) {

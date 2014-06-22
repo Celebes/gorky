@@ -46,6 +46,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	// czcionka
 	public AssetFonts fonts;
+	public AssetFonts fontsUpsideDown;
 	public AssetFonts battleFonts;
 	public AssetFonts battleFontsSmall;
 	
@@ -106,6 +107,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		// utworz czcionki
 		fonts = new AssetFonts("images/arial_pl.fnt", true);
+		fontsUpsideDown = new AssetFonts("images/arial_pl.fnt", false);
 		battleFonts = new AssetFonts("images/battle_font.fnt", false);
 		battleFontsSmall = new AssetFonts("images/battle_font_small.fnt", false);
 		
