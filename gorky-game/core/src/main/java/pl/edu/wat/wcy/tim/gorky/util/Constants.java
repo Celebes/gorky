@@ -16,14 +16,18 @@ public class Constants {
 	// lokalizacja pliku opisujacego poziom 01
 	public static final String LEVEL_01 = "levels/level-01.png";
 	public static final String LEVEL_02 = "levels/level-02.png";
+	public static final String LEVEL_03 = "levels/level-03.png";
 	
 	// ilosc przeciwnikow w poziomach
+	public static final int LEVEL_01_ENEMY_COUNT = 0;
 	public static final int LEVEL_02_ENEMY_COUNT = 5;
+	public static final int LEVEL_03_ENEMY_COUNT = 2;
 	
 	public static float CURRENT_MAP_WIDTH = 0.0f;
 	public static float CURRENT_MAP_HEIGHT = 0.0f;
 	
 	public static final String GAME_PREFERENCES = "game_preferences.prefs";
+	public static final String LOGIN_PREFERENCES = "login_preferences.prefs";
 	public static final String SAVE_STATE_PREFERENCES = "save_state.prefs";
 	
 	// GUI
@@ -39,7 +43,14 @@ public class Constants {
 	public static final String TEXTURE_ATLAS_BATTLE = "images/gorky-battle.pack";
 	public static final String SKIN_GORKY_BATTLE = "images/gorky-battle.json";
 	
+	public static final String SKIN_GORKY_MAP = "images/gorky-map.json";
+	
 	public static final String TEXTURE_ATLAS_KNIGHT_BATTLE = "images/gorky-knight.pack";
 	public static final String TEXTURE_ATLAS_ORC_BATTLE = "images/gorky-orc.pack";
+	public static final String TEXTURE_ATLAS_HEAL_SPELL = "images/gorky-heal-spell.pack";
 	
+	public static final String TEXTURE_ATLAS_INTEGRATION_UI = "images/gorky-integration-ui.pack";
+	public static final String SKIN_GORKY_LOGIN = "images/gorky-ui-login.json";
+	public static final String SKIN_GORKY_NEW_GAME = "images/gorky-ui-new-game.json";
+	public static final String SKIN_GORKY_EQ = "images/gorky-ui-eq.json";
 }

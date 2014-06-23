@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -32,6 +34,10 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetKnightBattle knight;
 	public AssetOrcBattle orc;
 	
+	// dzwieki
+	public AssetSounds sounds;
+	public AssetMusic music;
+	
 	// animacje atakow
 	public AssetSwordSwing swordSwing;
 	
@@ -40,7 +46,15 @@ public class Assets implements Disposable, AssetErrorListener {
 	
 	// czcionka
 	public AssetFonts fonts;
+	public AssetFonts fontsUpsideDown;
 	public AssetFonts battleFonts;
+	public AssetFonts battleFontsSmall;
+	
+	// pasek postepu
+	public AtlasRegion progressBarImg;
+	
+	// czar leczenia
+	public AssetHealSpell healSpell;
 	
 	// prywatny konstruktor oznacza, ze klasa jest Singletonem - nie mozna jej inicjalizowac z innych klas
 	private Assets() {}
@@ -67,6 +81,22 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.load(Constants.TEXTURE_ATLAS_KNIGHT_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_ORC_BATTLE, TextureAtlas.class);
 		assetManager.load(Constants.TEXTURE_ATLAS_BATTLE, TextureAtlas.class);
+		assetManager.load(Constants.TEXTURE_ATLAS_HEAL_SPELL, TextureAtlas.class);
+		//assetManager.load(Constants.TEXTURE_ATLAS_INTEGRATION_UI, TextureAtlas.class);
+		
+		// wczytaj dzwieki
+		assetManager.load("sounds/player_attack.ogg", Sound.class);
+		assetManager.load("sounds/player_hit.ogg", Sound.class);
+		assetManager.load("sounds/orc_attack.ogg", Sound.class);
+		assetManager.load("sounds/orc_hit.ogg", Sound.class);
+		assetManager.load("sounds/heal_spell.ogg", Sound.class);
+		
+		// wczytaj muzyke
+		assetManager.load("music/music_battle.ogg", Music.class);
+		assetManager.load("music/music_game.ogg", Music.class);
+		assetManager.load("music/music_menu.ogg", Music.class);
+		assetManager.load("music/music_victory.ogg", Music.class);
+		assetManager.load("music/music_sacred.ogg", Music.class);
 		
 		// zacznij wczytywac rzeczy i poczekaj do konca
 		assetManager.finishLoading();
@@ -86,7 +116,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		// utworz czcionki
 		fonts = new AssetFonts("images/arial_pl.fnt", true);
+		fontsUpsideDown = new AssetFonts("images/arial_pl.fnt", false);
 		battleFonts = new AssetFonts("images/battle_font.fnt", false);
+		battleFontsSmall = new AssetFonts("images/battle_font_small.fnt", false);
 		
 		// utworz obiekty
 		grass = new AssetGrass(atlasGameScreen);
@@ -102,6 +134,16 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		TextureAtlas atlasBattleScreen = assetManager.get(Constants.TEXTURE_ATLAS_BATTLE);
 		swordSwing = new AssetSwordSwing(atlasBattleScreen);
+		
+		TextureAtlas atlasHealSpell = assetManager.get(Constants.TEXTURE_ATLAS_HEAL_SPELL);
+		healSpell = new AssetHealSpell(atlasHealSpell);
+		
+		// dzwieki
+		sounds = new AssetSounds(assetManager);
+		music = new AssetMusic(assetManager);
+		
+		// pasek postepu
+		progressBarImg = atlasBattleScreen.findRegion("progress_bar_img");
 	}
 	
 	@Override
@@ -187,6 +229,17 @@ public class Assets implements Disposable, AssetErrorListener {
 		}
 	}
 	
+	public class AssetHealSpell {
+		public final Animation animHealSpell;
+		
+		public AssetHealSpell(TextureAtlas atlas) {
+			Array<AtlasRegion> regions = null;
+			
+			regions = atlas.findRegions("anim_heal_spell");
+			animHealSpell = new Animation (1.0f / 15.0f, regions);
+		}
+	}
+	
 	public class AssetSwordSwing {
 		public final Animation animSwordSwing;
 		
@@ -219,13 +272,45 @@ public class Assets implements Disposable, AssetErrorListener {
 			
 			// rozmiary czcionek
 			defaultSmall.setScale(0.75f);
-			defaultNormal.setScale(1.0f);
-			defaultBig.setScale(2.0f);
+			defaultNormal.setScale(0.95f);
+			defaultBig.setScale(1.5f);
 			
 			// wlacz 'linear-filtering' by wygladzic czcionki
 			defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		}
+	}
+	
+	public class AssetSounds {
+		public final Sound playerAttack;
+		public final Sound playerHit;
+		public final Sound enemyAttack;
+		public final Sound enemyHit;
+		public final Sound healSpell;
+
+		public AssetSounds(AssetManager am) {
+			playerAttack = am.get("sounds/player_attack.ogg", Sound.class);
+			playerHit = am.get("sounds/player_hit.ogg", Sound.class);
+			enemyAttack = am.get("sounds/orc_attack.ogg", Sound.class);
+			enemyHit = am.get("sounds/orc_hit.ogg", Sound.class);
+			healSpell = am.get("sounds/heal_spell.ogg", Sound.class);
+		}
+	}
+	
+	public class AssetMusic {
+		public final Music menuMusic;
+		public final Music gameMusic;
+		public final Music battleMusic;
+		public final Music victoryMusic;
+		public final Music sacredMusic;
+
+		public AssetMusic(AssetManager am) {
+			menuMusic = am.get("music/music_menu.ogg", Music.class);
+			gameMusic = am.get("music/music_game.ogg", Music.class);
+			battleMusic = am.get("music/music_battle.ogg", Music.class);
+			victoryMusic = am.get("music/music_victory.ogg", Music.class);
+			sacredMusic = am.get("music/music_sacred.ogg", Music.class);
 		}
 	}
 	

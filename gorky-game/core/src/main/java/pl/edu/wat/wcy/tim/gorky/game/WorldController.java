@@ -7,6 +7,7 @@ import pl.edu.wat.wcy.tim.gorky.database.DBTest;
 import pl.edu.wat.wcy.tim.gorky.objects.Enemy;
 import pl.edu.wat.wcy.tim.gorky.objects.EnemySpawnpoint;
 import pl.edu.wat.wcy.tim.gorky.objects.Grass;
+import pl.edu.wat.wcy.tim.gorky.objects.NextLevelTeleport;
 import pl.edu.wat.wcy.tim.gorky.objects.Player;
 import pl.edu.wat.wcy.tim.gorky.objects.Wall;
 import pl.edu.wat.wcy.tim.gorky.screens.MenuScreen;
@@ -31,6 +32,10 @@ public class WorldController extends InputAdapter {
 	public Level level;
 	
 	private boolean onCollisionWithEnemy = false;
+	private boolean onCollisionWithTeleport = false;
+	private boolean restartMusic = true;
+	
+	private String nextLevelName;
 	
 	// Detekcja kolizji
 	private Rectangle r1 = new Rectangle();
@@ -42,7 +47,7 @@ public class WorldController extends InputAdapter {
 	}
 	
 	private void init() {
-		Gdx.input.setInputProcessor(this);
+		//Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		initLevel();
 	}
@@ -70,13 +75,12 @@ public class WorldController extends InputAdapter {
 		
 		if(level.fileName.equals(Constants.LEVEL_02)) {
 			numberOfEnemies = Constants.LEVEL_02_ENEMY_COUNT;
+		} else if(level.fileName.equals(Constants.LEVEL_03)) {
+			numberOfEnemies = Constants.LEVEL_03_ENEMY_COUNT;
 		}
 		
 		// sprawdza czy na ekranie jest mniej niz 3 wrogow - jesli tak, to dodaje nowych
 		while(level.enemies.size < numberOfEnemies) {
-			
-			System.out.println("HEHE");
-			
 			// losuje spawnpoint
 			int losowyIndexSpawna = r.nextInt(level.enemySpawnpoints.size);
 			EnemySpawnpoint es = level.enemySpawnpoints.get(losowyIndexSpawna);
@@ -107,8 +111,6 @@ public class WorldController extends InputAdapter {
 			Enemy newEnemy = new Enemy();
 			newEnemy.position = es.position;
 			level.enemies.add(newEnemy);
-			
-			System.out.println("NEW ENEMY POSITION: " + es.position);
 		}
 	}
 
@@ -143,6 +145,66 @@ public class WorldController extends InputAdapter {
 			onCollisionPlayerWithEnemy(e);
 		}
 		
+		for(NextLevelTeleport nlt : level.nextLevelTeleports) {
+			r2.set(nlt.position.x, nlt.position.y, nlt.bounds.width, nlt.bounds.height);
+			
+			if(!r1.overlaps(r2)) {
+				continue;
+			}
+			
+			onCollisionPlayerWithNextLevelTeleport(nlt);
+		}
+		
+	}
+
+	private void onCollisionPlayerWithNextLevelTeleport(NextLevelTeleport nlt) {
+		onCollisionWithTeleport = true;
+		System.out.println("Kolizja z teleportem o wspolrzednych: " + nlt.position.x + " | " + nlt.position.y);
+		
+		float playerNewX = 5;
+		float playerNewY = 5;
+		
+		if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_02)) {
+			if((int)nlt.position.x == 0 && (int)nlt.position.y == 11) {
+				restartMusic = true;
+				nextLevelName = Constants.LEVEL_01;
+				playerNewX = 11;
+				playerNewY = 4;
+				
+				// przechodzac do poziomu numer 1 rowniez wylecz postac
+				SaveStatePreferences.instance.HP = SaveStatePreferences.instance.maxHP;
+				SaveStatePreferences.instance.MP = SaveStatePreferences.instance.maxMP;				
+			} else if((int)nlt.position.x == 24 && (int)nlt.position.y == 12) {
+				restartMusic = false;
+				nextLevelName = Constants.LEVEL_03;
+				playerNewX = 1;
+				playerNewY = 7;
+			}
+		} else if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_01)) {
+			if((int)nlt.position.x == 12 && (int)nlt.position.y == 4) {
+				restartMusic = true;
+				nextLevelName = Constants.LEVEL_02;
+				playerNewX = 1;
+				playerNewY = 11;
+			}
+		} else if(SaveStatePreferences.instance.currentLevel.equals(Constants.LEVEL_03)) {
+			if((int)nlt.position.x == 0 && (int)nlt.position.y == 7) {
+				restartMusic = false;
+				nextLevelName = Constants.LEVEL_02;
+				playerNewX = 23;
+				playerNewY = 12;
+			}
+		}
+		
+		System.out.println("NEXT LEVEL NAME = " + nextLevelName);
+		// ustaw nowy poziom
+		SaveStatePreferences.instance.currentLevel = nextLevelName;
+		
+		// ustaw nowe wspolrzedne gracza
+		SaveStatePreferences.instance.playerPositionX = playerNewX;
+		SaveStatePreferences.instance.playerPositionY = playerNewY;
+		
+		SaveStatePreferences.instance.save();
 	}
 
 	private void onCollisionPlayerWithEnemy(Enemy e) {
@@ -304,6 +366,18 @@ public class WorldController extends InputAdapter {
 
 	public boolean isCollisionWithEnemy() {
 		return onCollisionWithEnemy;
+	}
+
+	public boolean isOnCollisionWithTeleport() {
+		return onCollisionWithTeleport;
+	}
+
+	public boolean isRestartMusic() {
+		return restartMusic;
+	}
+
+	public void setRestartMusic(boolean restartMusic) {
+		this.restartMusic = restartMusic;
 	}
 
 }

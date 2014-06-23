@@ -11,7 +11,11 @@ public class CharacterAttributes {
 	private int MP;				// aktualne punkty many
 	private int maxMP;			// max punkty many
 	
-	public CharacterAttributes(int atk, int def, int magAtk, int magDef, int hP, int maxHP, int mP, int maxMP) {
+	private int gold;			// ilosc posiadanego zlota
+	private int exp;			// ilosc posiadanego doswiadczenia
+	private int level;			// aktualny poziom postaci
+	
+	public CharacterAttributes(int atk, int def, int magAtk, int magDef, int hP, int maxHP, int mP, int maxMP, int gold, int exp, int expForNextLevel, int level) {
 		super();
 		this.atk = atk;
 		this.def = def;
@@ -21,10 +25,37 @@ public class CharacterAttributes {
 		this.maxHP = maxHP;
 		this.MP = mP;
 		this.maxMP = maxMP;
+		this.exp = exp;
+		this.gold = gold;
+		this.level = level;
 	}
 
 	public CharacterAttributes() {
 		
+	}
+
+	public int getGold() {
+		return gold;
+	}
+
+	public void setGold(int gold) {
+		this.gold = gold;
+	}
+
+	public int getExp() {
+		return exp;
+	}
+
+	public void setExp(int exp) {
+		this.exp = exp;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public int getAtk() {

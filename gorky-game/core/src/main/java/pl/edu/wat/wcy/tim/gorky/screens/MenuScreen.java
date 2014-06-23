@@ -8,9 +8,14 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.touchable;
 import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
+import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GamePreferences;
+import pl.edu.wat.wcy.tim.gorky.util.LoginPreferences;
+import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
+import pl.edu.wat.wcy.tim.gorky.util.UltraIntegrator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -32,8 +37,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MenuScreen extends AbstractGameScreen {
@@ -44,6 +51,7 @@ public class MenuScreen extends AbstractGameScreen {
 	public final float CUSTOM_CHECKBOX_SIZE = 25.0f;
 
 	private Stage stage;
+	private Stack stack;
 	private Skin skinGorky;
 	private Skin skinLibgdx;
 	
@@ -70,6 +78,34 @@ public class MenuScreen extends AbstractGameScreen {
 	private boolean debugEnabled = false;
 	private float debugRebuildStage;
 	
+	// new game
+	private Skin skinGorkyNewGame;
+	private Button btnLogIn;
+	private Button btnLogOut;
+	private Button btnNewGame;
+	private Button btnContinue;
+	private Button btnNewGameCancel;
+	
+	private Table layerButtons;
+	
+	// login menu
+	private Skin skinGorkyLogin;
+	private TextField loginTF;
+	private TextField passwordTF;
+	private Button btnLoginOk;
+	private Button btnLoginCancel;
+	
+	private Table layerTF;
+	private Table layerLoginButtons;
+	
+	// aktualnie zalogowany jako..
+	private Text currentLoginTextHeader;
+	private Text currentLoginText;
+	
+	// okienka z info o zlym loginie
+	private Window popupWrongLoginWindow;
+	private TextButton popupOKButton;
+	
 	public MenuScreen(GorkyGame game) {
 		super(game);
 	}
@@ -95,6 +131,8 @@ public class MenuScreen extends AbstractGameScreen {
 	private void rebuildStage () {
 		skinGorky = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
 		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		skinGorkyNewGame = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_NEW_GAME), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
+		skinGorkyLogin = new Skin(Gdx.files.internal(Constants.SKIN_GORKY_LOGIN), new TextureAtlas(Constants.TEXTURE_ATLAS_INTEGRATION_UI));
 		
 		Table layerBackground = buildBackgroundLayer();
 		Table layerObjects = buildObjectsLayer();
@@ -103,8 +141,15 @@ public class MenuScreen extends AbstractGameScreen {
 		Table layerControls = buildControlsLayer();
 		Table layerOptionsWindow = buildOptionsWindowLayer();
 		
+		// new game
+		layerButtons = buildNewGameButtonsLayer();
+		
+		// login
+		layerTF = buildLoginTFLayer();
+		layerLoginButtons = buildLoginButtonsLayer();
+		
 		stage.clear();
-		Stack stack = new Stack();
+		stack = new Stack();
 		stage.addActor(stack);
 		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
 		stack.add(layerBackground);
@@ -112,7 +157,256 @@ public class MenuScreen extends AbstractGameScreen {
 		stack.add(layerLogo);
 		stack.add(layerInfo);
 		stack.add(layerControls);
+		
+		// new game
+		stack.add(layerButtons);
+		
+		// login
+		stack.add(layerTF);
+		stack.add(layerLoginButtons);
+		
+		// aktualnie zalogowany uzytkownik
+		
+		showCurrentLogin();		
+		
 		stage.addActor(layerOptionsWindow);
+	}
+	
+	private Table buildLoginButtonsLayer() {
+		Table layer = new Table();
+		
+		layer.right().top();
+		layer.padRight(40 - 300);
+		layer.padTop(250);
+		
+		btnLoginOk = new Button(skinGorkyLogin, "ok");
+		layer.add(btnLoginOk).padBottom(10);
+		
+		btnLoginOk.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onLoginOkClicked();
+			}
+		});
+		
+		layer.row();
+		
+		btnLoginCancel = new Button(skinGorkyLogin, "cancel");
+		layer.add(btnLoginCancel).padBottom(10);
+		
+		btnLoginCancel.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onLoginCancelClicked();
+			}
+		});
+
+		return layer;
+	}
+	
+	private Table buildLoginTFLayer() {
+		Table layer = new Table();
+		
+		layer.top().right();
+		layer.padRight(40 - 300);
+		layer.padTop(170);
+		
+		loginTF = new TextField("", skinLibgdx, "default");
+		loginTF.setMessageText("Login");
+		layer.add(loginTF).padBottom(5);	
+		
+		layer.row();
+		
+		passwordTF = new TextField("", skinLibgdx, "default");
+		passwordTF.setMessageText("Has³o");
+		passwordTF.setPasswordCharacter('*');
+		passwordTF.setPasswordMode(true);
+		layer.add(passwordTF);
+		
+		
+		return layer;
+	}
+	
+	private void onLoginOkClicked() {
+		boolean checkLoginData = UltraIntegrator.instance.checkLoginData(loginTF.getText(), passwordTF.getText());
+		System.out.println("OK! " + loginTF.getText() + " | " + passwordTF.getText() + " | " + checkLoginData);
+		
+		if(checkLoginData == true) {
+			
+			// wyzeruj pola
+			loginTF.setText("");
+			passwordTF.setText("");
+			
+			layerButtons = buildNewGameButtonsLayer();
+			showNewGameButtons(true);
+			showLoginButtons(false);
+		} else {
+			Table popupWindow = buildPopupWrongLoginWindow("Logowanie", "Niepoprawne dane logowania!");
+			stage.addActor(popupWindow);
+		}
+	}
+	
+	private void onLoginCancelClicked() {
+		System.out.println("CANCEL!");
+		showNewGameButtons(true);
+		showLoginButtons(false);
+		
+		// wyzeruj pola
+		loginTF.setText("");
+		passwordTF.setText("");
+	}
+	
+	private Table buildNewGameButtonsLayer() {
+		Table layer = new Table();
+		
+		int offsetY = 0;
+		
+		if(LoginPreferences.instance.loggedIn == false) {
+			offsetY = 50;
+		} else {
+			offsetY = 22;
+		}
+		
+		layer.right().top();
+		layer.padRight(40 - 300);
+		layer.padTop(100 + offsetY);
+		
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnContinue = new Button(skinGorkyNewGame, "continue");
+			layer.add(btnContinue).padBottom(10);
+			btnContinue.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onContinueClicked();
+				}
+			});
+			
+			layer.row();
+			
+			btnNewGame = new Button(skinGorkyNewGame, "newgame");
+			layer.add(btnNewGame).padBottom(10);
+			
+			btnNewGame.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onNewGameClicked();
+				}
+			});
+			
+			layer.row();
+			
+			btnLogOut = new Button(skinGorkyNewGame, "logout");
+			layer.add(btnLogOut).padBottom(10);
+			btnLogOut.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onLogOutClicked();
+				}
+			});
+			
+			layer.row();
+			
+			btnNewGameCancel = new Button(skinGorkyNewGame, "cancel");
+			layer.add(btnNewGameCancel);
+			
+			btnNewGameCancel.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onNewGameCancelClicked();
+				}
+			});
+		} else {
+			btnNewGame = new Button(skinGorkyNewGame, "newgame");
+			layer.add(btnNewGame).padBottom(10);
+			
+			btnNewGame.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onNewGameClicked();
+				}
+			});
+			
+			layer.row();
+			
+			btnLogIn = new Button(skinGorkyNewGame, "login");
+			layer.add(btnLogIn).padBottom(10);
+			btnLogIn.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onLogInClicked();
+				}
+			});
+			
+			layer.row();
+			
+			btnNewGameCancel = new Button(skinGorkyNewGame, "cancel");
+			layer.add(btnNewGameCancel);
+			
+			btnNewGameCancel.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onNewGameCancelClicked();
+				}
+			});
+		}
+		
+		return layer;
+	}
+	
+	private void onLogInClicked() {
+		System.out.println("LOG IN");
+		showLoginButtons(true);
+		showNewGameButtons(false);
+	}
+	
+	private void onLogOutClicked() {
+		System.out.println("LOG OUT");
+		
+		showNewGameButtons(false);
+		
+		LoginPreferences.instance.loggedIn = false;
+		LoginPreferences.instance.login = "";
+		LoginPreferences.instance.password = "";
+		
+		LoginPreferences.instance.save();
+		
+		showMenuButtons(true);
+	}
+
+	private void onNewGameClicked() {
+		System.out.println("NEW GAME");
+		SaveStatePreferences.instance.reset();
+		game.setScreen(new GameScreen(game, true));
+	}
+	
+	private void onContinueClicked() {
+		System.out.println("CONTINUE");
+		game.setScreen(new GameScreen(game, true));
+	}
+	
+	private void onNewGameCancelClicked() {
+		System.out.println("CANCEL");
+		showMenuButtons(true);
+		showNewGameButtons(false);
+	}
+	
+	private void showCurrentLogin() {
+		currentLoginTextHeader = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Zalogowany jako:");
+		currentLoginTextHeader.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10);
+		currentLoginText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "ASDSAD_" + LoginPreferences.instance.login);
+		currentLoginText.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10 - 5 - currentLoginText.getHeight());
+		currentLoginText.setColor(Color.GREEN);
+		stage.addActor(currentLoginTextHeader);
+		stage.addActor(currentLoginText);
 	}
 
 	private Table buildControlsLayer() {
@@ -147,8 +441,12 @@ public class MenuScreen extends AbstractGameScreen {
 		return layer;
 	}
 	
-	private void onPlayClicked () {
-		game.setScreen(new GameScreen(game));
+	private void onPlayClicked () {		
+		// pokaz przyciski new game
+		showNewGameButtons(true);
+		
+		// ukryj przyciski play/opcje
+		showMenuButtons(false);
 	}
 	
 	private void onOptionsClicked () {
@@ -170,6 +468,83 @@ public class MenuScreen extends AbstractGameScreen {
 
 		SequenceAction seq = sequence();
 		if (visible) seq.addAction(delay(delayOptionsButton + moveDuration));
+		seq.addAction(run(new Runnable() {
+			public void run () {
+				btnMenuPlay.setTouchable(touchEnabled);
+				btnMenuOptions.setTouchable(touchEnabled);
+			}
+		}));
+		stage.addAction(seq);
+	}
+	
+	private void showNewGameButtons(boolean visible) {
+		float moveDuration = 1.0f;
+		
+		if(visible == true) {
+			rebuildNewGameButtons();
+			
+			currentLoginText.setVisible(true);
+			currentLoginTextHeader.setVisible(true);
+		} else {
+			// opoznij zmiane setVisible napisow
+			SequenceAction seq = sequence();
+			seq.addAction(delay(moveDuration));
+			seq.addAction(run(new Runnable() {
+				public void run () {
+					currentLoginText.setVisible(false);
+					currentLoginTextHeader.setVisible(false);
+				}
+			}));
+			stage.addAction(seq);
+		}
+		
+		Interpolation moveEasing = Interpolation.swing;
+
+		float moveX = 300 * (visible ? -1 : 1);
+		float moveY = 0 * (visible ? -1 : 1);
+		final Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		
+		if(LoginPreferences.instance.loggedIn == false) {
+			btnLogIn.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		}
+		
+		btnNewGame.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		
+		btnNewGameCancel.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnContinue.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			btnLogOut.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			currentLoginTextHeader.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+			currentLoginText.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		}
+
+		SequenceAction seq = sequence();
+		if (visible) seq.addAction(delay(moveDuration));
+		seq.addAction(run(new Runnable() {
+			public void run () {
+				btnMenuPlay.setTouchable(touchEnabled);
+				btnMenuOptions.setTouchable(touchEnabled);
+			}
+		}));
+		stage.addAction(seq);
+	}
+	
+	private void showLoginButtons(boolean visible) {
+		float moveDuration = 1.0f;
+		Interpolation moveEasing = Interpolation.swing;
+
+		float moveX = 300 * (visible ? -1 : 1);
+		float moveY = 0 * (visible ? -1 : 1);
+		final Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		
+		btnLoginOk.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		btnLoginCancel.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		loginTF.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+		passwordTF.addAction(moveBy(moveX, moveY, moveDuration, moveEasing));
+
+		SequenceAction seq = sequence();
+		if (visible) seq.addAction(delay(moveDuration));
 		seq.addAction(run(new Runnable() {
 			public void run () {
 				btnMenuPlay.setTouchable(touchEnabled);
@@ -360,11 +735,102 @@ public class MenuScreen extends AbstractGameScreen {
 	private void onSaveClicked () {
 		saveSettings();
 		onCancelClicked();
+		AudioManager.instance.onSettingsUpdated();
 	}
 
 	private void onCancelClicked () {
 		showMenuButtons(true);
 		showOptionsWindow(false, true);
+		AudioManager.instance.onSettingsUpdated();
+	}
+	
+	private Table buildPopupWrongLoginWindow(String popupHeader, String popupInfo) {
+		popupWrongLoginWindow = new Window(popupHeader, skinLibgdx);
+		
+		// dodaj informacje jakies
+		popupWrongLoginWindow.add(buildPopupInfoSection(popupInfo)).row();
+		
+		// dodaj przycisk OK
+		popupWrongLoginWindow.add(buildPlayerPopupButtonSection()).pad(10, 0, 10, 0);
+		
+		// ustaw kolor lekko przezroczysty
+		popupWrongLoginWindow.setColor(1, 1, 1, 0.8f);
+		
+		// domyslnie pokaz
+		showPopupWrongLoginWindow(true, true);
+		
+		// przelicz rozmiar
+		popupWrongLoginWindow.pack();
+		
+		// ustaw na srodku ekranu
+		popupWrongLoginWindow.setPosition((Constants.VIEWPORT_GUI_WIDTH/2) - (popupWrongLoginWindow.getWidth()/2), (Constants.VIEWPORT_GUI_HEIGHT/2) - (popupWrongLoginWindow.getHeight()/2));
+		
+		return popupWrongLoginWindow;
+	}
+	
+	private void showPopupWrongLoginWindow (boolean visible, boolean animated) {
+		float alphaTo = visible ? 0.8f : 0.0f;
+		float duration = animated ? 1.0f : 0.0f;
+		Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		popupWrongLoginWindow.addAction(sequence(touchable(touchEnabled), alpha(alphaTo, duration)));
+	}
+	
+	private Table buildPopupInfoSection(String popupInfo) {
+		Table tbl = new Table();
+		
+		tbl.pad(10, 10, 0, 10);
+		tbl.add(new Label(popupInfo, skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.row();
+		tbl.columnDefaults(0).padRight(10);
+		tbl.columnDefaults(1).padRight(10);
+		
+		return tbl;
+	}
+	
+	private Table buildPlayerPopupButtonSection() {
+		Table tbl = new Table();
+		
+		// + Separator
+		Label lbl = null;
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.75f, 0.75f, 0.75f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 0, 0, 1);
+		tbl.row();
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.5f, 0.5f, 0.5f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
+		tbl.row();
+		
+		// + Save Button with event handler
+		popupOKButton = new TextButton("OK", skinLibgdx);
+		popupOKButton.getCells().get(0).size(35);
+		tbl.add(popupOKButton).bottom().center().padLeft(popupOKButton.getWidth());
+		
+		popupOKButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				onPopupOKClicked();
+			}
+		});
+		
+		return tbl;
+	}
+	
+	private void onPopupOKClicked() {
+		showPopupWrongLoginWindow(false, false);
+	}
+	
+	private void rebuildNewGameButtons() {
+		stack.removeActor(layerButtons);
+		
+		// new game
+		layerButtons = buildNewGameButtonsLayer();
+		
+		stack.add(layerButtons);
 	}
 
 	@Override
@@ -384,6 +850,7 @@ public class MenuScreen extends AbstractGameScreen {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
+		AudioManager.instance.play(Assets.instance.music.menuMusic);
 	}
 
 	@Override

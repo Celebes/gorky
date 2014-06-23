@@ -21,7 +21,6 @@ public class Level {
 	
 	public enum BLOCK_TYPE {
 		EMPTY(255, 255, 255),					// bialy
-		PLAYER_SPAWNPOINT(255, 0, 0),			// czerwony
 		ENEMY_SPAWNPOINT(0, 255, 0),			// zielony
 		NEXT_LEVEL(255, 0, 255),				// magneta
 		WALL(0, 0, 0);							// czarny
@@ -93,14 +92,6 @@ public class Level {
 					// nic nie rob
 				}
 				
-				// gracz
-				else if(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
-					obj = new Player();
-					obj.position.set(SaveStatePreferences.instance.playerPositionX, SaveStatePreferences.instance.playerPositionY);
-					//System.out.println("PLAYER: " + pixelX + " | " + pixelY);
-					player = (Player)obj;
-				}
-				
 				// potworek
 				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
 					obj = new EnemySpawnpoint();
@@ -109,7 +100,7 @@ public class Level {
 				}
 				
 				// teleport do innego poziomu
-				else if(BLOCK_TYPE.ENEMY_SPAWNPOINT.sameColor(currentPixel)) {
+				else if(BLOCK_TYPE.NEXT_LEVEL.sameColor(currentPixel)) {
 					obj = new NextLevelTeleport();
 					obj.position.set(pixelX,baseHeight * obj.dimension.y);
 					nextLevelTeleports.add((NextLevelTeleport)obj);
@@ -132,8 +123,11 @@ public class Level {
 					Gdx.app.error(TAG, "Unknown object at x<" + pixelX + "> y<" + pixelY + ">: r<" + r + "> g<" + g + "> b<" + b + "> a<" + a + ">");
 				}
 			}
-
 		}
+		
+		// na koncu dodaj gracza
+		player = new Player();
+		player.position.set(SaveStatePreferences.instance.playerPositionX, SaveStatePreferences.instance.playerPositionY);
 		
 		// oczysc pamiec
 		pixmap.dispose();

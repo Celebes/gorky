@@ -1,0 +1,9 @@
+{
+	com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+		save: { down: savegame-dn, up: savegame-up },
+		continue: { down: continue-dn, up: continue-up },
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Image: {
+		background: { drawable: background },
+	},
+}
