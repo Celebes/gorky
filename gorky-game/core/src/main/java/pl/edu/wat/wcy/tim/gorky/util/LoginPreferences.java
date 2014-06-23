@@ -13,6 +13,7 @@ public class LoginPreferences {
 	public boolean loggedIn;
 	public String login;
 	public String password;
+	public int idUser;
 	
 	// singleton - prywatny konstruktor
 	private LoginPreferences() {
@@ -23,12 +24,14 @@ public class LoginPreferences {
 		loggedIn = prefs.getBoolean("loggedIn", false);
 		login = prefs.getString("login");
 		password = prefs.getString("password");
+		idUser = prefs.getInteger("idUser");
 	}
 	
 	public void save() {
 		prefs.putBoolean("loggedIn", loggedIn);
 		prefs.putString("login", login);
 		prefs.putString("password", password);
+		prefs.putInteger("idUser", idUser);
 		
 		prefs.flush();
 	}

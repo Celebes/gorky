@@ -7,6 +7,7 @@ import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
 import pl.edu.wat.wcy.tim.gorky.util.LoginPreferences;
 import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
+import pl.edu.wat.wcy.tim.gorky.util.UltraIntegrator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -113,6 +114,8 @@ public class InventoryScreen extends AbstractGameScreen {
 	
 	private void onSaveClicked() {
 		System.out.println("SAVE!");
+		
+		UltraIntegrator.instance.saveDataOnServer();
 	}
 	
 	private void onContinueClicked() {

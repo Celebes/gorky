@@ -134,6 +134,9 @@ public abstract class BattleGameObject extends AbstractGameObject {
 	public void increaseGold(int gold) {
 		int currentGold = characterAttributes.getGold();
 		characterAttributes.setGold(currentGold + gold);
+		
+		SaveStatePreferences.instance.gold = characterAttributes.getGold();
+		SaveStatePreferences.instance.save();
 	}
 	
 	/*

@@ -229,13 +229,6 @@ public class MenuScreen extends AbstractGameScreen {
 		System.out.println("OK! " + loginTF.getText() + " | " + passwordTF.getText() + " | " + checkLoginData);
 		
 		if(checkLoginData == true) {
-			LoginPreferences.instance.loggedIn = true;
-			LoginPreferences.instance.login = loginTF.getText();
-			LoginPreferences.instance.password = passwordTF.getText();
-			
-			LoginPreferences.instance.save();
-			
-			System.out.println("Pomyslnie zalogowano uzytkownika: " + LoginPreferences.instance.login);
 			
 			// wyzeruj pola
 			loginTF.setText("");

@@ -28,6 +28,8 @@ public class SaveStatePreferences {
 	public int exp;				// ilosc posiadanego doswiadczenia
 	public int level;			// aktualny poziom postaci
 	
+	public String avatarName;
+	
 	// weapon
 	public boolean weaponEquipped;
 	public String weaponName;
@@ -60,6 +62,8 @@ public class SaveStatePreferences {
 		weaponEquipped = prefs.getBoolean("weaponEquipped", false);
 		weaponName = prefs.getString("weaponName");
 		weaponAtk = prefs.getInteger("weaponAtk");
+		
+		avatarName = prefs.getString("avatarName");
 	}
 	
 	public void save() {
@@ -84,6 +88,8 @@ public class SaveStatePreferences {
 		prefs.putBoolean("weaponEquipped", weaponEquipped);
 		prefs.putString("weaponName", weaponName);
 		prefs.putInteger("weaponAtk", weaponAtk);
+		
+		prefs.putString("avatarName", avatarName);
 		
 		prefs.flush();
 	}
