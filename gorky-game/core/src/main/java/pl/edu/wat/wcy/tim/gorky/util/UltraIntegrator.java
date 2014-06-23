@@ -2,6 +2,7 @@ package pl.edu.wat.wcy.tim.gorky.util;
 
 import pl.edu.wat.wcy.tim.gorky.dto.IntegrationDTO;
 import pl.edu.wat.wcy.tim.gorky.dto.LoggedAndroidDTO;
+import pl.edu.wat.wcy.tim.gorky.dto.ReturnCodeDTO;
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,7 @@ public class UltraIntegrator {
 	public boolean checkLoginData(String login, String password) {
 		boolean result = false;
 		
+		/*
 		// przygotuj DTO
 		LoggedAndroidDTO ladto = new LoggedAndroidDTO();
 		
@@ -26,9 +28,12 @@ public class UltraIntegrator {
 		String json = gson.toJson(ladto);
 		
 		// wyslij JSON na usluge i dostan idUser
-		int idUser = 1;
+		String idUserJSON = "{\"isCanLogged\":3}";
+		ReturnCodeDTO rcdto = gson.fromJson(idUserJSON, ReturnCodeDTO.class);
 		
-		System.out.println("Otrzymano idUser = ");
+		int idUser = rcdto.getIsCanLogged();
+		
+		System.out.println("Otrzymano idUser = " + idUser);
 		
 		if(idUser != -1) {
 			LoginPreferences.instance.loggedIn = true;
@@ -40,10 +45,9 @@ public class UltraIntegrator {
 			
 			System.out.println("Pomyslnie zalogowano uzytkownika: " + LoginPreferences.instance.login + " o ID: " + LoginPreferences.instance.idUser);
 			
-			
 			result = true;
 		}
-		
+		*/
 		return result;
 	}
 	

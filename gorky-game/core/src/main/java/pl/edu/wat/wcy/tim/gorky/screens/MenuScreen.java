@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MenuScreen extends AbstractGameScreen {
@@ -100,6 +101,10 @@ public class MenuScreen extends AbstractGameScreen {
 	// aktualnie zalogowany jako..
 	private Text currentLoginTextHeader;
 	private Text currentLoginText;
+	
+	// okienka z info o zlym loginie
+	private Window popupWrongLoginWindow;
+	private TextButton popupOKButton;
 	
 	public MenuScreen(GorkyGame game) {
 		super(game);
@@ -237,6 +242,9 @@ public class MenuScreen extends AbstractGameScreen {
 			layerButtons = buildNewGameButtonsLayer();
 			showNewGameButtons(true);
 			showLoginButtons(false);
+		} else {
+			Table popupWindow = buildPopupWrongLoginWindow("Logowanie", "Niepoprawne dane logowania!");
+			stage.addActor(popupWindow);
 		}
 	}
 	
@@ -734,6 +742,86 @@ public class MenuScreen extends AbstractGameScreen {
 		showMenuButtons(true);
 		showOptionsWindow(false, true);
 		AudioManager.instance.onSettingsUpdated();
+	}
+	
+	private Table buildPopupWrongLoginWindow(String popupHeader, String popupInfo) {
+		popupWrongLoginWindow = new Window(popupHeader, skinLibgdx);
+		
+		// dodaj informacje jakies
+		popupWrongLoginWindow.add(buildPopupInfoSection(popupInfo)).row();
+		
+		// dodaj przycisk OK
+		popupWrongLoginWindow.add(buildPlayerPopupButtonSection()).pad(10, 0, 10, 0);
+		
+		// ustaw kolor lekko przezroczysty
+		popupWrongLoginWindow.setColor(1, 1, 1, 0.8f);
+		
+		// domyslnie pokaz
+		showPopupWrongLoginWindow(true, true);
+		
+		// przelicz rozmiar
+		popupWrongLoginWindow.pack();
+		
+		// ustaw na srodku ekranu
+		popupWrongLoginWindow.setPosition((Constants.VIEWPORT_GUI_WIDTH/2) - (popupWrongLoginWindow.getWidth()/2), (Constants.VIEWPORT_GUI_HEIGHT/2) - (popupWrongLoginWindow.getHeight()/2));
+		
+		return popupWrongLoginWindow;
+	}
+	
+	private void showPopupWrongLoginWindow (boolean visible, boolean animated) {
+		float alphaTo = visible ? 0.8f : 0.0f;
+		float duration = animated ? 1.0f : 0.0f;
+		Touchable touchEnabled = visible ? Touchable.enabled : Touchable.disabled;
+		popupWrongLoginWindow.addAction(sequence(touchable(touchEnabled), alpha(alphaTo, duration)));
+	}
+	
+	private Table buildPopupInfoSection(String popupInfo) {
+		Table tbl = new Table();
+		
+		tbl.pad(10, 10, 0, 10);
+		tbl.add(new Label(popupInfo, skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.row();
+		tbl.columnDefaults(0).padRight(10);
+		tbl.columnDefaults(1).padRight(10);
+		
+		return tbl;
+	}
+	
+	private Table buildPlayerPopupButtonSection() {
+		Table tbl = new Table();
+		
+		// + Separator
+		Label lbl = null;
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.75f, 0.75f, 0.75f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 0, 0, 1);
+		tbl.row();
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.5f, 0.5f, 0.5f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
+		tbl.row();
+		
+		// + Save Button with event handler
+		popupOKButton = new TextButton("OK", skinLibgdx);
+		popupOKButton.getCells().get(0).size(35);
+		tbl.add(popupOKButton).bottom().center().padLeft(popupOKButton.getWidth());
+		
+		popupOKButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				onPopupOKClicked();
+			}
+		});
+		
+		return tbl;
+	}
+	
+	private void onPopupOKClicked() {
+		showPopupWrongLoginWindow(false, false);
 	}
 	
 	private void rebuildNewGameButtons() {
