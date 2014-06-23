@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:spring/root-context.xml
+            <!--classpath:spring/security-app-context.xml-->
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>defaultHtmlEscape</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:logger/log4j.xml</param-value>
+    </context-param>
+    <!-- Rest Full WS -->
+<!--      <context-param>
+        <param-name>resteasy.scan</param-name>
+	    <param-value>true</param-value>
+    </context-param> -->
+
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+    <!-- Creates the Spring Container shared by all Servlets and Filters -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.request.RequestContextListener
+        </listener-class>
+    </listener>
+
+    <!-- Do sprawdzania liczby sesji springowych -->
+    <listener>
+        <listener-class>
+            org.springframework.security.web.session.HttpSessionEventPublisher
+        </listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>errorHandlerFilter</filter-name>
+        <filter-class>www.wcy.wat.gorky.utils.exceptions.UnhandledExceptionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>errorHandlerFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>requestContextFilter</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>requestContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+<!-- Start -->
+<!--     <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> -->
+    <!-- stop -->
+
+    <filter>
+        <filter-name>CharacterEncoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CharacterEncoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Processes application requests -->
+    <servlet>
+        <servlet-name>gorky</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+ <!--    <servlet>
+	<servlet-name>resteasy-servlet</servlet-name>
+       <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+    </servlet> -->
+
+    <servlet-mapping>
+        <servlet-name>gorky</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
+<!--     <servlet-mapping>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+   </servlet-mapping> -->
+
+    <session-config>
+        <session-timeout>100</session-timeout>
+    </session-config>
+
+</web-app>
