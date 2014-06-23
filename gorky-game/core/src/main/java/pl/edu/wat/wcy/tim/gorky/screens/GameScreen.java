@@ -50,9 +50,7 @@ public class GameScreen extends AbstractGameScreen {
 		
 		if(eqButtonClicked == true) {
 			SaveStatePreferences.instance.save();
-			//game.setScreen(new InventoryScreen(game));
-			//game.setScreen(new NewGameScreen(game));
-			game.setScreen(new LoginScreen(game));
+			game.setScreen(new InventoryScreen(game));
 		}
 		
 		else if(worldController.isOnCollisionWithTeleport()) {
@@ -87,7 +85,6 @@ public class GameScreen extends AbstractGameScreen {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
 		multiplexer.removeProcessor(stage);
 		multiplexer.addProcessor(stage);
-		//multiplexer.addProcessor(worldController);
 		Gdx.input.setInputProcessor(multiplexer);
 		worldRenderer.resize(width, height);
 		rebuildStageEqGui();
