@@ -5,6 +5,7 @@ import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GameplayFormulas;
+import pl.edu.wat.wcy.tim.gorky.util.LoginPreferences;
 import pl.edu.wat.wcy.tim.gorky.util.SaveStatePreferences;
 
 import com.badlogic.gdx.Gdx;
@@ -79,18 +80,22 @@ public class InventoryScreen extends AbstractGameScreen {
 		layer.right().top();
 		layer.pad(145);
 		
-		btnSave = new Button(skinGorkyUiEq, "save");
-		layer.add(btnSave).padBottom(10);
-		
-		btnSave.addListener(new ChangeListener() {
+		if(LoginPreferences.instance.loggedIn == true) {
+			btnSave = new Button(skinGorkyUiEq, "save");
+			layer.add(btnSave).padBottom(10);
 			
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				onSaveClicked();
-			}
-		});
-		
-		layer.row();
+			btnSave.addListener(new ChangeListener() {
+				
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					onSaveClicked();
+				}
+			});
+			
+			layer.row();
+		} else {
+			layer.padTop(170);
+		}
 		
 		btnContinue = new Button(skinGorkyUiEq, "continue");
 		layer.add(btnContinue);
@@ -107,10 +112,11 @@ public class InventoryScreen extends AbstractGameScreen {
 	}
 	
 	private void onSaveClicked() {
-		
+		System.out.println("SAVE!");
 	}
 	
 	private void onContinueClicked() {
+		System.out.println("CONTINUE!");
 		game.setScreen(new GameScreen(game, false));
 	}
 	
