@@ -230,22 +230,77 @@ public class MenuScreen extends AbstractGameScreen {
 	}
 	
 	private void onLoginOkClicked() {
-		boolean checkLoginData = UltraIntegrator.instance.checkLoginData(loginTF.getText(), passwordTF.getText());
-		System.out.println("OK! " + loginTF.getText() + " | " + passwordTF.getText() + " | " + checkLoginData);
 		
-		if(checkLoginData == true) {
+		/*SequenceAction seq = sequence();
+		seq.addAction(delay(1.0f));
+		seq.addAction(run(new Runnable() {
 			
-			// wyzeruj pola
-			loginTF.setText("");
-			passwordTF.setText("");
+			@Override
+			public void run() {
+				boolean checkLoginData = UltraIntegrator.instance.checkLoginData(loginTF.getText(), passwordTF.getText());
+				System.out.println("OK! " + loginTF.getText() + " | " + passwordTF.getText() + " | " + checkLoginData);
+				
+				if(checkLoginData == true) {
+					
+					// wyzeruj pola
+					loginTF.setText("");
+					passwordTF.setText("");
+					
+					System.out.println("WEWNATRZ IFA");
+					
+					layerButtons = buildNewGameButtonsLayer();
+					showNewGameButtons(true);
+					showLoginButtons(false);
+				} else {
+					Table popupWindow = buildPopupWrongLoginWindow("Logowanie", "Niepoprawne dane logowania!");
+					stage.addActor(popupWindow);
+				}
+			}
+		}));
+		
+		stage.addAction(seq);*/
+		
+		Thread t = new Thread(new Runnable() {
 			
-			layerButtons = buildNewGameButtonsLayer();
-			showNewGameButtons(true);
-			showLoginButtons(false);
-		} else {
-			Table popupWindow = buildPopupWrongLoginWindow("Logowanie", "Niepoprawne dane logowania!");
-			stage.addActor(popupWindow);
-		}
+			@Override
+			public void run() {
+				
+				Text pleaseWaitText = new Text(Assets.instance.fontsUpsideDown.defaultBig, "Prosz\u0119 czekaæ..");
+				pleaseWaitText.setPosition(400 - pleaseWaitText.getWidth()/2, 240);
+				stage.addActor(pleaseWaitText);
+				
+				btnLoginOk.setTouchable(Touchable.disabled);
+				btnLoginCancel.setTouchable(Touchable.disabled);
+				
+				boolean checkLoginData = UltraIntegrator.instance.checkLoginData(loginTF.getText(), passwordTF.getText());
+				System.out.println("OK! " + loginTF.getText() + " | " + passwordTF.getText() + " | " + checkLoginData);
+				
+				if(checkLoginData == true) {
+					
+					// wyzeruj pola
+					loginTF.setText("");
+					passwordTF.setText("");
+					
+					System.out.println("WEWNATRZ IFA");
+					
+					layerButtons = buildNewGameButtonsLayer();
+					showNewGameButtons(true);
+					showLoginButtons(false);
+				} else {
+
+					Table popupWindow = buildPopupWrongLoginWindow("Logowanie", "Niepoprawne dane logowania!");
+					stage.addActor(popupWindow);
+				}
+
+				pleaseWaitText.remove();
+				btnLoginOk.setTouchable(Touchable.enabled);
+				btnLoginCancel.setTouchable(Touchable.enabled);
+			}
+		});
+		
+		t.start();
+	
+		
 	}
 	
 	private void onLoginCancelClicked() {
@@ -402,7 +457,7 @@ public class MenuScreen extends AbstractGameScreen {
 	private void showCurrentLogin() {
 		currentLoginTextHeader = new Text(Assets.instance.battleFontsSmall.defaultNormal, "Zalogowany jako:");
 		currentLoginTextHeader.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10);
-		currentLoginText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "ASDSAD_" + LoginPreferences.instance.login);
+		currentLoginText = new Text(Assets.instance.battleFontsSmall.defaultNormal, "" + LoginPreferences.instance.login);
 		currentLoginText.setPosition(800 - 10 - currentLoginTextHeader.getWidth() + 300, 480 - 10 - 5 - currentLoginText.getHeight());
 		currentLoginText.setColor(Color.GREEN);
 		stage.addActor(currentLoginTextHeader);

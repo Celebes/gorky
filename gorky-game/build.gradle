@@ -80,6 +80,7 @@ project(":core") {
 
     dependencies {
     	compile "com.google.code.gson:gson:2.2.+"
+    	compile "org.apache.httpcomponents:httpclient:4.0-alpha4"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }

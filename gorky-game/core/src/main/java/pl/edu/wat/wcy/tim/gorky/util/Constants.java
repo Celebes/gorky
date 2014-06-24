@@ -53,4 +53,9 @@ public class Constants {
 	public static final String SKIN_GORKY_LOGIN = "images/gorky-ui-login.json";
 	public static final String SKIN_GORKY_NEW_GAME = "images/gorky-ui-new-game.json";
 	public static final String SKIN_GORKY_EQ = "images/gorky-ui-eq.json";
+	
+	// integracja
+	public static final String LOGIN_URL = "http://echo.jsontest.com/key/value/one/two";//"http://192.168.0.12:8080/gorky/integration/login";
+	public static final String SAVE_GAME_URL = "http://192.168.0.12:8080/gorky/integration/model/{userId}";
+	public static final String LOAD_GAME_URL = "";
 }

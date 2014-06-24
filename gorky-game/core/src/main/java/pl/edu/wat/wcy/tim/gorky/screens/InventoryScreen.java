@@ -137,7 +137,7 @@ public class InventoryScreen extends AbstractGameScreen {
 		layer.addActor(statsText);
 		
 		yPosition -= (30 + textHeight);
-		layer.addActor(createText("Imiê Postaci: " + "Brak", xPosition, yPosition));
+		layer.addActor(createText("Imiê Postaci: " + SaveStatePreferences.instance.avatarName, xPosition, yPosition));
 		
 		yPosition -= (10 + textHeight);
 		layer.addActor(createText("Poziom doœwiadczenia: " + SaveStatePreferences.instance.level, xPosition, yPosition));
