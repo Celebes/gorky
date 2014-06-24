@@ -14,6 +14,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -115,7 +116,32 @@ public class InventoryScreen extends AbstractGameScreen {
 	private void onSaveClicked() {
 		System.out.println("SAVE!");
 		
-		UltraIntegrator.instance.saveDataOnServer();
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Text pleaseWaitText = new Text(Assets.instance.fontsUpsideDown.defaultBig, "Zapisywanie gry..");
+				pleaseWaitText.setPosition(400 - pleaseWaitText.getWidth()/2, 240);
+				stage.addActor(pleaseWaitText);
+				
+				btnSave.setTouchable(Touchable.disabled);
+				btnContinue.setTouchable(Touchable.disabled);
+				
+				try {
+					UltraIntegrator.instance.saveDataOnServer();
+				} catch(Exception e) {
+					SaveStatePreferences.instance.reset();
+					Gdx.app.log("HEHE", "Zapisywanie gry na serwer sie nie powiodlo - InventoryScreen, linijka 134");
+				}
+				
+				pleaseWaitText.remove();
+				
+				btnSave.setTouchable(Touchable.enabled);
+				btnContinue.setTouchable(Touchable.enabled);
+			}
+		});
+		
+		t.start();
 	}
 	
 	private void onContinueClicked() {

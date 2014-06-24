@@ -445,7 +445,39 @@ public class MenuScreen extends AbstractGameScreen {
 	
 	private void onContinueClicked() {
 		System.out.println("CONTINUE");
-		game.setScreen(new GameScreen(game, true));
+		
+		// pobierz dane z serwera
+		
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Text pleaseWaitText = new Text(Assets.instance.fontsUpsideDown.defaultBig, "Wczytywanie gry..");
+				pleaseWaitText.setPosition(400 - pleaseWaitText.getWidth()/2, 240);
+				stage.addActor(pleaseWaitText);
+				
+				btnNewGame.setTouchable(Touchable.disabled);
+				btnContinue.setTouchable(Touchable.disabled);
+				btnNewGameCancel.setTouchable(Touchable.disabled);
+				
+				try {
+					UltraIntegrator.instance.loadDataFromServer();
+				} catch(Exception e) {
+					SaveStatePreferences.instance.reset();
+					Gdx.app.log("HEHE", "Wczytanie gry z serwera sie nie powiodlo - MenuScreen, linijka 467");
+				}
+				
+				pleaseWaitText.remove();
+				
+				btnNewGame.setTouchable(Touchable.enabled);
+				btnContinue.setTouchable(Touchable.enabled);
+				btnNewGameCancel.setTouchable(Touchable.enabled);
+				
+				game.setScreen(new GameScreen(game, true));
+			}
+		});
+		
+		t.start();
 	}
 	
 	private void onNewGameCancelClicked() {
