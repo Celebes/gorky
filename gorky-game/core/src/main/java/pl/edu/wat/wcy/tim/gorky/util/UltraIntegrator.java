@@ -12,6 +12,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -149,7 +150,7 @@ public class UltraIntegrator {
 		// przygotuj http
 		
 		// pobierz JSON z serwera
-		String json = wykonajZadanieHttp(Constants.LOAD_GAME_URL + LoginPreferences.instance.idUser, "");
+		String json = wykonajZadanieHttpGET(Constants.LOAD_GAME_URL + LoginPreferences.instance.idUser, "");
 		
 		// utworz z niego obiekt
 		Gson gson = new Gson();
@@ -185,10 +186,6 @@ public class UltraIntegrator {
 	
 	private String wykonajZadanieHttp(String url, String json)
     {
-        
-
-        
-        
         try
         {
         	builder = new StringBuilder();
@@ -199,6 +196,54 @@ public class UltraIntegrator {
             
             entity = new StringEntity( json );
             request.setEntity( entity );
+
+            response = client.execute( request );
+            response.setHeader( "Content-type", "application/json" );
+            response.setHeader( "Accept", "application/json" );
+            HttpEntity entityResult = response.getEntity();
+            InputStream content = entityResult.getContent();
+            BufferedReader reader = new BufferedReader( new InputStreamReader( content ) );
+            String line;
+            builder = new StringBuilder();
+            while ( ( line = reader.readLine() ) != null )
+            {
+                builder.append( line );
+            }
+            entityResult.consumeContent();
+            content.close();
+            Gdx.app.log( "HEHE", builder.toString() );
+            
+        }
+        catch ( ClientProtocolException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        } catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return builder.toString();
+    }
+	
+	private String wykonajZadanieHttpGET(String url, String json)
+    {
+        try
+        {
+        	builder = new StringBuilder();
+            HttpGet request = new HttpGet( url );
+            
+        	request.setHeader( "Accept", "application/json" );
+            request.setHeader( "Content-type", "application/json" );
+            
+            /*entity = new StringEntity( json );
+            request.setEntity( entity );*/
 
             response = client.execute( request );
             response.setHeader( "Content-type", "application/json" );

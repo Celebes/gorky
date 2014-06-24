@@ -35,4 +35,9 @@ public class LoginPreferences {
 		
 		prefs.flush();
 	}
+	
+	public void reset() {
+		prefs.clear();
+		prefs.flush();
+	}
 }

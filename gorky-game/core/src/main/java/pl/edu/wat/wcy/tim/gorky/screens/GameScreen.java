@@ -42,6 +42,7 @@ public class GameScreen extends AbstractGameScreen {
 	public GameScreen(GorkyGame game, boolean restartMusic) {
 		super(game);
 		SaveStatePreferences.instance.load();
+		System.out.println("GameScreen - ponownie zaladowano SaveStatePreferences");
 		this.restartMusic = restartMusic;
 	}
 	

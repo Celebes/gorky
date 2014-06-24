@@ -92,6 +92,8 @@ public class SaveStatePreferences {
 		prefs.putString("avatarName", avatarName);
 		
 		prefs.flush();
+		
+		System.out.println("SaveStatePreferences - zapisano gre");
 	}
 	
 	public void reset() {

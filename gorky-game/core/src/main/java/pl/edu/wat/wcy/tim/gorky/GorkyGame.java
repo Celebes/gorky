@@ -19,7 +19,8 @@ public class GorkyGame extends Game {
 		Assets.instance.init(new AssetManager());
 		GamePreferences.instance.load();
 		SaveStatePreferences.instance.load();
-		LoginPreferences.instance.load();
+		LoginPreferences.instance.reset();
+		
 		setScreen(new MenuScreen(this));
 	}
 	

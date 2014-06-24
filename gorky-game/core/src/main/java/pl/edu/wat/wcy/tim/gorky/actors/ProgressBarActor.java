@@ -28,9 +28,9 @@ public class ProgressBarActor extends Actor {
 	@Override
     public void draw(Batch batch, float parentAlpha) {		
 		batch.setColor(Color.GRAY);
-		batch.draw(Assets.instance.progressBarImg, getX(), getY(), getWidth(), getHeight());
+		batch.draw(Assets.instance.progressBarImg, getX(), getY(), (getWidth() * currentPercent > 115 ? 115 : getWidth() * currentPercent), getHeight());
 		batch.setColor(c);
-		batch.draw(Assets.instance.progressBarImg, getX(), getY(), getWidth() * currentPercent, getHeight());
+		batch.draw(Assets.instance.progressBarImg, getX(), getY(), (getWidth() * currentPercent > 115 ? 115 : getWidth() * currentPercent), getHeight());
 	}
 	
 	@Override

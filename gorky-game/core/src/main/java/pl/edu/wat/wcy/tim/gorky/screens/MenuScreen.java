@@ -10,6 +10,7 @@ import pl.edu.wat.wcy.tim.gorky.GorkyGame;
 import pl.edu.wat.wcy.tim.gorky.actors.KnightActor;
 import pl.edu.wat.wcy.tim.gorky.actors.Text;
 import pl.edu.wat.wcy.tim.gorky.game.Assets;
+import pl.edu.wat.wcy.tim.gorky.runnables.MyRunnable;
 import pl.edu.wat.wcy.tim.gorky.util.AudioManager;
 import pl.edu.wat.wcy.tim.gorky.util.Constants;
 import pl.edu.wat.wcy.tim.gorky.util.GamePreferences;
@@ -40,7 +41,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MenuScreen extends AbstractGameScreen {
@@ -283,6 +283,7 @@ public class MenuScreen extends AbstractGameScreen {
 					
 					System.out.println("WEWNATRZ IFA");
 					
+					currentLoginText.setText("" + LoginPreferences.instance.login);
 					layerButtons = buildNewGameButtonsLayer();
 					showNewGameButtons(true);
 					showLoginButtons(false);
@@ -448,7 +449,9 @@ public class MenuScreen extends AbstractGameScreen {
 		
 		// pobierz dane z serwera
 		
-		Thread t = new Thread(new Runnable() {
+		final MyRunnable mr = new MyRunnable() {
+			
+			
 			
 			@Override
 			public void run() {
@@ -460,12 +463,14 @@ public class MenuScreen extends AbstractGameScreen {
 				btnContinue.setTouchable(Touchable.disabled);
 				btnNewGameCancel.setTouchable(Touchable.disabled);
 				
-				try {
-					UltraIntegrator.instance.loadDataFromServer();
+				UltraIntegrator.instance.loadDataFromServer();
+				
+				/*try {
+					
 				} catch(Exception e) {
 					SaveStatePreferences.instance.reset();
 					Gdx.app.log("HEHE", "Wczytanie gry z serwera sie nie powiodlo - MenuScreen, linijka 467");
-				}
+				}*/
 				
 				pleaseWaitText.remove();
 				
@@ -473,11 +478,34 @@ public class MenuScreen extends AbstractGameScreen {
 				btnContinue.setTouchable(Touchable.enabled);
 				btnNewGameCancel.setTouchable(Touchable.enabled);
 				
-				game.setScreen(new GameScreen(game, true));
+				this.setZakonczonoPolaczenieHTTP(true);
+			}
+		};
+		
+		Thread t = new Thread(mr);
+		
+		t.start();
+		
+		/*Thread t2 = new Thread(new Runnable() {
+			
+			volatile boolean running = true;
+			@Override
+			public void run() {
+				while(running) {
+					if(mr.isZakonczonoPolaczenieHTTP() == true) {
+						game.setScreen(new GameScreen(game, true));
+					}
+					
+				}
 			}
 		});
 		
-		t.start();
+		t2.start();*/
+		
+		while(mr.isZakonczonoPolaczenieHTTP() == false) {
+			game.setScreen(new GameScreen(game, true));
+		}
+		
 	}
 	
 	private void onNewGameCancelClicked() {
