@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -22,9 +26,11 @@ import com.google.gson.Gson;
 public class UltraIntegrator {
 	public static final UltraIntegrator instance = new UltraIntegrator();
 	
-	private InputStream inputStream;
-	//private HttpClient httpclient;
-	private HttpPost httpPost;
+    private HttpClient client = new DefaultHttpClient();
+    private StringBuilder builder;
+    private String json = "";
+    private StringEntity entity;
+    private HttpResponse response;
 	
 	private UltraIntegrator() {
 		// singleton
@@ -34,8 +40,7 @@ public class UltraIntegrator {
 		boolean result = false;
 		
 		// przygotuj http
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
+		/*try {
 			httpPost = new HttpPost(Constants.LOGIN_URL);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
@@ -43,7 +48,7 @@ public class UltraIntegrator {
 		}
 		
 		System.out.println("START, URL = " + httpPost.getURI());
-		Gdx.app.log("HEHE", "START, URL = " + httpPost.getURI());
+		Gdx.app.log("HEHE", "START, URL = " + httpPost.getURI());*/
 		
 		// przygotuj DTO
 		LoggedAndroidDTO ladto = new LoggedAndroidDTO();
@@ -51,7 +56,7 @@ public class UltraIntegrator {
 		ladto.setLogin(login);
 		ladto.setPassword(password);
 		
-		System.out.println("LoggedAndroidDTO = " + ladto);
+		System.out.println("LoggedAndroidDTO = " + ladto.toString());
 		Gdx.app.log("HEHE", "LoggedAndroidDTO = " + ladto);
 		
 		// utworz JSON
@@ -63,7 +68,7 @@ public class UltraIntegrator {
 		
 		// wyslij JSON na usluge i dostan idUser
 
-		String idUserJSON = wykonajZadanieHTTP(httpclient, Constants.LOGIN_URL, json);
+		String idUserJSON = wykonajZadanieHttp(Constants.LOGIN_URL, json);
 		
 		System.out.println("idUserJSON = " + idUserJSON);
 		Gdx.app.log("HEHE", "idUserJSON = " + idUserJSON);
@@ -128,39 +133,23 @@ public class UltraIntegrator {
 		// utworz JSON
 		Gson gson = new Gson();
 		String json = gson.toJson(idto);
-		
-		// tymczasowo
-		// return json;
 
 		// wyslij na serwer
-		// przygotuj http
 		
-		/*
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
-			httpPost = new HttpPost(Constants.SAVE_GAME_URL);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String errorCode = wykonajZadanieHttp(Constants.SAVE_GAME_URL, json);
 		
-		wykonajZadanieHTTP(httpclient, Constants.SAVE_GAME_URL, json);*/
+		ReturnCodeDTO rcdto = gson.fromJson(errorCode, ReturnCodeDTO.class);
+		
+		Gdx.app.log("HEHE", "Otrzymano z Save kod: " + rcdto.getIsCanLogged());
+		
 		Gdx.app.log("HEHE", "Wyslano JSON w metodzie SaveGame(): " + json);
 	}
 	
 	public void loadDataFromServer() {
 		// przygotuj http
 		
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
-			httpPost = new HttpPost(Constants.LOAD_GAME_URL);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		// pobierz JSON z serwera
-		String json = wykonajZadanieHTTP(httpclient, Constants.LOAD_GAME_URL, "");
+		String json = wykonajZadanieHttp(Constants.LOAD_GAME_URL + LoginPreferences.instance.idUser, "");
 		
 		// utworz z niego obiekt
 		Gson gson = new Gson();
@@ -190,52 +179,59 @@ public class UltraIntegrator {
 		
 		// nadpisz tym co pobrales
 		SaveStatePreferences.instance.save();
+		
+		Gdx.app.log("HEHE", "pomyslnie wczytano dane z serwera");
 	}
 	
-	private String wykonajZadanieHTTP(HttpClient httpclient, String url, String json) {
-		inputStream = null;
-		String result = "";
-		
-		try {
-			// polaczenie HTTP			
-			StringEntity se = new StringEntity(json);
-			
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setEntity(se);
-			
-			
-			HttpResponse httpResponse = httpclient.execute(httpPost);
-			httpResponse.setHeader( "Content-type", "application/json" );
-			httpResponse.setHeader( "Accept", "application/json" );
-			
-			inputStream = httpResponse.getEntity().getContent();
-			
-			if(inputStream != null) {
-				result = convertInputStreamToString(inputStream);
-			} else {
-				result = "ERROR!";
-			}
-			
-			httpResponse.getEntity().consumeContent();
-		} catch (Exception e) {
-			Gdx.app.log("InputStream", e.getLocalizedMessage());
+	private String wykonajZadanieHttp(String url, String json)
+    {
+        
+
+        
+        
+        try
+        {
+        	builder = new StringBuilder();
+            HttpPost request = new HttpPost( url );
+            
+        	request.setHeader( "Accept", "application/json" );
+            request.setHeader( "Content-type", "application/json" );
+            
+            entity = new StringEntity( json );
+            request.setEntity( entity );
+
+            response = client.execute( request );
+            response.setHeader( "Content-type", "application/json" );
+            response.setHeader( "Accept", "application/json" );
+            HttpEntity entityResult = response.getEntity();
+            InputStream content = entityResult.getContent();
+            BufferedReader reader = new BufferedReader( new InputStreamReader( content ) );
+            String line;
+            builder = new StringBuilder();
+            while ( ( line = reader.readLine() ) != null )
+            {
+                builder.append( line );
+            }
+            entityResult.consumeContent();
+            content.close();
+            Gdx.app.log( "HEHE", builder.toString() );
+            
+        }
+        catch ( ClientProtocolException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        } catch (HttpException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		Gdx.app.log("HEHE", "Otrzymano odpowiedz z URL = " + result);
-		
-		return result;
-	}
-	
-	private String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
- 
-        inputStream.close();
-        return result;
- 
+        
+        return builder.toString();
     }
 }
